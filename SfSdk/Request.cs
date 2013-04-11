@@ -4,9 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using SfSdk.Data;
 using SfSdk.Enums;
-using SfSdk.RequestData;
 
 namespace SfSdk
 {
@@ -56,7 +54,7 @@ namespace SfSdk
                 using (WebResponse response = await webRequest.GetResponseAsync())
                 using (Stream stream = response.GetResponseStream())
                 using (var reader = new StreamReader(stream))
-                    return ParseResponseString(reader.ReadToEnd());
+                    return new RequestResult(reader.ReadToEnd());
             }
             catch (WebException)
             {
@@ -81,76 +79,6 @@ namespace SfSdk
             webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
 
             return webRequest;
-        }
-
-        private RequestResult ParseResponseString(string responseString)
-        {
-            if (responseString.StartsWith("+"))
-                responseString = responseString.Substring(1);
-
-            if (responseString.StartsWith("E"))
-            {
-                var fail = (SfFail) int.Parse(responseString.Substring(1, 3));
-                string[] failArgs = responseString.Substring(4).Split(';');
-                return ProcessFail(fail, failArgs);
-            }
-
-            var success = (SfSuccess) int.Parse(responseString.Substring(0, 3));
-            string[] successArgs = responseString.Substring(3).Split(';');
-            return ProcessSuccess(success, successArgs);
-        }
-
-        private RequestResult ProcessSuccess(SfSuccess success, string[] args)
-        {
-            string[] savegameParts;
-            var r = new RequestResult();
-            switch (success)
-            {
-                case SfSuccess.LoginSuccess:
-                case SfSuccess.LoginSuccessBought:
-                    if (args.Length < 3) throw new NotImplementedException();
-                    string sessionId = args[2];
-                    savegameParts = ("0/" + args[0]).Split('/');
-                    r.Result = new LoginData(sessionId, savegameParts);
-                    break;
-                case SfSuccess.LogoutSuccess:
-                    r.Result = true;
-                    break;
-                case SfSuccess.Character:
-                case SfSuccess.SearchedPlayerFound:
-                    savegameParts = ("0/" + args[0]).Split('/');
-                    string guild = args[2];
-                    string comment = args[1];
-                    r.Result = new Character(savegameParts, guild, comment);
-                    break;
-                case SfSuccess.HallOfFame:
-                    string searchString = null;
-                    if (args.Length > 1)
-                        searchString = args[1];
-                    var tmp = args[0].Split('/');
-                    break;
-                case SfSuccess.SearchedPlayerNotFound:
-                    throw new NotImplementedException();
-                default:
-                    throw new ArgumentOutOfRangeException(string.Format("Success: {0}", success));
-            }
-            return r;
-        }
-
-        private RequestResult ProcessFail(SfFail fail, string[] args)
-        {
-            var result = new RequestResult();
-            switch (fail)
-            {
-                case SfFail.LoginFailed:
-                case SfFail.SessionIdExpired:
-                case SfFail.ServerDown:
-                    result.Errors.Add(fail.ToString());
-                    break;
-                default:
-                    throw new NotImplementedException(fail.ToString());
-            }
-            return result;
         }
     }
 }

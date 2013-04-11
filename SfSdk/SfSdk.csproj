@@ -46,12 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\Character.cs" />
+    <Compile Include="Data\CharacterResponse.cs" />
     <Compile Include="Enums\SfClass.cs" />
     <Compile Include="Contracts\ICharacter.cs" />
     <Compile Include="Contracts\ICountry.cs" />
     <Compile Include="Contracts\IServer.cs" />
-    <Compile Include="RequestData\LoginData.cs" />
+    <Compile Include="LogoutResponse.cs" />
+    <Compile Include="RequestResult.cs" />
+    <Compile Include="ResponseData\IResponse.cs" />
+    <Compile Include="ResponseData\LoginResponse.cs" />
     <Compile Include="Contracts\ICountryProvider.cs" />
     <Compile Include="Enums\SfFail.cs" />
     <Compile Include="Helpers.cs" />
@@ -62,7 +65,6 @@
     <Compile Include="Data\Server.cs" />
     <Compile Include="Enums\SfAction.cs" />
     <Compile Include="Request.cs" />
-    <Compile Include="RequestResult.cs" />
     <Compile Include="Enums\SfSavegame.cs" />
     <Compile Include="Enums\SfSuccess.cs" />
     <Compile Include="Session.cs" />

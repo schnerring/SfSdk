@@ -12,6 +12,7 @@ namespace SfSdk.Data
     [Serializable]
     internal class Server : IServer
     {
+        // TODO HtmlAgilityPack
         private const string TagPattern = "<option value=\"(.*?)\">(.*?)</option>";
         private const string ServerUrlPattern = "value=\"(.*?)\"";
         private const string ServerNamePattern = ">(.*?)<";

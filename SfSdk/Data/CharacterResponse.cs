@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using SfSdk.Contracts;
 using SfSdk.Enums;
+using SfSdk.ResponseData;
 
 namespace SfSdk.Data
 {
-    internal class Character : ICharacter
+    internal class CharacterResponse : IResponse, ICharacter
     {
         private readonly string _comment;
         private readonly string _guild;
@@ -31,7 +32,7 @@ namespace SfSdk.Data
         private readonly int _sgStrengthBonus;
         private readonly int _sgStrengthBought;
 
-        internal Character(string[] savegameParts, string guild, string comment)
+        internal CharacterResponse(string[] savegameParts, string guild, string comment)
         {
             _sgLevel = int.Parse(savegameParts[(int) SfSavegame.Level]);
 //            _gold = int.Parse(savegameParts[(int) SfSavegame.Gold]);

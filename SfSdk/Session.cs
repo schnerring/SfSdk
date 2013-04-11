@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SfSdk.Contracts;
 using SfSdk.Enums;
-using SfSdk.RequestData;
+using SfSdk.ResponseData;
 
 namespace SfSdk
 {
@@ -33,9 +33,9 @@ namespace SfSdk
             _serverUri = serverUri;
             var request = new Request(emptySessionId, _serverUri, SfAction.Login,
                                         new[] {username, md5PasswordHash, "v1.70&random=%2"});
-            RequestResult result = await request.ExecuteAsync();
+            var result = await request.ExecuteAsync();
 
-            var session = result.Result as LoginData;
+            var session = result.Response as LoginResponse;
             if (result.Errors.Count > 0 || session == null) return false;
 
             _sessionId = session.SessionId;
@@ -52,13 +52,14 @@ namespace SfSdk
         /// <returns>The success of the logout as bool.</returns>
         public async Task<bool> LogoutAsync()
         {
-            RequestResult result = await new Request(_sessionId, _serverUri, SfAction.Logout).ExecuteAsync();
+            var result = await new Request(_sessionId, _serverUri, SfAction.Logout).ExecuteAsync();
             if (result.Errors.Count > 1)
             {
                 return result.Errors.Any(e => e == "SessionIdExpired");
             }
-            if (!(result.Result is bool)) return false;
-            return (bool) result.Result;
+            var response = result.Response as LogoutResponse;
+            if (response == null) return false;
+            return response.LogoutSucceeded;
         }
 
         /// <summary>
@@ -68,8 +69,8 @@ namespace SfSdk
         public async Task<ICharacter> CharacterAsync()
         {
             var request = new Request(_sessionId, _serverUri, SfAction.Character);
-            RequestResult result = await request.ExecuteAsync();
-            return result.Result as ICharacter;
+            var result = await request.ExecuteAsync();
+            return result.Response as ICharacter;
         }
 
         /// <summary>
@@ -80,8 +81,8 @@ namespace SfSdk
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
             var request = new Request(_sessionId, _serverUri, SfAction.RequestCharacter, new[] {username});
-            RequestResult result = await request.ExecuteAsync();
-            return result.Result as ICharacter;
+            var result = await request.ExecuteAsync();
+            return result.Response as ICharacter;
         }
 
         /// <summary>
@@ -92,8 +93,8 @@ namespace SfSdk
         public async Task<ICharacter> HallOfFameAsync(bool forceLoad = false)
         {
             var request = new Request(_sessionId, _serverUri, SfAction.HallOfFame);
-            RequestResult result = await request.ExecuteAsync();
-            return result.Result as ICharacter;
+            var result = await request.ExecuteAsync();
+            return result.Response as ICharacter;
         }
     }
 }

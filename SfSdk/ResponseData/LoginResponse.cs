@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using SfSdk.Enums;
 
-namespace SfSdk.RequestData
+namespace SfSdk.ResponseData
 {
-    internal class LoginData
+    internal class LoginResponse : IResponse
     {
         private readonly int _gold;
         private readonly int _mushrooms;
         private readonly string _sessionId;
         private readonly int _silver;
 
-        public LoginData(string sessionId, IList<string> savegameParts)
+        public LoginResponse(IList<string> savegameParts, string sessionId)
         {
             _sessionId = sessionId;
             _gold = int.Parse(savegameParts[(int) SfSavegame.Gold])/100;
