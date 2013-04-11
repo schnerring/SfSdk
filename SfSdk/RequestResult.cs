@@ -2,9 +2,9 @@
 
 namespace SfSdk
 {
-    internal class SfRequestResult
+    internal class RequestResult
     {
-        internal SfRequestResult()
+        internal RequestResult()
         {
             Errors = new List<string>();
         }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SfSdk")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Provides a .NET 4.5 API to easily communicate with Shakes & Fidget servers")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SfSdk")]
@@ -34,3 +34,4 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.0.0.1")]
 [assembly: AssemblyFileVersion("0.0.0.1")]
+[assembly: InternalsVisibleTo("SfSdk.Tests,PublicKey=0024000004800000940000000602000000240000525341310004000001000100e174c31927959a6f3e0e3f637816dd7d82c3440dc60d55c37c7448039c0b5adcf3ca5857f13f91cf64c8215db99463a8412b1c7e7128bd2e4ce71bd769a628ef13c0ad9ca532210e05e886009b6a0c29927efd9c1243931bb390d6846dfaefbb84944887e0aee5b4fb150abcfeebf8aed7541c6cbecf44cf862f0fa063d098c9")]

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using SfSdk.Enums;
 
-namespace SfSdk
+namespace SfSdk.RequestData
 {
     internal class LoginData
     {

@@ -1,6 +1,6 @@
-﻿namespace SfSdk
+﻿namespace SfSdk.Enums
 {
-    public enum Class
+    public enum SfClass
     {
         Warrior = 1,
         Mage = 2,

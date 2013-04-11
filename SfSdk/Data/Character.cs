@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SfSdk.Contracts;
+using SfSdk.Enums;
 
 namespace SfSdk.Data
 {
@@ -8,7 +9,7 @@ namespace SfSdk.Data
     {
         private readonly string _comment;
         private readonly string _guild;
-        private readonly Class _sgClass;
+        private readonly SfClass _sgClass;
         private readonly int _sgConstitution;
         private readonly int _sgConstitutionBonus;
         private readonly int _sgConstitutionBought;
@@ -35,7 +36,7 @@ namespace SfSdk.Data
             _sgLevel = int.Parse(savegameParts[(int) SfSavegame.Level]);
 //            _gold = int.Parse(savegameParts[(int) SfSavegame.Gold]);
 //            _mushrooms = int.Parse(savegameParts[(int) SfSavegame.Mushrooms]);
-            _sgClass = (Class) int.Parse(savegameParts[(int) SfSavegame.Class]);
+            _sgClass = (SfClass) int.Parse(savegameParts[(int) SfSavegame.Class]);
             _sgStrength = int.Parse(savegameParts[(int) SfSavegame.Strength]);
             _sgDexterity = int.Parse(savegameParts[(int) SfSavegame.Dexterity]);
             _sgConstitution = int.Parse(savegameParts[(int) SfSavegame.Constitution]);
@@ -86,15 +87,15 @@ namespace SfSdk.Data
 
             switch (_sgClass)
             {
-                case Class.Warrior:
+                case SfClass.Warrior:
                     tmpDamageFactor = 1 + (double) Strength/10;
                     tmpLifeFactor = 5;
                     break;
-                case Class.Mage:
+                case SfClass.Mage:
                     tmpDamageFactor = 1 + (double) Intelligence/10;
                     tmpLifeFactor = 2;
                     break;
-                case Class.Scout:
+                case SfClass.Scout:
                     tmpDamageFactor = 1 + (double) Dexterity/10;
                     tmpLifeFactor = 4;
                     break;

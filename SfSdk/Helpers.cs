@@ -2,7 +2,7 @@
 
 namespace SfSdk
 {
-    internal static class SfHelpers
+    internal static class Helpers
     {
         internal static double ToUnixTimeStamp(this DateTime date)
         {

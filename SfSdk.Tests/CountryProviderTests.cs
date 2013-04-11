@@ -1,19 +1,33 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SfSdk.Contracts;
 using SfSdk.Providers;
 using Xunit;
 
 namespace SfSdk.Tests
 {
-    public class CountriesProviderTests
+    public class CountryProviderTests
     {
+        [Fact(Skip = "Interrupts my Internet, reactivate when needed")]
+        public async Task GetCountriesAsyncThrowsExceptionWithoutInternetConnection()
+        {
+            // Arrange
+            Helpers.Disconnect();
+            var provider = new CountryProvider();
+
+            // Act / Assert
+            await ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
+            Helpers.Connect();
+        }
+
         [Fact]
         public async Task GetCountriesAsyncReturns25Countries()
         {
             // Arrange / Act
-            var countries = await new CountryProvider().GetCountriesAsync();
+            IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
             // Assert
             countries.Should().HaveCount(25);
@@ -53,7 +67,7 @@ namespace SfSdk.Tests
                 };
 
             // Act
-            var countries = await new CountryProvider().GetCountriesAsync();
+            IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
             // Assert
             countries.Select(c => c.Name).Should().Contain(countryNames);
@@ -63,7 +77,7 @@ namespace SfSdk.Tests
         public async Task CountriesCollectionContainsProperUris()
         {
             // Arrange
-            var countryUris = new[]
+            IEnumerable<Uri> countryUris = new[]
                 {
                     "http://www.sfgame.de/",
                     "http://www.sfgame.pl/",
@@ -93,10 +107,25 @@ namespace SfSdk.Tests
                 }.Select(url => new UriBuilder(url).Uri);
 
             // Act
-            var countries = await new CountryProvider().GetCountriesAsync();
+            IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
             // Assert
             countries.Select(c => c.Uri).Should().Contain(countryUris);
+        }
+
+        public static async Task ThrowsAsync<TException>(Func<Task> func)
+        {
+            var expected = typeof(TException);
+            Type actual = null;
+            try
+            {
+                await func();
+            }
+            catch (Exception e)
+            {
+                actual = e.GetType();
+            }
+            Assert.Equal(expected, actual);
         }
     }
 }

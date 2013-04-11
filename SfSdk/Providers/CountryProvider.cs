@@ -47,10 +47,16 @@ namespace SfSdk.Providers
 //            webRequest.Headers.Add(HttpRequestHeader.AcceptLanguage, "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4");
 //            webRequest.Headers.Add(HttpRequestHeader.AcceptCharset, "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
 //            webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
-
-            using (var responseStream = (HttpWebResponse) await webRequest.GetResponseAsync())
-            using (var streamReader = new StreamReader(responseStream.GetResponseStream()))
-                _response = await streamReader.ReadToEndAsync();
+            try
+            {
+                using (var responseStream = (HttpWebResponse) await webRequest.GetResponseAsync())
+                using (var streamReader = new StreamReader(responseStream.GetResponseStream()))
+                    _response = await streamReader.ReadToEndAsync();
+            }
+            catch (WebException)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         private static async Task<ICountry> CreateCountryAsync(HtmlNode node, bool forceRefresh)

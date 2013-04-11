@@ -5,21 +5,23 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using SfSdk.Data;
+using SfSdk.Enums;
+using SfSdk.RequestData;
 
 namespace SfSdk
 {
-    internal class SfRequest
+    internal class Request
     {
         private readonly Uri _serverUri;
         private static readonly Random Random;
         private readonly Uri _requestUri;
 
-        static SfRequest()
+        static Request()
         {
             Random = new Random(DateTime.Now.Millisecond);
         }
 
-        internal SfRequest(string sessionId, Uri serverUri, SfAction sfAction, IEnumerable<string> args = null)
+        internal Request(string sessionId, Uri serverUri, SfAction sfAction, IEnumerable<string> args = null)
         {
             if (serverUri == null) throw new ArgumentNullException("serverUri");
             if (sessionId == null) throw new ArgumentNullException("sessionId");
@@ -46,7 +48,7 @@ namespace SfSdk
             _requestUri = new UriBuilder(url).Uri;
         }
 
-        internal async Task<SfRequestResult> ExecuteAsync()
+        internal async Task<RequestResult> ExecuteAsync()
         {
             try
             {
@@ -81,7 +83,7 @@ namespace SfSdk
             return webRequest;
         }
 
-        private SfRequestResult ParseResponseString(string responseString)
+        private RequestResult ParseResponseString(string responseString)
         {
             if (responseString.StartsWith("+"))
                 responseString = responseString.Substring(1);
@@ -98,10 +100,10 @@ namespace SfSdk
             return ProcessSuccess(success, successArgs);
         }
 
-        private SfRequestResult ProcessSuccess(SfSuccess success, string[] args)
+        private RequestResult ProcessSuccess(SfSuccess success, string[] args)
         {
             string[] savegameParts;
-            var r = new SfRequestResult();
+            var r = new RequestResult();
             switch (success)
             {
                 case SfSuccess.LoginSuccess:
@@ -135,9 +137,9 @@ namespace SfSdk
             return r;
         }
 
-        private SfRequestResult ProcessFail(SfFail fail, string[] args)
+        private RequestResult ProcessFail(SfFail fail, string[] args)
         {
-            var result = new SfRequestResult();
+            var result = new RequestResult();
             switch (fail)
             {
                 case SfFail.LoginFailed:

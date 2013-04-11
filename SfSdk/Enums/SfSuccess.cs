@@ -1,4 +1,4 @@
-﻿namespace SfSdk
+﻿namespace SfSdk.Enums
 {
     internal enum SfSuccess
     {
