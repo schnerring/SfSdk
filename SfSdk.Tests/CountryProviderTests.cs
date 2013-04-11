@@ -11,16 +11,16 @@ namespace SfSdk.Tests
 {
     public class CountryProviderTests
     {
-        [Fact(Skip = "Interrupts my Internet, reactivate when needed")]
-        public async Task GetCountriesAsyncThrowsExceptionWithoutInternetConnection()
+        [Fact(Skip = "Interrupts Network connection, reactivate when needed")]
+        public async Task GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
         {
             // Arrange
-            Helpers.Disconnect();
+            TestHelpers.Disconnect();
             var provider = new CountryProvider();
 
             // Act / Assert
-            await ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
-            Helpers.Connect();
+            await TestHelpers.ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
+            TestHelpers.Connect();
         }
 
         [Fact]
@@ -111,21 +111,6 @@ namespace SfSdk.Tests
 
             // Assert
             countries.Select(c => c.Uri).Should().Contain(countryUris);
-        }
-
-        public static async Task ThrowsAsync<TException>(Func<Task> func)
-        {
-            var expected = typeof(TException);
-            Type actual = null;
-            try
-            {
-                await func();
-            }
-            catch (Exception e)
-            {
-                actual = e.GetType();
-            }
-            Assert.Equal(expected, actual);
         }
     }
 }

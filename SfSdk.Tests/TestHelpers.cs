@@ -2,10 +2,12 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace SfSdk.Tests
 {
-    public static class Helpers
+    public static class TestHelpers
     {
         public static void Connect()
         {
@@ -51,6 +53,21 @@ namespace SfSdk.Tests
                 mo.InvokeMethod("EnableDHCP", null, null);
                 mo.InvokeMethod("SetDNSServerSearchOrder", newDns, null);
             }
+        }
+
+        public static async Task ThrowsAsync<TException>(Func<Task> func)
+        {
+            var expected = typeof(TException);
+            Type actual = null;
+            try
+            {
+                await func();
+            }
+            catch (Exception e)
+            {
+                actual = e.GetType();
+            }
+            Assert.Equal(expected, actual);
         }
     }
 }

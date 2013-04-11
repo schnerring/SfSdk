@@ -21,8 +21,9 @@ namespace SfSdk
 
         internal Request(string sessionId, Uri serverUri, SfAction sfAction, IEnumerable<string> args = null)
         {
-            if (serverUri == null) throw new ArgumentNullException("serverUri");
             if (sessionId == null) throw new ArgumentNullException("sessionId");
+            if (serverUri == null) throw new ArgumentNullException("serverUri");
+            if (sessionId.Length != 32) throw new ArgumentException("SessionId must have a length of 32", "sessionId");
 
             _serverUri = serverUri;
 
@@ -64,7 +65,7 @@ namespace SfSdk
 
         private WebRequest CreateWebRequest()
         {
-            // todo refactor properly
+            // todo refactor properly, very ugly ATM => static Cookie
             var webRequest = (HttpWebRequest) WebRequest.Create(_requestUri);
 
             webRequest.Host = _serverUri.Host;
