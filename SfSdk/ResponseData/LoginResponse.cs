@@ -15,7 +15,7 @@ namespace SfSdk.ResponseData
             _sessionId = sessionId;
             _gold = int.Parse(savegameParts[(int) SfSavegame.Gold])/100;
             _silver = int.Parse(savegameParts[(int) SfSavegame.Gold])%100;
-            _mushrooms = int.Parse(savegameParts[(int) SfSavegame.Mushrooms]);
+            _mushrooms = int.Parse(savegameParts[(int) SfSavegame.Mush]);
         }
 
         public int Gold

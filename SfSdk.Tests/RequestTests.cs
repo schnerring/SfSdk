@@ -23,31 +23,31 @@ namespace SfSdk.Tests
         [Fact]
         public void ConstructorThrowsExceptionIfSessionIdIsNull()
         {
-            // Arrange / Act
+            // Arrange
             Action a = () => new Request(null, _serverUri, SfAction.Album);
 
-            // Assert
+            // Act / Assert
             a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
         }
 
         [Fact]
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
-            // Arrange / Act
+            // Arrange
             Action a = () => new Request(EmptySessionId, null, SfAction.Album);
 
-            // Assert
+            // Act / Assert
             a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
         }
 
         [Fact]
         public void ConstructorThrowsExceptionIfSessionIdHasInvalidLength()
         {
-            // Arrange / Act
+            // Arrange
             const string invalidSessionid = "000";
             Action a = () => new Request(invalidSessionid, _serverUri, SfAction.Album);
 
-            // Assert
+            // Act / Assert
             a.ShouldThrow<ArgumentException>().Where(e => e.ParamName == "sessionId");
         }
 

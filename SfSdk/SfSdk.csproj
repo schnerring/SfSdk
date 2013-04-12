@@ -46,7 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\CharacterResponse.cs" />
+    <Compile Include="Enums\SfSavegame.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SfSavegame.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ResponseData\CharacterResponse.cs" />
+    <Compile Include="Savegame.cs" />
     <Compile Include="Enums\SfClass.cs" />
     <Compile Include="Contracts\ICharacter.cs" />
     <Compile Include="Contracts\ICountry.cs" />
@@ -65,7 +71,6 @@
     <Compile Include="Data\Server.cs" />
     <Compile Include="Enums\SfAction.cs" />
     <Compile Include="Request.cs" />
-    <Compile Include="Enums\SfSavegame.cs" />
     <Compile Include="Enums\SfSuccess.cs" />
     <Compile Include="Session.cs" />
   </ItemGroup>
@@ -73,9 +78,19 @@
     <None Include="..\SfSdk.snk">
       <Link>Properties\SfSdk.snk</Link>
     </None>
+    <None Include="Enums\SfSavegame.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SfSavegame.cs</LastGenOutput>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Enums\SfSavegameOriginal.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
