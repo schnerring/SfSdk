@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SfSdk.Enums;
+using SfSdk.Constants;
 
 namespace SfSdk.ResponseData
 {
@@ -13,9 +13,9 @@ namespace SfSdk.ResponseData
         public LoginResponse(IList<string> savegameParts, string sessionId)
         {
             _sessionId = sessionId;
-            _gold = int.Parse(savegameParts[(int) SfSavegame.Gold])/100;
-            _silver = int.Parse(savegameParts[(int) SfSavegame.Gold])%100;
-            _mushrooms = int.Parse(savegameParts[(int) SfSavegame.Mush]);
+            _gold = int.Parse(savegameParts[(int) SF.SgGold])/100;
+            _silver = int.Parse(savegameParts[(int) SF.SgGold])%100;
+            _mushrooms = int.Parse(savegameParts[(int) SF.SgMush]);
         }
 
         public int Gold

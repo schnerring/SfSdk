@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using SfSdk.Constants;
 using SfSdk.Contracts;
-using SfSdk.Enums;
+using SfSdk.Data;
+using SfSdk.Logging;
 using SfSdk.ResponseData;
 
 namespace SfSdk
 {
     public class Session : ISession
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof (Session));
+
         private Uri _serverUri;
         private string _sessionId;
 
@@ -31,17 +35,18 @@ namespace SfSdk
 
             const string emptySessionId = "00000000000000000000000000000000";
             _serverUri = serverUri;
-            var request = new Request(emptySessionId, _serverUri, SfAction.Login,
-                                        new[] {username, md5PasswordHash, "v1.70&random=%2"});
+            var request = new Request(emptySessionId, _serverUri, SF.ActLogin,
+                                      new[] {username, md5PasswordHash, "v1.70&random=%2"});
+
             var result = await request.ExecuteAsync();
 
-            var session = result.Response as LoginResponse;
-            if (result.Errors.Count > 0 || session == null) return false;
+            var response = result.Response as LoginResponse;
+            if (result.Errors.Count > 0 || response == null) return false;
 
-            _sessionId = session.SessionId;
-            Mushrooms = session.Mushrooms;
-            Gold = session.Gold;
-            Silver = session.Silver;
+            _sessionId = response.SessionId;
+            Mushrooms = response.Mushrooms;
+            Gold = response.Gold;
+            Silver = response.Silver;
 
             return true;
         }
@@ -52,7 +57,7 @@ namespace SfSdk
         /// <returns>The success of the logout as bool.</returns>
         public async Task<bool> LogoutAsync()
         {
-            var result = await new Request(_sessionId, _serverUri, SfAction.Logout).ExecuteAsync();
+            var result = await new Request(_sessionId, _serverUri, SF.ActLogout).ExecuteAsync();
             if (result.Errors.Count > 1)
             {
                 return result.Errors.Any(e => e == "SessionIdExpired");
@@ -66,11 +71,11 @@ namespace SfSdk
         ///     Represents the Character Screen Action.
         /// </summary>
         /// <returns>The character of the currently logged in account.</returns>
-        public async Task<ICharacter> CharacterAsync()
+        public async Task<ICharacter> CharacterScreenAsync()
         {
-            var request = new Request(_sessionId, _serverUri, SfAction.Character);
+            var request = new Request(_sessionId, _serverUri, SF.ActScreenChar);
             var result = await request.ExecuteAsync();
-            return result.Response as ICharacter;
+            return new Character(result.Response as CharacterResponse);
         }
 
         /// <summary>
@@ -80,9 +85,9 @@ namespace SfSdk
         /// <returns>Null if the name cannot be found.</returns>
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
-            var request = new Request(_sessionId, _serverUri, SfAction.RequestCharacter, new[] {username});
+            var request = new Request(_sessionId, _serverUri, SF.ActRequestChar, new[] { username });
             var result = await request.ExecuteAsync();
-            return result.Response as ICharacter;
+            return new Character(result.Response as CharacterResponse);
         }
 
         /// <summary>
@@ -92,9 +97,9 @@ namespace SfSdk
         /// <returns>A list of ICharacter.</returns>
         public async Task<ICharacter> HallOfFameAsync(bool forceLoad = false)
         {
-            var request = new Request(_sessionId, _serverUri, SfAction.HallOfFame);
+            var request = new Request(_sessionId, _serverUri, SF.ActScreenEhrenhalle);
             var result = await request.ExecuteAsync();
-            return result.Response as ICharacter;
+            return new Character(result.Response as CharacterResponse);
         }
     }
 }

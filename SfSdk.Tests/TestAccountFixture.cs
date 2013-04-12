@@ -13,6 +13,8 @@ namespace SfSdk.Tests
             // the third line containing the server URL
             string[] lines = File.ReadAllLines("TestAccount.txt");
 
+            if (lines.Length != 3) throw new NotSupportedException("The TestAccount file has an invalid format.");
+
             Username = lines[0];
             PasswordHash = lines[1].ToMd5Hash();
             ServerUri = new UriBuilder(lines[2]).Uri;

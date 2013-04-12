@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
-using SfSdk.Enums;
+using SfSdk.Constants;
 using Xunit;
 
 namespace SfSdk.Tests
@@ -24,7 +24,7 @@ namespace SfSdk.Tests
         public void ConstructorThrowsExceptionIfSessionIdIsNull()
         {
             // Arrange
-            Action a = () => new Request(null, _serverUri, SfAction.Album);
+            Action a = () => new Request(null, _serverUri, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
@@ -34,7 +34,7 @@ namespace SfSdk.Tests
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
             // Arrange
-            Action a = () => new Request(EmptySessionId, null, SfAction.Album);
+            Action a = () => new Request(EmptySessionId, null, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
@@ -45,7 +45,7 @@ namespace SfSdk.Tests
         {
             // Arrange
             const string invalidSessionid = "000";
-            Action a = () => new Request(invalidSessionid, _serverUri, SfAction.Album);
+            Action a = () => new Request(invalidSessionid, _serverUri, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentException>().Where(e => e.ParamName == "sessionId");
@@ -58,7 +58,7 @@ namespace SfSdk.Tests
 
             // Arrange
             // Login in this case
-            var request = new Request("00000000000000000000000000000000", _serverUri, SfAction.Login,
+            var request = new Request("00000000000000000000000000000000", _serverUri, SF.ActLogin,
                                       new[] { _username, _passwordHash, "v1.70&random=%2" });
 
             // Act / Assert

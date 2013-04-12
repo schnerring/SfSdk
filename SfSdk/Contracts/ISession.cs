@@ -28,7 +28,7 @@ namespace SfSdk.Contracts
         ///     Represents the Character Screen Action.
         /// </summary>
         /// <returns>The character of the currently logged in account.</returns>
-        Task<ICharacter> CharacterAsync();
+        Task<ICharacter> CharacterScreenAsync();
 
         /// <summary>
         ///     Requests a Character via a given predicate.

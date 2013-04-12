@@ -70,7 +70,7 @@ namespace SimpleConsoleApplication
             var session = new Session();
             await session.LoginAsync(username, passwordHash, serverUri);
 
-            var character = await session.CharacterAsync();
+            var character = await session.CharacterScreenAsync();
 
             Console.WriteLine();
             var charType = typeof (ICharacter);

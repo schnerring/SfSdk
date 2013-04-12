@@ -1,4 +1,4 @@
-﻿namespace SfSdk.Enums
+﻿namespace SfSdk.Constants
 {
     internal enum SfClass
     {

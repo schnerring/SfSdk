@@ -4,47 +4,57 @@ using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
-using SfSdk.Enums;
+using SfSdk.Constants;
+using SfSdk.Logging;
 
 namespace SfSdk
 {
     internal class Request
     {
-        private readonly Uri _serverUri;
+        private static readonly ILog Log = LogManager.GetLog(typeof (Request));
         private static readonly Random Random;
+
+        private readonly string _action;
+        private readonly string _args;
+        private readonly Guid _id;
         private readonly Uri _requestUri;
+        private readonly Uri _serverUri;
+        private readonly string _sessionId;
 
         static Request()
         {
             Random = new Random(DateTime.Now.Millisecond);
         }
 
-        internal Request(string sessionId, Uri serverUri, SfAction sfAction, IEnumerable<string> args = null)
+        internal Request(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
         {
             if (sessionId == null) throw new ArgumentNullException("sessionId");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
             if (sessionId.Length != 32) throw new ArgumentException("SessionId must have a length of 32", "sessionId");
 
+            _id = Guid.NewGuid();
+            _sessionId = sessionId;
             _serverUri = serverUri;
+            _action = ((int) action).ToString(CultureInfo.InvariantCulture);
+            while (_action.Length < 3)
+                _action = _action.Insert(0, "0");
+            if (args != null) _args = string.Join(";", args);
+            _requestUri = BuildRequestUri();
+        }
 
-            string joinedArgs = null;
-            if (args != null) joinedArgs = string.Join(";", args);
-
-            string actionString = ((int) sfAction).ToString(CultureInfo.InvariantCulture);
-            while (actionString.Length < 3)
-                actionString = actionString.Insert(0, "0");
-
+        private Uri BuildRequestUri()
+        {
             string url = string.Empty;
-                   url += serverUri;
-                   url += "request.php?req=";
-                   url += sessionId;
-                   url += actionString;
-                   url += joinedArgs;
-                   url += "&rnd=";
-                   url += Random.Next(2000000000);
-                   url += Math.Round(DateTime.Now.ToUnixTimeStamp());
+            url += _serverUri;
+            url += "request.php?req=";
+            url += _sessionId;
+            url += _action;
+            url += _args;
+            url += "&rnd=";
+            url += Random.Next(2000000000);
+            url += Math.Round(DateTime.Now.ToUnixTimeStamp());
 
-            _requestUri = new UriBuilder(url).Uri;
+            return new UriBuilder(url).Uri;
         }
 
         internal async Task<RequestResult> ExecuteAsync()
@@ -52,14 +62,31 @@ namespace SfSdk
             try
             {
                 WebRequest webRequest = CreateWebRequest();
-                using (WebResponse response = await webRequest.GetResponseAsync())
-                using (Stream stream = response.GetResponseStream())
-                using (var reader = new StreamReader(stream))
-                    return new RequestResult(reader.ReadToEnd());
+
+                Log.Info("Request started:  ID = {0}", _id);
+                Log.Info("    SID:    {0}", _sessionId);
+                Log.Info("    Action: {0}", _action);
+                Log.Info("    Args:   {0}", _args ?? "null");
+                Log.Info("    URL:    {0}", _requestUri.AbsoluteUri);
+
+                RequestResult result = await RequestResult(webRequest);
+
+                Log.Info("Request finished: ID = {0}", _id);
+                return result;
             }
             catch (WebException)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        private static async Task<RequestResult> RequestResult(WebRequest webRequest)
+        {
+            using (WebResponse response = await webRequest.GetResponseAsync())
+            {
+                using (Stream stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream)) // TODO
+                    return new RequestResult(reader.ReadToEnd());
             }
         }
 

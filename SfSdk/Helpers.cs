@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,8 +9,8 @@ namespace SfSdk
     {
         internal static double ToUnixTimeStamp(this DateTime date)
         {
-            var t = (date.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
-            return  t.TotalMilliseconds;
+            TimeSpan t = (date.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+            return t.TotalMilliseconds;
         }
 
 
@@ -34,6 +35,26 @@ namespace SfSdk
                 // Return the hexadecimal string. 
                 return sBuilder.ToString();
             }
+        }
+
+
+        public static T Convert<T>(this string input)
+        {
+            TypeConverter converter = TypeDescriptor.GetConverter(typeof (T));
+            // TODO catch Invalid
+            if (converter != null)
+            {
+                try
+                {
+                    //Cast ConvertFromString(string text) : object to (T)
+                    return (T) converter.ConvertFromString(input);
+                }
+                catch (Exception e)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+            return default(T);
         }
     }
 }
