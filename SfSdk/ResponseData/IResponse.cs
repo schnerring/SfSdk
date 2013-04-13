@@ -2,5 +2,6 @@
 {
     internal interface IResponse
     {
+        string[] Args { get; }
     }
 }

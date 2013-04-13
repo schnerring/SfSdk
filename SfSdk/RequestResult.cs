@@ -43,20 +43,14 @@ namespace SfSdk
             {
                 case SF.RespLoginSuccess:
                 case SF.RespLoginSuccessBought:
-                    if (args.Length < 3) throw new NotImplementedException();
-                    string sessionId = args[2];
-                    savegameParts = ("0/" + args[0]).Split('/');
-                    Response = new LoginResponse(savegameParts, sessionId);
+                    Response = new LoginResponse(args);
                     break;
                 case SF.RespLogoutSuccess:
-                    Response = new LogoutResponse(true);
+                    Response = new LogoutResponse(args, logoutSucceeded: true);
                     break;
                 case SF.ActScreenChar:
                 case SF.RespPlayerScreen:
-                    savegameParts = ("0/" + args[0]).Split('/');
-                    string guild = args[2];
-                    string comment = args[1];
-                    Response = new CharacterResponse(savegameParts, guild, comment);
+                    Response = new CharacterResponse(args);
                     break;
                 case SF.ActScreenEhrenhalle:
                     string searchString = null;

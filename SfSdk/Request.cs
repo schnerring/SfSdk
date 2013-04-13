@@ -83,11 +83,9 @@ namespace SfSdk
         private static async Task<RequestResult> RequestResult(WebRequest webRequest)
         {
             using (WebResponse response = await webRequest.GetResponseAsync())
-            {
-                using (Stream stream = response.GetResponseStream())
-                using (var reader = new StreamReader(stream)) // TODO
+            using (Stream stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream)) // TODO
                     return new RequestResult(reader.ReadToEnd());
-            }
         }
 
         private WebRequest CreateWebRequest()

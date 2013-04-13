@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
 using SfSdk.Data;
-using SfSdk.Logging;
 using SfSdk.ResponseData;
 
 namespace SfSdk
 {
     public class Session : ISession
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof (Session));
+        private const string EmptySessionId = "00000000000000000000000000000000";
 
         private Uri _serverUri;
         private string _sessionId;
@@ -33,9 +32,8 @@ namespace SfSdk
             if (md5PasswordHash == null) throw new ArgumentNullException("md5PasswordHash");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
-            const string emptySessionId = "00000000000000000000000000000000";
             _serverUri = serverUri;
-            var request = new Request(emptySessionId, _serverUri, SF.ActLogin,
+            var request = new Request(EmptySessionId, _serverUri, SF.ActLogin,
                                       new[] {username, md5PasswordHash, "v1.70&random=%2"});
 
             var result = await request.ExecuteAsync();
