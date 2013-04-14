@@ -3,7 +3,7 @@
 namespace SfSdk.ResponseData
 {
     /// <summary>
-    ///     The reponse type returned on <see cref="SF.ActScreenChar" />, <see cref="SF.RespLogoutSuccess" />.
+    ///     The reponse type returned on <see cref="SF.RespLogoutSuccess" />.
     /// </summary>
     internal class LogoutResponse : ResponseBase
     {
