@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace SfSdk.Contracts
 {
+    /// <summary>
+    ///     Contains information about a country where S&amp;F is available.
+    /// </summary>
     public interface ICountry : ISerializable
     {
         /// <summary>
@@ -12,12 +15,12 @@ namespace SfSdk.Contracts
         string Name { get; }
 
         /// <summary>
-        ///     The country's server URI.
+        ///     The country's server <see cref="Uri" />.
         /// </summary>
         Uri Uri { get; }
 
         /// <summary>
-        ///     The countries game servers.
+        ///     The country's subservers. See: <seealso cref="IServer" />.
         /// </summary>
         IList<IServer> Servers { get; }
     }

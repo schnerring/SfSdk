@@ -1,11 +1,18 @@
-﻿namespace SfSdk.ResponseData
+﻿using SfSdk.Constants;
+
+namespace SfSdk.ResponseData
 {
+    /// <summary>
+    ///     The reponse type returned on <see cref="SF.ActScreenChar" />, <see cref="SF.RespLogoutSuccess" />.
+    /// </summary>
     internal class LogoutResponse : ResponseBase
     {
-        public bool LogoutSucceeded { get; private set; }
-        public LogoutResponse(string[] args, bool logoutSucceeded) : base(args)
+        /// <summary>
+        ///     Creates a new logout response.
+        /// </summary>
+        /// <param name="args">The response arguments.</param>
+        public LogoutResponse(string[] args) : base(args)
         {
-            LogoutSucceeded = logoutSucceeded;
         }
     }
 }

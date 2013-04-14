@@ -9,6 +9,9 @@ using SfSdk.Contracts;
 
 namespace SfSdk.Data
 {
+    /// <summary>
+    ///     Implements the functionality of creating a new <see cref="IServer" />.
+    /// </summary>
     [Serializable]
     internal class Server : IServer
     {
@@ -29,7 +32,13 @@ namespace SfSdk.Data
         public string Name { get; private set; }
         public Uri Uri { get; private set; }
 
-        internal static async Task<IEnumerable<Server>> CreateServersAsync(Country country, bool forceRefresh = false)
+        /// <summary>
+        ///     Creates an <see cref="ICountry" />.
+        /// </summary>
+        /// <param name="country">The country where the server belongs to.</param>
+        /// <param name="forceRefresh">Indicates whether the server's details shall be re-requested or the cached results shall be returned.</param>
+        /// <returns>A <see cref="IEnumerable{T}" /> where T: <see cref="IServer" />.</returns>
+        public static async Task<IEnumerable<IServer>> CreateServersAsync(Country country, bool forceRefresh = false)
         {
             if (forceRefresh)
                 if (Responses.ContainsKey(country.Uri))
@@ -54,7 +63,7 @@ namespace SfSdk.Data
             name = name.Remove(0, ">".Length);
             name = name.Remove(name.Length - 1, "<".Length);
 
-            var uri = new UriBuilder(url).Uri;
+            Uri uri = new UriBuilder(url).Uri;
 
             if (string.IsNullOrEmpty(uri.ToString())) name = uri.ToString();
 

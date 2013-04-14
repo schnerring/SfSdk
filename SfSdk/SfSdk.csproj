@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\SfSdk.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,8 +56,10 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Data\Character.cs" />
+    <Compile Include="IRequestSource.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\NLogLogger.cs" />
+    <Compile Include="SnFRequestSource.cs" />
     <Compile Include="ResponseData\CharacterResponse.cs" />
     <Compile Include="ResponseData\ResponseBase.cs" />
     <Compile Include="ResponseData\Savegame.cs" />

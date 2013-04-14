@@ -10,10 +10,13 @@ using SfSdk.Data;
 
 namespace SfSdk.Providers
 {
+    /// <summary>
+    ///     A service to receive information about countries where S&amp;F is available.
+    /// </summary>
     public class CountryProvider : ICountryProvider
     {
         private static string _response;
-
+        
         public async Task<IEnumerable<ICountry>> GetCountriesAsync(bool forceRefresh = false)
         {
             if (_response == null || forceRefresh)

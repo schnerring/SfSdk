@@ -6,6 +6,9 @@ using SfSdk.ResponseData;
 
 namespace SfSdk.Data
 {
+    /// <summary>
+    ///     Implements the functionality of creating a new <see cref="ICharacter"/>.
+    /// </summary>
     internal class Character : ICharacter
     {
         private readonly int _constitution;
@@ -22,7 +25,11 @@ namespace SfSdk.Data
         private readonly int _resistance;
         private readonly int _strength;
         private readonly string _username;
-
+        
+        /// <summary>
+        ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />.
+        /// </summary>
+        /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         public Character(CharacterResponse response)
         {
             Savegame sg = response.Savegame;

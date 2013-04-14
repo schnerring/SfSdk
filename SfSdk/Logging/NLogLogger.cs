@@ -3,7 +3,7 @@ using NLog;
 
 namespace SfSdk.Logging
 {
-    public class NLogLogger : ILog
+    internal class NLogLogger : ILog
     {
         private readonly Logger _logger;
 

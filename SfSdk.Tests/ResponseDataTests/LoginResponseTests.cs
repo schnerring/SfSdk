@@ -1,7 +1,5 @@
 ﻿using System.Security.Authentication;
 using System.Threading.Tasks;
-using FluentAssertions;
-using SfSdk.ResponseData;
 using Xunit;
 
 namespace SfSdk.Tests.ResponseDataTests

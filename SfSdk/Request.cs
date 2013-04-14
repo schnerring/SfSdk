@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using SfSdk.Constants;
@@ -9,8 +8,17 @@ using SfSdk.Logging;
 
 namespace SfSdk
 {
+    /// <summary>
+    ///     Helps to build requests against S&amp;F servers easier.
+    /// </summary>
     internal class Request
     {
+        /// <summary>
+        ///     The addressed request source, which is set to the <see cref="SnFRequestSource"/> per default.
+        /// </summary>
+        public static Func<Uri, Uri, IRequestSource> RequestSource =
+            (serverUri, requestUri) => new SnFRequestSource(serverUri, requestUri);
+
         private static readonly ILog Log = LogManager.GetLog(typeof (Request));
         private static readonly Random Random;
 
@@ -26,7 +34,14 @@ namespace SfSdk
             Random = new Random(DateTime.Now.Millisecond);
         }
 
-        internal Request(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
+        /// <summary>
+        ///     Creates a instance of <see cref="Request" />.
+        /// </summary>
+        /// <param name="sessionId">A valid session ID, with the length of 32. <see cref="Session.EmptySessionId" /> is used for logging in.</param>
+        /// <param name="serverUri">The server URI where the request is going to be received on.</param>
+        /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
+        /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
+        public Request(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
         {
             if (sessionId == null) throw new ArgumentNullException("sessionId");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
@@ -53,23 +68,25 @@ namespace SfSdk
             url += "&rnd=";
             url += Random.Next(2000000000);
             url += Math.Round(DateTime.Now.ToUnixTimeStamp());
-
             return new UriBuilder(url).Uri;
         }
 
-        internal async Task<RequestResult> ExecuteAsync()
+        /// <summary>
+        ///     Executes the <see cref="Request"/> asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="RequestResult"/> containing the result information.</returns>
+        public async Task<RequestResult> ExecuteAsync()
         {
             try
             {
-                WebRequest webRequest = CreateWebRequest();
-
                 Log.Info("Request started:  ID = {0}", _id);
                 Log.Info("    SID:    {0}", _sessionId);
                 Log.Info("    Action: {0}", _action);
                 Log.Info("    Args:   {0}", _args ?? "null");
                 Log.Info("    URL:    {0}", _requestUri.AbsoluteUri);
 
-                RequestResult result = await RequestResult(webRequest);
+                var source = RequestSource(_serverUri, _requestUri);
+                RequestResult result = await source.RequestAsync();
 
                 Log.Info("Request finished: ID = {0}", _id);
                 return result;
@@ -78,33 +95,6 @@ namespace SfSdk
             {
                 throw new NotImplementedException();
             }
-        }
-
-        private static async Task<RequestResult> RequestResult(WebRequest webRequest)
-        {
-            using (WebResponse response = await webRequest.GetResponseAsync())
-            using (Stream stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream)) // TODO
-                    return new RequestResult(reader.ReadToEnd());
-        }
-
-        private WebRequest CreateWebRequest()
-        {
-            // todo refactor properly, very ugly ATM => static Cookie
-            var webRequest = (HttpWebRequest) WebRequest.Create(_requestUri);
-
-            webRequest.Host = _serverUri.Host;
-            webRequest.KeepAlive = true;
-            webRequest.UserAgent =
-                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31";
-            webRequest.Accept = "*/*";
-            webRequest.Referer = _serverUri.AbsoluteUri;
-//            webRequest.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
-            webRequest.Headers.Add(HttpRequestHeader.AcceptLanguage, "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4");
-            webRequest.Headers.Add(HttpRequestHeader.AcceptCharset, "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
-            webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
-
-            return webRequest;
         }
     }
 }

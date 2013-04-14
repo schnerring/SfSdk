@@ -5,15 +5,27 @@ using System.Text;
 
 namespace SfSdk
 {
+    /// <summary>
+    ///     Contains various extension methods used in the SfSdk.
+    /// </summary>
     internal static class Helpers
     {
-        internal static double ToUnixTimeStamp(this DateTime date)
+        /// <summary>
+        ///     Gets the unix time stamp from a <see cref="DateTime"/> object.
+        /// </summary>
+        /// <param name="date">The <see cref="DateTime"/> object to be converted.</param>
+        /// <returns>A unix time stamp as <see cref="double"/>.</returns>
+        public static double ToUnixTimeStamp(this DateTime date)
         {
             TimeSpan t = (date.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc));
             return t.TotalMilliseconds;
         }
 
-
+        /// <summary>
+        ///     Gets the MD5 hash from a <see cref="string"/>.
+        /// </summary>
+        /// <param name="input">The string to be hashed.</param>
+        /// <returns>The MD5 hash as <see cref="string"/>.</returns>
         public static string ToMd5Hash(this string input)
         {
             using (MD5 md5Hash = MD5.Create())
@@ -37,7 +49,12 @@ namespace SfSdk
             }
         }
 
-
+        /// <summary>
+        ///     Tries to convert a string to type T.
+        /// </summary>
+        /// <typeparam name="T">The expected type of the input string.</typeparam>
+        /// <param name="input">The input string.</param>
+        /// <returns>If the conversion succeeds the value of the converted input, if not the default value of type T.</returns>
         public static T Convert<T>(this string input)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(typeof (T));

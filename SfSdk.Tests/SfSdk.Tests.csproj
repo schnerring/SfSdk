@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CountryProviderTests.cs" />
+    <Compile Include="RequestResultTests.cs" />
     <Compile Include="TestAccountFixture.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="RequestTests.cs" />

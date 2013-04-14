@@ -2,6 +2,9 @@
 
 namespace SfSdk.ResponseData
 {
+    /// <summary>
+    ///     A base class of <see cref="IResponse"/> containing the arguments of the resonse.
+    /// </summary>
     internal abstract class ResponseBase : IResponse
     {
         private readonly string[] _args;

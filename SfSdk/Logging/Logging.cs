@@ -45,6 +45,7 @@ namespace SfSdk.Logging
         /// <summary>
         ///     Creates an <see cref="ILog" /> for the provided type.
         /// </summary>
+//        public static Func<Type, ILog> GetLog = type => NullLogInstance;
         public static Func<Type, ILog> GetLog = type => new NLogLogger(type);
 
         private class NullLog : ILog

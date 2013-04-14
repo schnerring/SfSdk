@@ -6,16 +6,29 @@ using SfSdk.ResponseData;
 
 namespace SfSdk
 {
+    /// <summary>
+    ///     Provides easier processing of response strings from the S&amp;F servers.
+    /// </summary>
     internal class RequestResult
     {
-        internal RequestResult(string responseString)
+        /// <summary>
+        ///     Creates a new request result.
+        /// </summary>
+        /// <param name="responseString">The response string of the web request.</param>
+        public RequestResult(string responseString)
         {
             Errors = new List<string>();
             ParseResponseString(responseString);
         }
 
+        /// <summary>
+        ///     Contains errors as <see cref="string"/> if the request failed.
+        /// </summary>
         public List<string> Errors { get; private set; }
 
+        /// <summary>
+        ///     Contains a response as <see cref="IResponse"/>.
+        /// </summary>
         public IResponse Response { get; private set; }
 
         private void ParseResponseString(string responseString)
@@ -38,7 +51,6 @@ namespace SfSdk
 
         private void ProcessSuccess(SF success, string[] args)
         {
-            string[] savegameParts;
             switch (success)
             {
                 case SF.RespLoginSuccess:
@@ -46,7 +58,7 @@ namespace SfSdk
                     Response = new LoginResponse(args);
                     break;
                 case SF.RespLogoutSuccess:
-                    Response = new LogoutResponse(args, logoutSucceeded: true);
+                    Response = new LogoutResponse(args);
                     break;
                 case SF.ActScreenChar:
                 case SF.RespPlayerScreen:

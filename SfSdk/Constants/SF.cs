@@ -8,7 +8,10 @@
 // </auto-generated>
 // ------------------------------------------------------------------------------
 namespace SfSdk.Constants
-{
+{		
+    /// <summary>
+    ///     Contains the auto-generated constants from the original S&amp;F client code.
+    /// </summary>
     internal enum SF
     {
 		CEmpty = 0,

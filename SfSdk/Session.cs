@@ -8,6 +8,9 @@ using SfSdk.ResponseData;
 
 namespace SfSdk
 {
+    /// <summary>
+    ///     A host of actions, which can be performed as you log the session in with valid user credentials. 
+    /// </summary>
     public class Session : ISession
     {
         private const string EmptySessionId = "00000000000000000000000000000000";
@@ -19,13 +22,6 @@ namespace SfSdk
         public int Gold { get; private set; }
         public int Silver { get; private set; }
 
-        /// <summary>
-        ///     Logs the current session in.
-        /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="md5PasswordHash">The MD5 hash of the password.</param>
-        /// <param name="serverUri">The Uri of the server to be logged on.</param>
-        /// <returns>The success of the login as bool.</returns>
         public async Task<bool> LoginAsync(string username, string md5PasswordHash, Uri serverUri)
         {
             if (username == null) throw new ArgumentNullException("username");
@@ -49,10 +45,6 @@ namespace SfSdk
             return true;
         }
 
-        /// <summary>
-        ///     Logs out the current session.
-        /// </summary>
-        /// <returns>The success of the logout as bool.</returns>
         public async Task<bool> LogoutAsync()
         {
             var result = await new Request(_sessionId, _serverUri, SF.ActLogout).ExecuteAsync();
@@ -62,13 +54,9 @@ namespace SfSdk
             }
             var response = result.Response as LogoutResponse;
             if (response == null) return false;
-            return response.LogoutSucceeded;
+            return true;
         }
 
-        /// <summary>
-        ///     Represents the Character Screen Action.
-        /// </summary>
-        /// <returns>The character of the currently logged in account.</returns>
         public async Task<ICharacter> CharacterScreenAsync()
         {
             var request = new Request(_sessionId, _serverUri, SF.ActScreenChar);
@@ -76,11 +64,6 @@ namespace SfSdk
             return new Character(result.Response as CharacterResponse);
         }
 
-        /// <summary>
-        ///     Requests a Character via a given predicate.
-        /// </summary>
-        /// <param name="username">The username to search.</param>
-        /// <returns>Null if the name cannot be found.</returns>
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
             var request = new Request(_sessionId, _serverUri, SF.ActRequestChar, new[] { username });
@@ -88,11 +71,6 @@ namespace SfSdk
             return new Character(result.Response as CharacterResponse);
         }
 
-        /// <summary>
-        ///     Represents the Hall Of Fame Screen Action.
-        /// </summary>
-        /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
-        /// <returns>A list of ICharacter.</returns>
         public async Task<ICharacter> HallOfFameAsync(bool forceLoad = false)
         {
             var request = new Request(_sessionId, _serverUri, SF.ActScreenEhrenhalle);
