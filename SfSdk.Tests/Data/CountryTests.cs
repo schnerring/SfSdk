@@ -10,7 +10,7 @@ namespace SfSdk.Tests.Data
         private const string ValidUrl = "http://www.google.com/";
 
         [Fact]
-        public async Task CreateAsyncThrowsNoExceptionIfNameIsNull()
+        public async Task CreateAsyncThrowsNoExceptionWithValidParameters()
         {
             // Arrange / Act / Assert
             await TestHelpers.ThrowsNotAsync(async () => await Country.CreateAsync(null, new Uri(ValidUrl)));

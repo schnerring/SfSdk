@@ -38,9 +38,10 @@ namespace SfSdk.Data
         /// <param name="country">The country where the server belongs to.</param>
         /// <param name="forceRefresh">Indicates whether the server's details shall be re-requested or the cached results shall be returned.</param>
         /// <returns>A <see cref="IEnumerable{T}" /> where T: <see cref="IServer" />.</returns>
-        public static async Task<IEnumerable<IServer>> CreateServersAsync(Country country, bool forceRefresh = false)
+        public static async Task<IEnumerable<IServer>> CreateServersAsync(ICountry country, bool forceRefresh = false)
         {
             if (country == null) throw new ArgumentNullException("country");
+            if (country == null) throw new ArgumentException("The country's URI must not be null.", "country");
 
             if (forceRefresh)
                 if (Responses.ContainsKey(country.Uri))
