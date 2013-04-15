@@ -15,8 +15,6 @@ namespace SfSdk.Data
     {
         private Country(string name, Uri uri)
         {
-            if (name == null) throw new ArgumentNullException("name");
-            if (uri == null) throw new ArgumentNullException("uri");
             Name = name;
             Uri = uri;
         }
@@ -34,7 +32,9 @@ namespace SfSdk.Data
         /// <returns>A <see cref="ICountry"/>.</returns>
         public static async Task<ICountry> CreateAsync(string name, Uri uri, bool forceRefresh = false)
         {
-            var country = new Country(name, uri);
+            if (uri == null) throw new ArgumentNullException("uri");
+
+            var country = new Country(name ?? uri.ToString(), uri);
             country.Servers = (await Server.CreateServersAsync(country, forceRefresh)).ToList();
             return country;
         }

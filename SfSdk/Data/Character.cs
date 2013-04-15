@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
-using SfSdk.ResponseData;
+using SfSdk.Response;
 
 namespace SfSdk.Data
 {
@@ -30,9 +30,12 @@ namespace SfSdk.Data
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />.
         /// </summary>
         /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
-        public Character(CharacterResponse response)
+        public Character(ICharacterResponse response)
         {
-            Savegame sg = response.Savegame;
+            if (response == null) throw new ArgumentNullException("response");
+            if (response.Savegame == null) throw new ArgumentException("Character response must contain a savegame.", "response");
+
+            ISavegame sg = response.Savegame;
             _strength = sg.GetValue(SF.SgAttrStaerke) + sg.GetValue(SF.SgAttrStaerkeBonus);
             _dexterity = sg.GetValue(SF.SgAttrBeweglichkeit) + sg.GetValue(SF.SgAttrBeweglichkeitBonus);
             _constitution = sg.GetValue(SF.SgAttrIntelligenz) + sg.GetValue(SF.SgAttrIntelligenzBonus);     // mistake in

@@ -69,5 +69,19 @@ namespace SfSdk.Tests
             }
             Assert.Equal(expected, actual);
         }
+
+        public static async Task ThrowsNotAsync(Func<Task> func)
+        {
+            Exception actual = null;
+            try
+            {
+                await func();
+            }
+            catch (Exception e)
+            {
+                actual = e;
+            }
+            Assert.Equal(null, actual);
+        }
     }
 }

@@ -64,6 +64,7 @@ namespace SfSdk.Providers
 
         private static async Task<ICountry> CreateCountryAsync(HtmlNode node, bool forceRefresh)
         {
+            // TODO catch exceptions?
             var name = node.Attributes.Where(a => a.Name == "title").Select(a => a.Value).FirstOrDefault();
             var url = node.Attributes.Where(a => a.Name == "onclick").Select(a => a.Value).FirstOrDefault();
             Uri uri = null;

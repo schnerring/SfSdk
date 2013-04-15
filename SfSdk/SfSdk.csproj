@@ -56,21 +56,24 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Data\Character.cs" />
-    <Compile Include="IRequestSource.cs" />
+    <Compile Include="DataSource\IRequestSource.cs" />
+    <Compile Include="Request\IUriFactory.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\NLogLogger.cs" />
-    <Compile Include="SnFRequestSource.cs" />
-    <Compile Include="ResponseData\CharacterResponse.cs" />
-    <Compile Include="ResponseData\ResponseBase.cs" />
-    <Compile Include="ResponseData\Savegame.cs" />
+    <Compile Include="DataSource\RequestSourceBase.cs" />
+    <Compile Include="Request\SnFUriFactory.cs" />
+    <Compile Include="DataSource\SnFRequestSource.cs" />
+    <Compile Include="Response\CharacterResponse.cs" />
+    <Compile Include="Response\ResponseBase.cs" />
+    <Compile Include="Response\Savegame.cs" />
     <Compile Include="Constants\SfClass.cs" />
     <Compile Include="Contracts\ICharacter.cs" />
     <Compile Include="Contracts\ICountry.cs" />
     <Compile Include="Contracts\IServer.cs" />
-    <Compile Include="ResponseData\LogoutResponse.cs" />
-    <Compile Include="RequestResult.cs" />
-    <Compile Include="ResponseData\IResponse.cs" />
-    <Compile Include="ResponseData\LoginResponse.cs" />
+    <Compile Include="Response\LogoutResponse.cs" />
+    <Compile Include="Response\SfResponse.cs" />
+    <Compile Include="Response\IResponse.cs" />
+    <Compile Include="Response\LoginResponse.cs" />
     <Compile Include="Contracts\ICountryProvider.cs" />
     <Compile Include="Helpers.cs" />
     <Compile Include="Contracts\ISession.cs" />
@@ -78,14 +81,13 @@
     <Compile Include="Data\Country.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Server.cs" />
-    <Compile Include="Request.cs" />
+    <Compile Include="Request\SfRequest.cs" />
     <Compile Include="Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\SfSdk.snk">
       <Link>Properties\SfSdk.snk</Link>
     </None>
-    <None Include="app.config" />
     <None Include="Constants\SF.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>SF.cs</LastGenOutput>

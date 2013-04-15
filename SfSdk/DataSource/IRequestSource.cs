@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using SfSdk.Request;
+using SfSdk.Response;
 
-namespace SfSdk
+namespace SfSdk.DataSource
 {
     /// <summary>
     ///     Used to request data from a S&amp;F data source.
@@ -10,7 +12,7 @@ namespace SfSdk
         /// <summary>
         ///     Request the data asynchronously.
         /// </summary>
-        /// <returns>The response as a <see cref="RequestResult"/>.</returns>
-        Task<RequestResult> RequestAsync();
+        /// <returns>The response as a <see cref="SfResponse"/>.</returns>
+        Task<SfResponse> RequestAsync();
     }
 }

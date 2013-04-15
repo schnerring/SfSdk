@@ -1,50 +1,77 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using SfSdk.Constants;
-using SfSdk.ResponseData;
 
-namespace SfSdk
+namespace SfSdk.Response
 {
     /// <summary>
     ///     Provides easier processing of response strings from the S&amp;F servers.
     /// </summary>
-    internal class RequestResult
+    internal class SfResponse
     {
         /// <summary>
-        ///     Creates a new request result.
+        ///     Creates a new <see cref="SfResponse" />.
         /// </summary>
         /// <param name="responseString">The response string of the web request.</param>
-        public RequestResult(string responseString)
+        public SfResponse(string responseString)
         {
             Errors = new List<string>();
             ParseResponseString(responseString);
         }
 
         /// <summary>
-        ///     Contains errors as <see cref="string"/> if the request failed.
+        ///     Contains errors as <see cref="string" /> if the request failed.
         /// </summary>
         public List<string> Errors { get; private set; }
 
         /// <summary>
-        ///     Contains a response as <see cref="IResponse"/>.
+        ///     Contains a response as <see cref="IResponse" />.
         /// </summary>
         public IResponse Response { get; private set; }
 
         private void ParseResponseString(string responseString)
         {
+            // TODO response string parser class
+
+            if (responseString == null)
+                throw new ArgumentNullException("responseString");
+            if (string.IsNullOrEmpty(responseString))
+                throw new ArgumentException("Response string must not be empty.", "responseString");
+
             if (responseString.StartsWith("+"))
+            {
+//                throw new ArgumentException("Response string starts with \"+\".", "responseString");
                 responseString = responseString.Substring(1);
+            }
 
             if (responseString.StartsWith("E"))
             {
-                var fail = (SF) (-int.Parse(responseString.Substring(1, 3)));
-                string[] failArgs = responseString.Substring(4).Split(';');
-                ProcessFail(fail, failArgs);
+                if (responseString.Length < 4)
+                    throw new ArgumentException(
+                        "Error response string (starting with \"E\") must have a minimum length of 4.", "responseString");
+
+                string errorString = responseString.Substring(1, 3);
+                int errorCode;
+
+                if (!int.TryParse(errorString, out errorCode))
+                    throw new ArgumentException("Error code must be of type int.", "responseString");
+
+                var error = (SF) (-errorCode);
+                string[] errorArgs = responseString.Substring(4).Split(';');
+                ProcessError(error, errorArgs);
                 return;
             }
 
-            var success = (SF) int.Parse(responseString.Substring(0, 3));
+            if (responseString.Length < 3)
+                throw new ArgumentException("Success response string must have a minimum length of 3.", "responseString");
+
+            string successString = responseString.Substring(0, 3);
+            int successCode;
+
+            if (!int.TryParse(successString, out successCode))
+                throw new ArgumentException("Success code must be of type int.", "responseString");
+
+            var success = (SF) successCode;
             string[] successArgs = responseString.Substring(3).Split(';');
             ProcessSuccess(success, successArgs);
         }
@@ -70,24 +97,22 @@ namespace SfSdk
                         searchString = args[1];
                     string[] tmp = args[0].Split('/');
                     break;
-//                case SF.ActScreenEhrenhalle:
-//                    throw new NotImplementedException();
                 default:
-                    throw new ArgumentOutOfRangeException(string.Format("Success: {0}", success));
+                    throw new ArgumentOutOfRangeException("success");
             }
         }
 
-        private void ProcessFail(SF fail, string[] args)
+        private void ProcessError(SF error, string[] args)
         {
-            switch (fail)
+            switch (error)
             {
                 case SF.ErrLoginFailed:
                 case SF.ErrSessionIdExpired:
                 case SF.ErrServerDown:
-                    Errors.Add(fail.ToString(CultureInfo.InvariantCulture));
+                    Errors.Add(error.ToString());
                     break;
                 default:
-                    throw new NotImplementedException(fail.ToString(CultureInfo.InvariantCulture));
+                    throw new ArgumentOutOfRangeException("error");
             }
         }
     }

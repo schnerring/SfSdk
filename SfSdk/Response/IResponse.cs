@@ -1,4 +1,4 @@
-﻿namespace SfSdk.ResponseData
+﻿namespace SfSdk.Response
 {
     /// <summary>
     ///     A response.

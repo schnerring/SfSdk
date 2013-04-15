@@ -7,22 +7,10 @@ using SfSdk.Contracts;
 using SfSdk.Providers;
 using Xunit;
 
-namespace SfSdk.Tests
+namespace SfSdk.Tests.Providers
 {
     public class CountryProviderTests
     {
-        [Fact(Skip = "Interrupts Network connection, reactivate when needed")]
-        public async Task GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
-        {
-            // Arrange
-            TestHelpers.Disconnect();
-            var provider = new CountryProvider();
-
-            // Act / Assert
-            await TestHelpers.ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
-            TestHelpers.Connect();
-        }
-
         [Fact]
         public async Task GetCountriesAsyncReturns25Countries()
         {
@@ -111,6 +99,18 @@ namespace SfSdk.Tests
 
             // Assert
             countries.Select(c => c.Uri).Should().Contain(countryUris);
+        }
+
+        [Fact(Skip = "Interrupts Network connection, reactivate when needed")]
+        public async Task GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
+        {
+            // Arrange
+            TestHelpers.Disconnect();
+            var provider = new CountryProvider();
+
+            // Act / Assert
+            await TestHelpers.ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
+            TestHelpers.Connect();
         }
     }
 }

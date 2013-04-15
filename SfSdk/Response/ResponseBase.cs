@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SfSdk.ResponseData
+namespace SfSdk.Response
 {
     /// <summary>
     ///     A base class of <see cref="IResponse"/> containing the arguments of the resonse.

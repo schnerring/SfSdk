@@ -39,6 +39,9 @@
     <Reference Include="FluentAssertions">
       <HintPath>..\SfSdk\packages\FluentAssertions.2.0.1\lib\net45\FluentAssertions.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
@@ -49,13 +52,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CountryProviderTests.cs" />
-    <Compile Include="RequestResultTests.cs" />
+    <Compile Include="Data\CharacterTests.cs" />
+    <Compile Include="Data\CountryTests.cs" />
+    <Compile Include="Data\ServerTests.cs" />
+    <Compile Include="Providers\CountryProviderTests.cs" />
+    <Compile Include="Request\RequestUriFactoryTests.cs" />
+    <Compile Include="Response\CharacterResponseTests.cs" />
+    <Compile Include="Response\LogoutResponseTests.cs" />
+    <Compile Include="Response\ResponseBaseTests.cs" />
+    <Compile Include="Response\SavegameTests.cs" />
+    <Compile Include="Response\SfResponseTests.cs" />
+    <Compile Include="DataSource\RequestSourceBaseTests.cs" />
+    <Compile Include="DataSource\SnFRequestSourceTests.cs" />
     <Compile Include="TestAccountFixture.cs" />
     <Compile Include="TestHelpers.cs" />
-    <Compile Include="RequestTests.cs" />
+    <Compile Include="Request\SfRequestTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResponseDataTests\LoginResponseTests.cs" />
+    <Compile Include="Response\LoginResponseTests.cs" />
+    <Compile Include="TestRequestSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SfSdk\SfSdk.csproj">
@@ -75,6 +89,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

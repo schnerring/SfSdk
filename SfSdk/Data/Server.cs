@@ -40,6 +40,8 @@ namespace SfSdk.Data
         /// <returns>A <see cref="IEnumerable{T}" /> where T: <see cref="IServer" />.</returns>
         public static async Task<IEnumerable<IServer>> CreateServersAsync(Country country, bool forceRefresh = false)
         {
+            if (country == null) throw new ArgumentNullException("country");
+
             if (forceRefresh)
                 if (Responses.ContainsKey(country.Uri))
                     Responses.Remove(country.Uri);
@@ -55,6 +57,7 @@ namespace SfSdk.Data
 
         private static Server CreateServerFromMatch(Match match)
         {
+            // TODO catch exceptions?
             string url = Regex.Match(match.Value, ServerUrlPattern).Value;
             url = url.Remove(0, "value=\"".Length);
             url = url.Remove(url.Length - 1, "\"".Length);
