@@ -80,6 +80,6 @@ namespace SfSdk.Contracts
         /// <summary>
         ///     Requests the S&amp;F server to refresh the character's data.
         /// </summary>
-        Task Reresh();
+        Task Refresh();
     }
 }

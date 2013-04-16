@@ -107,7 +107,7 @@ namespace SfSdk.Tests.Data
             var character = new Character(characterResponseMock.Object);
 
             // Act / Assert
-            character.Invoking(c => c.Reresh())
+            character.Invoking(c => c.Refresh())
                      .ShouldThrow<NotImplementedException>();
         }
     }
