@@ -1,4 +1,5 @@
 SfBot/
+packages/
 *.snk
 TestAccount.txt
 
