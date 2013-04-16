@@ -163,7 +163,7 @@ namespace SfSdk.Data
             get { return _criticalHit; }
         }
 
-        public Task Reresh()
+        public Task Refresh()
         {
             throw new NotImplementedException();
         }
