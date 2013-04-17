@@ -101,15 +101,19 @@ namespace SfSdk.Tests.Providers
             countries.Select(c => c.Uri).Should().Contain(countryUris);
         }
 
-        [Fact(Skip = "Interrupts Network connection, reactivate when needed")]
-        public async Task GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
+//        [Fact]
+        [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
+        public void GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
         {
-            // Arrange
             TestHelpers.Disconnect();
-            var provider = new CountryProvider();
+
+            // Arrange
+            var sut = new CountryProvider();
+            Func<Task> getCountries = async () => await sut.GetCountriesAsync();
 
             // Act / Assert
-            await TestHelpers.ThrowsAsync<NotImplementedException>(async () => await provider.GetCountriesAsync());
+            getCountries.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");
+
             TestHelpers.Connect();
         }
     }

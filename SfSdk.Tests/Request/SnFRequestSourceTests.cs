@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using SfSdk.Constants;
-using SfSdk.DataSource;
 using SfSdk.Request;
 using SfSdk.Response;
 using Xunit;
 
-namespace SfSdk.Tests.DataSource
+namespace SfSdk.Tests.Request
 {
     public class SnFRequestSourceTests : IUseFixture<TestAccountFixture>
     {
@@ -33,7 +32,7 @@ namespace SfSdk.Tests.DataSource
 
             // Act
             // Login in this case
-            SfResponse result =
+            ISfResponse result =
                 await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"});
 
             // Assert
@@ -48,15 +47,15 @@ namespace SfSdk.Tests.DataSource
             // Arrange
             var sut = new SnFRequestSource(_serverUri);
             // Login in this case
-            Func<Task<SfResponse>> login =
+            Func<Task<ISfResponse>> login =
                 async () =>
                 await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] { _username, _passwordHash, "v1.70&random=%2" });
 
             // Act
-            SfResponse result = await login();
+            ISfResponse result = await login();
             string oldSessionId = ((LoginResponse) result.Response).SessionId;
 
-            // to request a new session id, so the old one expires
+            // request a new session id, so the old one expires
             await login();
 
             result = await sut.RequestAsync(oldSessionId, SF.ActScreenChar);
@@ -67,21 +66,21 @@ namespace SfSdk.Tests.DataSource
             result.Errors.Should().HaveCount(count => count > 0);
         }
 
-        [Fact(Skip = "Interrupts Network connection, reactivate when needed")]
-        public async Task ExecuteAsyncThrowsExceptionWithoutNetworkConnection()
+//        [Fact]
+        [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
+        public void ExecuteAsyncThrowsExceptionWithoutNetworkConnection()
         {
             TestHelpers.Disconnect();
 
             // Arrange
             var sut = new SnFRequestSource(_serverUri);
 
+            Func<Task> login =
+                async () =>
+                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"});
+
             // Act / Assert
-            // Login in this case
-            await
-                TestHelpers.ThrowsAsync<NotImplementedException>(
-                    async () =>
-                    await
-                    sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"}));
+            login.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");
 
             TestHelpers.Connect();
         }

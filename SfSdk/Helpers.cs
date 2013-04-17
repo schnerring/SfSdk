@@ -66,7 +66,7 @@ namespace SfSdk
                     //Cast ConvertFromString(string text) : object to (T)
                     return (T) converter.ConvertFromString(input);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw new NotImplementedException();
                 }

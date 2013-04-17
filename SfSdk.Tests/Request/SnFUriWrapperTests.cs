@@ -6,7 +6,7 @@ using Xunit;
 
 namespace SfSdk.Tests.Request
 {
-    public class RequestUriFactoryTests
+    public class SnFUriWrapperTests
     {
         private const string ValidSessionId = "00000000000000000000000000000000";
         private const string ValidServerUrl = "http://s25.sfgame.de/";
@@ -41,6 +41,16 @@ namespace SfSdk.Tests.Request
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
                .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("SessionId must have a length of 32."));
+        }
+
+        [Fact]
+        public void ConstructorThrowsNoExceptionWithValidParameters()
+        {
+            // Arrange
+            Action sut = () => new SnFUriWrapper(ValidSessionId, new Uri(ValidServerUrl), SF.ActAccountCreate);
+
+            // Act / Assert
+            sut.ShouldNotThrow<Exception>();
         }
     }
 }

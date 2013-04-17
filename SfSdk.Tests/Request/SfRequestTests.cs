@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using SfSdk.Constants;
-using SfSdk.DataSource;
 using SfSdk.Request;
+using SfSdk.Response;
 using Xunit;
 
 namespace SfSdk.Tests.Request
@@ -35,7 +36,7 @@ namespace SfSdk.Tests.Request
         }
 
         [Fact]
-        public void ConstructorThrowsExceptionIfSessionIdHasInvalidLength()
+        public void ExecuteAsyncThrowsExceptionIfSessionIdHasInvalidLength()
         {
             // Arrange
             var sourceMock = new Mock<IRequestSource>();
@@ -46,6 +47,56 @@ namespace SfSdk.Tests.Request
             // Act / Assert
             a.ShouldThrow<ArgumentException>()
              .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("SessionId must have a length of 32."));
+        }
+
+        [Fact]
+        public async Task ExecuteAsyncReturnsISfResponseWithValidParameters()
+        {
+            // Arrange
+            var sfResponseMock = new Mock<ISfResponse>();
+            var sourceMock = new Mock<IRequestSource>();
+            sourceMock.Setup(source => source.RequestAsync(It.IsAny<string>(),
+                                                           It.IsAny<SF>(),
+                                                           It.IsAny<IEnumerable<string>>()))
+#pragma warning disable 1998
+                      .Returns(async () => sfResponseMock.Object);
+#pragma warning restore 1998
+
+            const string validSessionId = "00000000000000000000000000000000";
+            var sut = new SfRequest();
+            Func<Task<ISfResponse>> a =
+                async () => await sut.ExecuteAsync(sourceMock.Object, validSessionId, SF.ActAccountCreate);
+
+            // Act
+            var result = await a();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task ExecuteAsyncCallsRequestAsyncMethodOfSource()
+        {
+            // Arrange
+            var sourceMock = new Mock<IRequestSource>();
+            sourceMock.Setup(source => source.RequestAsync(It.IsAny<string>(),
+                                                           It.IsAny<SF>(),
+                                                           It.IsAny<IEnumerable<string>>()))
+#pragma warning disable 1998
+                      .Returns(async () => null)
+#pragma warning restore 1998
+                      .Verifiable();
+
+            const string validSessionId = "00000000000000000000000000000000";
+            var sut = new SfRequest();
+            Func<Task> a = async () => await sut.ExecuteAsync(sourceMock.Object, validSessionId, SF.ActAccountCreate);
+
+            // Act
+            await a();
+
+            // Assert
+            sourceMock.Verify(
+                source => source.RequestAsync(It.IsAny<string>(), It.IsAny<SF>(), It.IsAny<IEnumerable<string>>()));
         }
     }
 }

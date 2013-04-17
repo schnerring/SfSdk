@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Moq;
 using SfSdk.Constants;
 using SfSdk.Data;
@@ -73,8 +74,9 @@ namespace SfSdk.Tests.Data
         }
 
         [Fact]
-        public void ConstructorDoesNotThrowExceptionIfResponseSavegameIsValid()
+        public void ConstructorDoesNotThrowExceptionIfResponseSavegamesValuesAreValid()
         {
+            // TODO how to determine a "valid" savegame?
             // Arrange
             var savegameMock = new Mock<ISavegame>();
             savegameMock.Setup(sg => sg.GetValue<int>(It.IsAny<SF>())).Returns(1);
@@ -88,7 +90,7 @@ namespace SfSdk.Tests.Data
             Action sut = () => new Character(characterResponseMock.Object);
 
             // Act / Assert
-            sut.ShouldNotThrow<ArgumentException>();
+            sut.ShouldNotThrow<Exception>();
         }
 
         [Fact]
@@ -104,11 +106,11 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            var character = new Character(characterResponseMock.Object);
+            var sut = new Character(characterResponseMock.Object);
+            Func<Task> refresh = async () => await sut.Refresh();
 
             // Act / Assert
-            character.Invoking(c => c.Refresh())
-                     .ShouldThrow<NotImplementedException>();
+            refresh.ShouldThrow<NotImplementedException>();
         }
     }
 }

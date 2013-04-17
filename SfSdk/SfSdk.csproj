@@ -56,12 +56,12 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Data\Character.cs" />
-    <Compile Include="DataSource\IRequestSource.cs" />
+    <Compile Include="Request\IRequestSource.cs" />
     <Compile Include="Request\IUriWrapper.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\NLogLogger.cs" />
     <Compile Include="Request\SnFUriWrapper.cs" />
-    <Compile Include="DataSource\SnFRequestSource.cs" />
+    <Compile Include="Request\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Response\Savegame.cs" />

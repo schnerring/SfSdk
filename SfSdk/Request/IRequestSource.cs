@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SfSdk.Constants;
-using SfSdk.Request;
 using SfSdk.Response;
 
-namespace SfSdk.DataSource
+namespace SfSdk.Request
 {
     /// <summary>
     ///     Used to request data from a S&amp;F data source.
@@ -18,6 +17,6 @@ namespace SfSdk.DataSource
         /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
         /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
         /// <returns>The response as a <see cref="SfResponse"/>.</returns>
-        Task<SfResponse> RequestAsync(string sessionId, SF action, IEnumerable<string> args = null);
+        Task<ISfResponse> RequestAsync(string sessionId, SF action, IEnumerable<string> args = null);
     }
 }

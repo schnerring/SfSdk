@@ -5,10 +5,9 @@ using System.Net;
 using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Logging;
-using SfSdk.Request;
 using SfSdk.Response;
 
-namespace SfSdk.DataSource
+namespace SfSdk.Request
 {
     /// <summary>
     ///     Used to request data from the real S&amp;F servers.
@@ -27,7 +26,7 @@ namespace SfSdk.DataSource
             _serverUri = serverUri;
         }
 
-        public async Task<SfResponse> RequestAsync(string sessionId, SF action, IEnumerable<string> args = null)
+        public async Task<ISfResponse> RequestAsync(string sessionId, SF action, IEnumerable<string> args = null)
         {
             var uriWrapper = new SnFUriWrapper(sessionId, _serverUri, action, args);
 

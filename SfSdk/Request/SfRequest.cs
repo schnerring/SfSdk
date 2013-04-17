@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SfSdk.Constants;
-using SfSdk.DataSource;
 using SfSdk.Logging;
 using SfSdk.Response;
 
@@ -23,7 +22,7 @@ namespace SfSdk.Request
         /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
         /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
         /// <returns>A <see cref="SfResponse" /> containing the result information.</returns>
-        public async Task<SfResponse> ExecuteAsync(IRequestSource source, string sessionId, SF action, IEnumerable<string> args = null)
+        public async Task<ISfResponse> ExecuteAsync(IRequestSource source, string sessionId, SF action, IEnumerable<string> args = null)
         {
             if (source == null) throw new ArgumentNullException("source");
             if (sessionId == null) throw new ArgumentNullException("sessionId");
@@ -32,7 +31,7 @@ namespace SfSdk.Request
             var id = Guid.NewGuid();
 
             Log.Info("Request started:  ID = {0}", id);
-            SfResponse response = await source.RequestAsync(sessionId, action, args);
+            var response = await source.RequestAsync(sessionId, action, args);
             Log.Info("Request finished: ID = {0}", id);
             
             return response;

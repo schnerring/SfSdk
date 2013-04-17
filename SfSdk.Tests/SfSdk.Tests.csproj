@@ -56,13 +56,13 @@
     <Compile Include="Data\CountryTests.cs" />
     <Compile Include="Data\ServerTests.cs" />
     <Compile Include="Providers\CountryProviderTests.cs" />
-    <Compile Include="Request\RequestUriFactoryTests.cs" />
+    <Compile Include="Request\SnFUriWrapperTests.cs" />
     <Compile Include="Response\CharacterResponseTests.cs" />
     <Compile Include="Response\LogoutResponseTests.cs" />
     <Compile Include="Response\ResponseBaseTests.cs" />
     <Compile Include="Response\SavegameTests.cs" />
     <Compile Include="Response\SfResponseTests.cs" />
-    <Compile Include="DataSource\SnFRequestSourceTests.cs" />
+    <Compile Include="Request\SnFRequestSourceTests.cs" />
     <Compile Include="TestAccountFixture.cs" />
     <Compile Include="TestHelpers.cs" />
     <Compile Include="Request\SfRequestTests.cs" />

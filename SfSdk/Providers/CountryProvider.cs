@@ -16,7 +16,12 @@ namespace SfSdk.Providers
     public class CountryProvider : ICountryProvider
     {
         private static string _response;
-        
+
+        /// <summary>
+        ///     Returns all the countries where S&amp;F is available.
+        /// </summary>
+        /// <param name="forceRefresh">Indicates whether the <see cref="ICountry"/>'s details shall be re-requested or the cached results shall be returned.</param>
+        /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="ICountry"/>.</returns>
         public async Task<IEnumerable<ICountry>> GetCountriesAsync(bool forceRefresh = false)
         {
             if (_response == null || forceRefresh)
@@ -58,7 +63,7 @@ namespace SfSdk.Providers
             }
             catch (WebException)
             {
-                throw new NotImplementedException();
+                throw new NotImplementedException("Network connection lost.");
             }
         }
 

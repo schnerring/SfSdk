@@ -41,7 +41,7 @@ namespace SfSdk.Data
         public static async Task<IEnumerable<IServer>> CreateServersAsync(ICountry country, bool forceRefresh = false)
         {
             if (country == null) throw new ArgumentNullException("country");
-            if (country == null) throw new ArgumentException("The country's URI must not be null.", "country");
+            if (country.Uri == null) throw new ArgumentException("The country's URI must not be null.", "country");
 
             if (forceRefresh)
                 if (Responses.ContainsKey(country.Uri))

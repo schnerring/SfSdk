@@ -1,43 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
 using SfSdk.Contracts;
 using SfSdk.Data;
 using Xunit;
+using FluentAssertions;
 
 namespace SfSdk.Tests.Data
 {
     public class ServerTests
     {
-        private const string ValidUrl = "http://www.google.com/";
+        private const string ValidUrl = "http://www.sfgame.de/";
 
         [Fact]
-        public async Task CreateServersAsyncThrowsExceptionIfCountryIsNull()
+        public void CreateServersAsyncThrowsExceptionIfCountryIsNull()
         {
-            // Arrange / Act / Assert
-            await TestHelpers.ThrowsAsync<ArgumentNullException>(async () => await Server.CreateServersAsync(null));
+            // Arrange
+            Func<Task> sut = async () => await Server.CreateServersAsync(null);
+            
+            // Act / Assert
+            sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "country");
         }
 
         [Fact]
-        public async Task CreateServersAsyncThrowsExceptionIfCountrysUriIsNull()
+        public void CreateServersAsyncThrowsExceptionIfCountrysUriIsNull()
         {
             // Arrange
             var countryMock = new Mock<ICountry>();
             countryMock.Setup(c => c.Uri).Returns(null as Uri);
+            Func<Task> sut = async () => await Server.CreateServersAsync(countryMock.Object);
 
             // Act / Assert
-            await TestHelpers.ThrowsAsync<ArgumentNullException>(async () => await Server.CreateServersAsync(countryMock.Object));
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.Message.StartsWith("The country's URI must not be null.") && e.ParamName == "country");
         }
 
         [Fact]
-        public async Task CreateServersAsyncThrowsNoExceptionWithValidArguments()
+        public async Task CreateServersAsyncReturnsResultsWithValidArguments()
         {
             // Arrange
             var countryMock = new Mock<ICountry>();
             countryMock.Setup(c => c.Uri).Returns(new Uri(ValidUrl));
+            Func<Task<IEnumerable<IServer>>> sut = async () => await Server.CreateServersAsync(countryMock.Object);
 
-            // Act / Assert
-            await TestHelpers.ThrowsNotAsync(async () => await Server.CreateServersAsync(countryMock.Object));
+            // Act
+            var servers = await sut();
+
+            // Assert
+            servers.Should().HaveCount(c => c > 0);
         }
     }
 }
