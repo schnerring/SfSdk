@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
 using SfSdk.Data;
+using SfSdk.DataSource;
 using SfSdk.Request;
 using SfSdk.Response;
 
@@ -18,6 +19,7 @@ namespace SfSdk
 
         private Uri _serverUri;
         private string _sessionId;
+        private IRequestSource _source;
 
         public int Mushrooms { get; private set; }
         public int Gold { get; private set; }
@@ -30,10 +32,9 @@ namespace SfSdk
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
             _serverUri = serverUri;
-            var request = new SfRequest(EmptySessionId, _serverUri, SF.ActLogin,
-                                      new[] {username, md5PasswordHash, "v1.70&random=%2"});
-
-            var result = await request.ExecuteAsync();
+            _source = new SnFRequestSource(_serverUri);
+            var result = await new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
+                                                      new[] {username, md5PasswordHash, "v1.70&random=%2"});
 
             var response = result.Response as LoginResponse;
             if (result.Errors.Count > 0 || response == null) return false;
@@ -48,7 +49,7 @@ namespace SfSdk
 
         public async Task<bool> LogoutAsync()
         {
-            var result = await new SfRequest(_sessionId, _serverUri, SF.ActLogout).ExecuteAsync();
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActLogout);
             if (result.Errors.Count > 1)
             {
                 return result.Errors.Any(e => e == "SessionIdExpired");
@@ -60,22 +61,19 @@ namespace SfSdk
 
         public async Task<ICharacter> CharacterScreenAsync()
         {
-            var request = new SfRequest(_sessionId, _serverUri, SF.ActScreenChar);
-            var result = await request.ExecuteAsync();
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenChar);
             return new Character(result.Response as ICharacterResponse);
         }
 
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
-            var request = new SfRequest(_sessionId, _serverUri, SF.ActRequestChar, new[] { username });
-            var result = await request.ExecuteAsync();
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActRequestChar, new[] {username});
             return new Character(result.Response as ICharacterResponse);
         }
 
         public async Task<ICharacter> HallOfFameAsync(bool forceLoad = false)
         {
-            var request = new SfRequest(_sessionId, _serverUri, SF.ActScreenEhrenhalle);
-            var result = await request.ExecuteAsync();
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle);
             return new Character(result.Response as ICharacterResponse);
         }
     }

@@ -29,13 +29,12 @@ namespace SfSdk.Tests.DataSource
         public async Task ExecuteAsyncReturnsIResultIfSuccessful()
         {
             // Arrange
-            // Login in this case
-            var uriFactory = new SnFUriFactory(EmptySessionId, _serverUri, SF.ActLogin,
-                                               new[] {_username, _passwordHash, "v1.70&random=%2"});
-            var sut = new SnFRequestSource(uriFactory);
+            var sut = new SnFRequestSource(_serverUri);
 
             // Act
-            SfResponse result = await sut.RequestAsync();
+            // Login in this case
+            SfResponse result =
+                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"});
 
             // Assert
             result.Should().NotBeNull();
@@ -47,21 +46,20 @@ namespace SfSdk.Tests.DataSource
         public async Task ExecuteAsyncReturnsErrorsIfUnsuccessful()
         {
             // Arrange
+            var sut = new SnFRequestSource(_serverUri);
             // Login in this case
-            var uriFactory = new SnFUriFactory(EmptySessionId, _serverUri, SF.ActLogin,
-                                                   new[] {_username, _passwordHash, "v1.70&random=%2"});
-            var sut = new SnFRequestSource(uriFactory);
+            Func<Task<SfResponse>> login =
+                async () =>
+                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] { _username, _passwordHash, "v1.70&random=%2" });
 
             // Act
-            SfResponse result = await sut.RequestAsync();
+            SfResponse result = await login();
             string oldSessionId = ((LoginResponse) result.Response).SessionId;
 
             // to request a new session id, so the old one expires
-            await sut.RequestAsync();
+            await login();
 
-            var otherUriFactory = new SnFUriFactory(oldSessionId, _serverUri, SF.ActScreenChar);
-            sut = new SnFRequestSource(otherUriFactory);
-            result = await sut.RequestAsync();
+            result = await sut.RequestAsync(oldSessionId, SF.ActScreenChar);
 
             // Assert
             result.Should().NotBeNull();
@@ -75,13 +73,15 @@ namespace SfSdk.Tests.DataSource
             TestHelpers.Disconnect();
 
             // Arrange
-            // Login in this case
-            var uriFactory = new SnFUriFactory(EmptySessionId, _serverUri, SF.ActLogin,
-                                                   new[] {_username, _passwordHash, "v1.70&random=%2"});
-            var sut = new SnFRequestSource(uriFactory);
+            var sut = new SnFRequestSource(_serverUri);
 
             // Act / Assert
-            await TestHelpers.ThrowsAsync<NotImplementedException>(async () => await sut.RequestAsync());
+            // Login in this case
+            await
+                TestHelpers.ThrowsAsync<NotImplementedException>(
+                    async () =>
+                    await
+                    sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"}));
 
             TestHelpers.Connect();
         }

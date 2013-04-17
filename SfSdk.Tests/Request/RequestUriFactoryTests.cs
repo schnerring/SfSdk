@@ -15,20 +15,20 @@ namespace SfSdk.Tests.Request
         public void ConstructorThrowsExceptionIfSessionIdIsNull()
         {
             // Arrange
-            Action a = () => new SnFUriFactory(null, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            Action sut = () => new SnFUriWrapper(null, new Uri(ValidServerUrl), SF.ActAccountCreate);
 
             // Act / Assert
-            a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
+            sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
         }
 
         [Fact]
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
             // Arrange
-            Action a = () => new SnFUriFactory(ValidSessionId, null, SF.ActAccountCreate);
+            Action sut = () => new SnFUriWrapper(ValidSessionId, null, SF.ActAccountCreate);
 
             // Act / Assert
-            a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
+            sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
         }
 
         [Fact]
@@ -36,11 +36,11 @@ namespace SfSdk.Tests.Request
         {
             // Arrange
             const string invalidSessionid = "000";
-            Action a = () => new SnFUriFactory(invalidSessionid, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            Action sut = () => new SnFUriWrapper(invalidSessionid, new Uri(ValidServerUrl), SF.ActAccountCreate);
 
             // Act / Assert
-            a.ShouldThrow<ArgumentException>()
-             .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("SessionId must have a length of 32."));
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("SessionId must have a length of 32."));
         }
     }
 }

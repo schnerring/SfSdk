@@ -62,7 +62,6 @@
     <Compile Include="Response\ResponseBaseTests.cs" />
     <Compile Include="Response\SavegameTests.cs" />
     <Compile Include="Response\SfResponseTests.cs" />
-    <Compile Include="DataSource\RequestSourceBaseTests.cs" />
     <Compile Include="DataSource\SnFRequestSourceTests.cs" />
     <Compile Include="TestAccountFixture.cs" />
     <Compile Include="TestHelpers.cs" />

@@ -38,10 +38,10 @@ namespace SfSdk.Tests.Response
 //        public void ParseReponseStringThrowsExceptionIfResponseStringStartsWithPlus()
 //        {
 //            // Arrange / Act
-//            Action a = () => new SfResponse("+");
+//            Action sut = () => new SfResponse("+");
 //
 //            // Assert
-//            a.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Response string starts with \"+\".");
+//            sut.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Response string starts with \"+\".");
 //        }
 
         [Fact]

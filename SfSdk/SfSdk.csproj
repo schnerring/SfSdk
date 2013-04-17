@@ -57,11 +57,10 @@
     </Compile>
     <Compile Include="Data\Character.cs" />
     <Compile Include="DataSource\IRequestSource.cs" />
-    <Compile Include="Request\IUriFactory.cs" />
+    <Compile Include="Request\IUriWrapper.cs" />
     <Compile Include="Logging\Logging.cs" />
     <Compile Include="Logging\NLogLogger.cs" />
-    <Compile Include="DataSource\RequestSourceBase.cs" />
-    <Compile Include="Request\SnFUriFactory.cs" />
+    <Compile Include="Request\SnFUriWrapper.cs" />
     <Compile Include="DataSource\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />

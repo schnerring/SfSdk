@@ -6,9 +6,9 @@ using SfSdk.Constants;
 namespace SfSdk.Request
 {
     /// <summary>
-    ///     A helper class to assemble a S&amp;F request <see cref="Uri"/> more easily.
+    ///     A helper class to assemble a S&amp;F request <see cref="Uri"/>s more easily.
     /// </summary>
-    internal class SnFUriFactory : IUriFactory
+    internal class SnFUriWrapper : IUriWrapper
     {
         private static readonly Random Random = new Random(DateTime.Now.Millisecond);
 
@@ -19,13 +19,13 @@ namespace SfSdk.Request
         private readonly Uri _requestUri;
 
         /// <summary>
-        ///     Creates a instance of <see cref="SnFUriFactory" />.
+        ///     Creates a instance of <see cref="SnFUriWrapper" />.
         /// </summary>
         /// <param name="sessionId">A valid session ID, with the length of 32. <see cref="Session.EmptySessionId" /> is used for logging in.</param>
         /// <param name="serverUri">The server URI where the request is going to be received on.</param>
         /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
         /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
-        public SnFUriFactory(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
+        public SnFUriWrapper(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
         {
             if (sessionId == null) throw new ArgumentNullException("sessionId");
             if (serverUri == null) throw new ArgumentNullException("serverUri");

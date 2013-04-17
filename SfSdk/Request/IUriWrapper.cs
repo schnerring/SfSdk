@@ -2,7 +2,10 @@
 
 namespace SfSdk.Request
 {
-    internal interface IUriFactory
+    /// <summary>
+    ///     A <see cref="Uri"/> wrapper.
+    /// </summary>
+    internal interface IUriWrapper
     {
         /// <summary>
         ///     The session ID.

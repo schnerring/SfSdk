@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using SfSdk.Constants;
+using SfSdk.DataSource;
 using SfSdk.Request;
 using Xunit;
 
@@ -8,35 +11,37 @@ namespace SfSdk.Tests.Request
 {
     public class SfRequestTests
     {
-        private const string ValidSessionId = "00000000000000000000000000000000";
-        private const string ValidServerUrl = "http://s25.sfgame.de/";
-
         [Fact]
-        public void ConstructorThrowsExceptionIfSessionIdIsNull()
+        public void ExecuteAsyncThrowsExceptionIfSourceIsNull()
         {
             // Arrange
-            Action a = () => new SfRequest(null, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            var sut = new SfRequest();
+            Func<Task> a = async () => await sut.ExecuteAsync(null, null, SF.ActAccountCreate);
+
+            // Act / Assert
+            a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "source");
+        }
+
+        [Fact]
+        public void ExecuteAsyncThrowsExceptionIfSessionIdIsNull()
+        {
+            // Arrange
+            var sourceMock = new Mock<IRequestSource>();
+            var sut = new SfRequest();
+            Func<Task> a = async () => await sut.ExecuteAsync(sourceMock.Object, null, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
         }
 
         [Fact]
-        public void ConstructorThrowsExceptionIfServerUriIsNull()
-        {
-            // Arrange
-            Action a = () => new SfRequest(ValidSessionId, null, SF.ActAccountCreate);
-
-            // Act / Assert
-            a.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
-        }
-
-        [Fact]
         public void ConstructorThrowsExceptionIfSessionIdHasInvalidLength()
         {
             // Arrange
+            var sourceMock = new Mock<IRequestSource>();
             const string invalidSessionid = "000";
-            Action a = () => new SfRequest(invalidSessionid, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            var sut = new SfRequest();
+            Func<Task> a = async () => await sut.ExecuteAsync(sourceMock.Object, invalidSessionid, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentException>()
