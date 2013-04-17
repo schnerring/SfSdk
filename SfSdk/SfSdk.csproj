@@ -64,6 +64,7 @@
     <Compile Include="Request\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />
+    <Compile Include="Response\ResponseWithSavegame.cs" />
     <Compile Include="Response\Savegame.cs" />
     <Compile Include="Constants\SfClass.cs" />
     <Compile Include="Contracts\ICharacter.cs" />

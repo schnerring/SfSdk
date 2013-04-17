@@ -9,41 +9,28 @@ namespace SfSdk.Tests.Response
     public class SavegameTests
     {
         [Fact]
-        public void ConstructorThrowsExceptionIfSavegameLengthIsEqualToMinimumKey()
+        public void ConstructorThrowsExceptionIfSavegameStringIsNotLongEnough()
         {
             // Arrange
-            Action sut = () => new Savegame(new string[10], (SF) 10);
+            Action sut = () => new Savegame(string.Empty.ToInvalidSavegameString());
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
                .Where(
                    e =>
-                   e.Message.StartsWith("The savegame parts must contain a value for the minimum savegame key.") &&
-                   e.ParamName == "savegameParts");
-        }
-
-        [Fact]
-        public void ConstructorThrowsExceptionIfSavegameLengthIsLessThanMinimumKey()
-        {
-            // Arrange
-            Action sut = () => new Savegame(new string[9], (SF) 10);
-
-            // Act / Assert
-            sut.ShouldThrow<ArgumentException>()
-               .Where(
-                   e =>
-                   e.Message.StartsWith("The savegame parts must contain a value for the minimum savegame key.") &&
-                   e.ParamName == "savegameParts");
+                   e.Message.StartsWith("The savegame string is not valid not long enough.") &&
+                   e.ParamName == "savegameString");
         }
 
         [Fact]
         public void ConstructorDoesNotThrowAnExceptionWithValidArguments()
         {
             // Arrange
-            Action sut = () => new Savegame(new string[9], (SF) 8);
+            
+            Action sut = () => new Savegame(string.Empty.ToValidSavegameString());
 
             // Act / Assert
-            sut.ShouldNotThrow<ArgumentException>();
+            sut.ShouldNotThrow<Exception>();
 
         }
 
@@ -51,8 +38,8 @@ namespace SfSdk.Tests.Response
         public void GetValueReturnsDefaultTIfKeyDoesNotExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const int invalidKey = 2;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int invalidKey = 1000;
 
             // Act
             var result = savegame.GetValue<int>(invalidKey);
@@ -65,8 +52,8 @@ namespace SfSdk.Tests.Response
         public void GetValueSfReturnsDefaultTIfKeyDoesNotExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const SF invalidKey = (SF) 2;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF invalidKey = (SF) 1000;
 
             // Act
             var result = savegame.GetValue<int>(invalidKey);
@@ -79,8 +66,8 @@ namespace SfSdk.Tests.Response
         public void GetValueReturnsDefaultIntIfKeyDoesNotExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const int invalidKey = 2;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int invalidKey = 1000;
 
             // Act
             var result = savegame.GetValue(invalidKey);
@@ -93,8 +80,8 @@ namespace SfSdk.Tests.Response
         public void GetValueSfReturnsDefaultIntIfKeyDoesNotExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const SF invalidKey = (SF) 2;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF invalidKey = (SF) 1000;
 
             // Act
             var result = savegame.GetValue(invalidKey);
@@ -107,8 +94,8 @@ namespace SfSdk.Tests.Response
         public void GetValueReturnsValueIfKeyDoesExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const int validKey = 1;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int validKey = 2;
 
             // Act
             var result = savegame.GetValue<int>(validKey);
@@ -121,8 +108,8 @@ namespace SfSdk.Tests.Response
         public void GetValueSfReturnsValueIfKeyDoesExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const SF validKey = (SF) 1;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF validKey = (SF) 2;
 
             // Act
             var result = savegame.GetValue<int>(validKey);
@@ -135,8 +122,8 @@ namespace SfSdk.Tests.Response
         public void GetValueReturnsValueIntIfKeyDoesExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const int validKey = 1;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int validKey = 2;
 
             // Act
             var result = savegame.GetValue(validKey);
@@ -149,8 +136,8 @@ namespace SfSdk.Tests.Response
         public void GetValueSfReturnsValueIntIfKeyDoesExist()
         {
             // Arrange
-            var savegame = new Savegame(new[] {"123", "456"}, (SF) 1);
-            const SF validKey = (SF) 1;
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF validKey = (SF) 2;
 
             // Act
             var result = savegame.GetValue(validKey);

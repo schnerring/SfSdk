@@ -23,5 +23,15 @@ namespace SfSdk.Tests.Response
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "args");
         }
+
+        [Fact]
+        public void ConstructorThrowsNoExceptionIfArgumentsAreNotNull()
+        {
+            // Arrange
+            Action sut = () => new TestResponse(new string[0]);
+
+            // Act / Assert
+            sut.ShouldNotThrow<Exception>();
+        }
     }
 }

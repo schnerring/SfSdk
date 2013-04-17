@@ -7,7 +7,7 @@ namespace SfSdk.Response
     ///     The reponse type returned on <see cref="SF.ActScreenChar" />, <see cref="SF.RespPlayerScreen" />.<br />
     ///     Triggered by action <see cref="SF.ActScreenChar" />, <see cref="SF.ActRequestChar" />.
     /// </summary>
-    internal interface ICharacterResponse
+    internal interface ICharacterResponse : IResponseWithSaveGame
     {
         /// <summary>
         ///     The character's comment.
@@ -18,22 +18,16 @@ namespace SfSdk.Response
         ///     The character's guild.
         /// </summary>
         string Guild { get; }
-
-        /// <summary>
-        ///     The character's savegame.
-        /// </summary>
-        ISavegame Savegame { get; }
     }
 
     /// <summary>
     ///     The reponse type returned on <see cref="SF.ActScreenChar" />, <see cref="SF.RespPlayerScreen" />.<br />
     ///     Triggered by action <see cref="SF.ActScreenChar" />, <see cref="SF.ActRequestChar" />.
     /// </summary>
-    internal class CharacterResponse : ResponseBase, ICharacterResponse
+    internal class CharacterResponse : ResponseWithSavegame, ICharacterResponse
     {
         private readonly string _comment;
         private readonly string _guild;
-        private readonly ISavegame _savegame;
 
         /// <summary>
         ///     Creates a new character response.
@@ -43,8 +37,6 @@ namespace SfSdk.Response
         {
             if (Args.Length < 3) throw new ArgumentException("The arguments must have a minimum length of 3.", "args");
 
-            string[] savegameParts = ("0/" + Args[0]).Split('/');
-            _savegame = new Savegame(savegameParts);
             _comment = Args[1];
             _guild = Args[2];
         }
@@ -57,11 +49,6 @@ namespace SfSdk.Response
         public string Guild
         {
             get { return _guild; }
-        }
-
-        public ISavegame Savegame
-        {
-            get { return _savegame; }
         }
     }
 }

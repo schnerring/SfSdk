@@ -50,13 +50,13 @@ namespace SfSdk.Response
         /// <summary>
         ///     Creates a new savegame.
         /// </summary>
-        /// <param name="savegameParts">A array of type <see cref="string" /> containing the savegame parts.</param>
-        /// <param name="minSavegameKey">The minimum savegame key that needs to exist in the savegame parts. A key of type <see cref="SF" /> starting with "Sg".</param>
-        public Savegame(string[] savegameParts, SF minSavegameKey = SF.SgServerTime)
+        /// <param name="savegameString">A <see cref="string" /> containing the savegame parts.</param>
+        public Savegame(string savegameString)
         {
-            if (savegameParts.Length <= (int) minSavegameKey)
-                throw new ArgumentException("The savegame parts must contain a value for the minimum savegame key.",
-                                            "savegameParts");
+            var savegameParts = ("0/" + savegameString).Split('/');
+            if (savegameParts.Length <= (int) SF.SgServerTime)
+                throw new ArgumentException("The savegame string is not valid not long enough.",
+                                            "savegameString");
 
             for (int i = 0; i < savegameParts.Length; i++)
                 _savegameDict.Add(i, savegameParts[i]);

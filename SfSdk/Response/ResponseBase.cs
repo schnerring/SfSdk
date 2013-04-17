@@ -3,7 +3,7 @@
 namespace SfSdk.Response
 {
     /// <summary>
-    ///     A base class of <see cref="IResponse"/> containing the arguments of the resonse.
+    ///     A base class of type <see cref="IResponse"/> containing the arguments of the resonse.
     /// </summary>
     internal abstract class ResponseBase : IResponse
     {

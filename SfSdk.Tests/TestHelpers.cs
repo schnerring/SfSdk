@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
+using SfSdk.Constants;
 using Xunit;
 
 namespace SfSdk.Tests
@@ -55,33 +56,20 @@ namespace SfSdk.Tests
             }
         }
 
-//        public static async Task ThrowsAsync<TException>(Func<Task> func)
-//        {
-//            var expected = typeof(TException);
-//            Type actual = null;
-//            try
-//            {
-//                await func();
-//            }
-//            catch (Exception e)
-//            {
-//                actual = e.GetType();
-//            }
-//            Assert.Equal(expected, actual);
-//        }
-//
-//        public static async Task ThrowsNotAsync(Func<Task> func)
-//        {
-//            Exception actual = null;
-//            try
-//            {
-//                await func();
-//            }
-//            catch (Exception e)
-//            {
-//                actual = e;
-//            }
-//            Assert.Equal(null, actual);
-//        }
+        public static string ToValidSavegameString(this string s, string dummyValue = null)
+        {
+            string result = s;
+            while (result.Split('/').Length < (int) SF.SgServerTime)
+                result += "/" + dummyValue;
+            return result;
+        }
+
+        public static string ToInvalidSavegameString(this string s, string dummyValue = null)
+        {
+            string result = s;
+            while (result.Split('/').Length < (int) SF.SgServerTime - 1)
+                result += "/" + dummyValue;
+            return result;
+        }
     }
 }

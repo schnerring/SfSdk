@@ -7,13 +7,8 @@ namespace SfSdk.Response
     ///     The reponse type returned on <see cref="SF.RespLoginSuccess" />, <see cref="SF.RespLoginSuccessBought" />.<br />
     ///     Triggered by action <see cref="SF.ActLogin" />.
     /// </summary>
-    internal interface ILoginResponse
+    internal interface ILoginResponse : IResponseWithSaveGame
     {
-        /// <summary>
-        ///     The savegame of the logged in account's character.
-        /// </summary>
-        ISavegame Savegame { get; }
-
         /// <summary>
         ///     The gold count of the logged in account.
         /// </summary>
@@ -39,11 +34,10 @@ namespace SfSdk.Response
     ///     The reponse type returned on <see cref="SF.RespLoginSuccess" />, <see cref="SF.RespLoginSuccessBought" />.<br />
     ///     Triggered by action <see cref="SF.ActLogin" />.
     /// </summary>
-    internal class LoginResponse : ResponseBase, ILoginResponse
+    internal class LoginResponse : ResponseWithSavegame, ILoginResponse
     {
         private readonly int _gold;
         private readonly int _mushrooms;
-        private readonly ISavegame _savegame;
         private readonly string _sessionId;
         private readonly int _silver;
 
@@ -55,18 +49,11 @@ namespace SfSdk.Response
         {
             if (Args.Length < 3) throw new ArgumentException("The arguments must have a minimum length of 3.", "args");
 
-            string[] savegameParts = ("0/" + Args[0]).Split('/');
-            _savegame = new Savegame(savegameParts);
             _sessionId = Args[2];
 
-            _gold = _savegame.GetValue(SF.SgGold)/100;
-            _silver = _savegame.GetValue(SF.SgGold)%100;
-            _mushrooms = _savegame.GetValue(SF.SgMush);
-        }
-
-        public ISavegame Savegame
-        {
-            get { return _savegame; }
+            _gold = Savegame.GetValue(SF.SgGold)/100;
+            _silver = Savegame.GetValue(SF.SgGold)%100;
+            _mushrooms = Savegame.GetValue(SF.SgMush);
         }
 
         public int Gold

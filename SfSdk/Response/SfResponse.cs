@@ -103,6 +103,8 @@ namespace SfSdk.Response
                     Response = new LogoutResponse(args);
                     break;
                 case SF.ActScreenChar:
+                    Response = new CharacterResponse(args);
+                    break;
                 case SF.RespPlayerScreen:
                     Response = new CharacterResponse(args);
                     break;
