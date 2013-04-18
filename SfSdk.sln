@@ -3,13 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{D8448F05-BE84-4017-85F4-1D3C9F364732}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfSdk", ".\SfSdk\SfSdk.csproj", "{022914BA-EB8B-4BE2-BE84-C585B7CC6A42}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfSdk", "SfSdk\SfSdk.csproj", "{022914BA-EB8B-4BE2-BE84-C585B7CC6A42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfSdk.Tests", ".\SfSdk.Tests\SfSdk.Tests.csproj", "{8506C357-974F-42FE-A310-710B4DFE9026}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfSdk.Tests", "SfSdk.Tests\SfSdk.Tests.csproj", "{8506C357-974F-42FE-A310-710B4DFE9026}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfBot", ".\SfBot\SfBot.csproj", "{4FDCFDE8-AB72-4C84-A5F8-6355F96D5EFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SfBot", "SfBot\SfBot.csproj", "{4FDCFDE8-AB72-4C84-A5F8-6355F96D5EFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleConsoleApplication", ".\Examples\SimpleConsoleApplication\SimpleConsoleApplication.csproj", "{B5D5FD79-056C-4490-91FC-7D61EFDA8026}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleConsoleApplication", "Examples\SimpleConsoleApplication\SimpleConsoleApplication.csproj", "{B5D5FD79-056C-4490-91FC-7D61EFDA8026}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7C03BEB9-B5A3-4D7C-919D-E04F45717D24}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
