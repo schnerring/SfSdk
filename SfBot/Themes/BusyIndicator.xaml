@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:mahApps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                    xmlns:controls="clr-namespace:SfBot.Controls">
+    
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    <Style TargetType="controls:BusyIndicator">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:BusyIndicator">
+                    <Grid>
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          Margin="{TemplateBinding Padding}" />
+
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Visibility="{TemplateBinding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <mahApps:ProgressRing IsActive="True" Foreground="{DynamicResource Blue1Brush}" />
+                            <TextBlock Text="{TemplateBinding Message}" Foreground="{DynamicResource Blue1Brush}" />
+                        </StackPanel>
+
+                        <Border Background="Transparent" Visibility="{TemplateBinding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="SfBot.Views.AccountsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:SfBot.Converters"
+             xmlns:viewModels="clr-namespace:SfBot.ViewModels" xmlns:controls="clr-namespace:SfBot.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance viewModels:AccountsViewModel}"
+             UseLayoutRounding="True">
+    <UserControl.Resources>
+        <converters:StringToUpperConverter x:Key="ToUpperConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid Width="300">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:BusyIndicator IsBusy="{Binding IsBusy}" Message="{Binding BusyMessage}" Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ListBox ItemsSource="{Binding ConfigurationStore.Accounts}"
+                         SelectedItem="{Binding SelectedAccount, Mode=TwoWay}"
+                         Style="{StaticResource AccountsListBoxStyle}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Rectangle Width="3" Fill="White" SnapsToDevicePixels="True" Margin="5" />
+                                <Rectangle Width="3" Fill="Green" SnapsToDevicePixels="True" Margin="5"
+                                           Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                                <Grid Margin="5" Grid.Column="1">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="{Binding Username}" FontSize="18" />
+                                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                                        <TextBlock Text="{Binding Country.Name, Converter={StaticResource ToUpperConverter}, StringFormat='{}{0} - '}" />
+                                        <TextBlock Text="{Binding Server.Name, Converter={StaticResource ToUpperConverter}}"
+                                                   FontSize="11" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="1">
+                    <StackPanel.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource DarkButtonStyle}" />
+                    </StackPanel.Resources>
+                    <Button x:Name="AddAccount" Content="ADD" />
+                    <Button x:Name="DeleteAccount" Content="DELETE" Margin="2 0 0 0" />
+                    <Button x:Name="LoginAsync" Content="LOGIN" Margin="2 0 0 0" />
+                    <Button x:Name="LogoutAsync" Content="LOGOUT" Margin="2 0 0 0" />
+                </StackPanel>
+            </Grid>
+        </controls:BusyIndicator>
+    </Grid>
+</UserControl>
