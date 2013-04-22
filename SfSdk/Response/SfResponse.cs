@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SfSdk.Constants;
+using SfSdk.Logging;
 
 namespace SfSdk.Response
 {    /// <summary>
@@ -20,14 +21,16 @@ namespace SfSdk.Response
     }
 
     /// <summary>
-    ///     Provides easier processing of response strings from the S&amp;F servers.
+    ///     Provides easier processing of response strings from a S&amp;F data source.
     /// </summary>
     internal class SfResponse : ISfResponse
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(SfResponse));
+
         /// <summary>
         ///     Creates a new <see cref="SfResponse" />.
         /// </summary>
-        /// <param name="responseString">The response string of the web request.</param>
+        /// <param name="responseString">The response string of the request.</param>
         public SfResponse(string responseString)
         {
             Errors = new List<string>();
@@ -46,8 +49,6 @@ namespace SfSdk.Response
 
         private void ParseResponseString(string responseString)
         {
-            // TODO response string parser class
-
             if (responseString == null)
                 throw new ArgumentNullException("responseString");
             if (string.IsNullOrEmpty(responseString))
@@ -55,7 +56,7 @@ namespace SfSdk.Response
 
             if (responseString.StartsWith("+"))
             {
-//                throw new ArgumentException("Response string starts with \"+\".", "responseString");
+                //                throw new ArgumentException("Response string starts with \"+\".", "responseString");
                 responseString = responseString.Substring(1);
             }
 
@@ -71,7 +72,7 @@ namespace SfSdk.Response
                 if (!int.TryParse(errorString, out errorCode))
                     throw new ArgumentException("Error code must be of type int.", "responseString");
 
-                var error = (SF) (-errorCode);
+                var error = (SF)(-errorCode);
                 string[] errorArgs = responseString.Substring(4).Split(';');
                 ProcessError(error, errorArgs);
                 return;
@@ -86,7 +87,7 @@ namespace SfSdk.Response
             if (!int.TryParse(successString, out successCode))
                 throw new ArgumentException("Success code must be of type int.", "responseString");
 
-            var success = (SF) successCode;
+            var success = (SF)successCode;
             string[] successArgs = responseString.Substring(3).Split(';');
             ProcessSuccess(success, successArgs);
         }
@@ -114,8 +115,13 @@ namespace SfSdk.Response
                         searchString = args[1];
                     string[] tmp = args[0].Split('/');
                     break;
+                case SF.ActGuildJoinAttack:
+                    // TODO
+                    break;
                 default:
-                    throw new ArgumentOutOfRangeException("success");
+                    var e = new ArgumentOutOfRangeException("success");
+                    Log.Error(e);
+                    throw e;
             }
         }
 
@@ -129,7 +135,9 @@ namespace SfSdk.Response
                     Errors.Add(error.ToString());
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException("error");
+                    var e = new ArgumentOutOfRangeException("error");
+                    Log.Error(e);
+                    throw e;
             }
         }
     }

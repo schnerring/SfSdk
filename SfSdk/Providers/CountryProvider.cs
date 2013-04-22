@@ -43,27 +43,32 @@ namespace SfSdk.Providers
         {
             // todo refactor WebRequest properly
 
-            var webRequest = (HttpWebRequest) WebRequest.Create(new UriBuilder("http://www.sfgame.de/").Uri);
-            
-//            webRequest.Host = "s25.sfgame.de";
-//            webRequest.KeepAlive = true;
-//            webRequest.UserAgent =
-//                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31";
-//            webRequest.Accept = "*/*";
-//            webRequest.Referer = "http://s25.sfgame.de/";
-//            webRequest.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
-//            webRequest.Headers.Add(HttpRequestHeader.AcceptLanguage, "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4");
-//            webRequest.Headers.Add(HttpRequestHeader.AcceptCharset, "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
-//            webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
+            var webRequest = (HttpWebRequest)WebRequest.Create(new UriBuilder("http://www.sfgame.de/").Uri);
+
+            //            webRequest.Host = "s25.sfgame.de";
+            //            webRequest.KeepAlive = true;
+            //            webRequest.UserAgent =
+            //                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31";
+            //            webRequest.Accept = "*/*";
+            //            webRequest.Referer = "http://s25.sfgame.de/";
+            //            webRequest.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
+            //            webRequest.Headers.Add(HttpRequestHeader.AcceptLanguage, "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4");
+            //            webRequest.Headers.Add(HttpRequestHeader.AcceptCharset, "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
+            //            webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
             try
             {
-                using (var responseStream = (HttpWebResponse) await webRequest.GetResponseAsync())
-                using (var streamReader = new StreamReader(responseStream.GetResponseStream()))
-                    _response = await streamReader.ReadToEndAsync();
+                using (var webResponse = (HttpWebResponse)await webRequest.GetResponseAsync())
+                using (var responseStream = webResponse.GetResponseStream())
+                {
+                    if (responseStream == null) throw new NotImplementedException(); // TODO test
+                    using (var streamReader = new StreamReader(responseStream))
+                        _response = await streamReader.ReadToEndAsync();
+                }
+
             }
             catch (WebException)
             {
-                throw new NotImplementedException("Network connection lost.");
+                //                throw new NotImplementedException("Network connection lost.");
             }
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using FluentAssertions;
 using SfSdk.Response;
 using Xunit;
@@ -14,7 +13,7 @@ namespace SfSdk.Tests.Response
         const string NotImplementedError = "E000";
 
         [Fact]
-        public void ParseResponseStringThrowsExceptionIfResponseStringIsNull()
+        public void ConstructorThrowsExceptionIfResponseStringIsNull()
         {
             // Arrange / Act
             Action sut = () => new SfResponse(null);
@@ -24,7 +23,7 @@ namespace SfSdk.Tests.Response
         }
 
         [Fact]
-        public void ParseReponseStringThrowsExceptionIfResponseStringIsEmpty()
+        public void ConstructorThrowsExceptionIfResponseStringIsEmpty()
         {
             // Arrange / Act
             Action sut = () => new SfResponse(string.Empty);
@@ -34,18 +33,18 @@ namespace SfSdk.Tests.Response
                .Where(e => e.Message.StartsWith("Response string must not be empty.") && e.ParamName == "responseString");
         }
 
-//        [Fact]
-//        public void ParseReponseStringThrowsExceptionIfResponseStringStartsWithPlus()
-//        {
-//            // Arrange / Act
-//            Action sut = () => new SfResponse("+");
-//
-//            // Assert
-//            sut.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Response string starts with \"+\".");
-//        }
+        //        [Fact]
+        //        public void ConstructorThrowsExceptionIfResponseStringStartsWithPlus()
+        //        {
+        //            // Arrange / Act
+        //            Action sut = () => new SfResponse("+");
+        //
+        //            // Assert
+        //            sut.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Response string starts with \"+\".");
+        //        }
 
         [Fact]
-        public void ParseReponseStringThrowsExceptionIfErrorResponseStringHasInvalidLength()
+        public void ConstructorThrowsExceptionIfErrorResponseStringHasInvalidLength()
         {
             // Arrange / Act
             Action sut = () => new SfResponse("E01");
@@ -59,7 +58,7 @@ namespace SfSdk.Tests.Response
         }
 
         [Fact]
-        public void ParseReponseStringThrowsExceptionIfErrorResponseStringHasInvalidCode()
+        public void ConstructorThrowsExceptionIfErrorResponseStringHasInvalidCode()
         {
             // Arrange / Act
             Action sut = () => new SfResponse("E01A");
@@ -70,7 +69,7 @@ namespace SfSdk.Tests.Response
         }
 
         [Fact]
-        public void ParseReponseStringThrowsExceptionIfSuccessResponseStringHasInvalidLength()
+        public void ConstructorThrowsExceptionIfSuccessResponseStringHasInvalidLength()
         {
             // Arrange / Act
             Action sut = () => new SfResponse("01");
@@ -81,7 +80,7 @@ namespace SfSdk.Tests.Response
         }
 
         [Fact]
-        public void ParseReponseStringThrowsExceptionIfSuccessResponseStringHasInvalidCode()
+        public void ConstructorThrowsExceptionIfSuccessResponseStringHasInvalidCode()
         {
             // Arrange / Act
             Action sut = () => new SfResponse("abc");
@@ -135,7 +134,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListCountIsGreaterZeroAfterCreatingErrorInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedError); // SF.RespLogoutSuccess is implemented
+            var sut = new SfResponse(ImplementedError);
 
             // Assert
             sut.Errors.Should().HaveCount(c => c > 0);

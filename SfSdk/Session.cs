@@ -54,7 +54,7 @@ namespace SfSdk
             var result =
                 await
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
-                                             new[] {username, md5PasswordHash, "v1.70&random=%2"});
+                                             new[] { username, md5PasswordHash, "v1.70&random=%2" });
 
             var response = result.Response as LoginResponse;
             if (result.Errors.Count > 0 || response == null) return false;
@@ -76,7 +76,7 @@ namespace SfSdk
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActLogout);
             if (result.Errors.Count > 1)
             {
-                return result.Errors.Any(e => e == "SessionIdExpired");
+                return result.Errors.Any(e => e == SF.ErrSessionIdExpired.ToString());
             }
             var response = result.Response as LogoutResponse;
             if (response == null) return false;
@@ -100,7 +100,7 @@ namespace SfSdk
         /// <returns>The <see cref="ICharacter"/> if the name could be found, null if not.</returns>
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
-            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActRequestChar, new[] {username});
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActRequestChar, new[] { username });
             return new Character(result.Response as ICharacterResponse);
         }
 
