@@ -26,7 +26,7 @@ sn -k "C:\Your\SfSdk\Solution\Folder\SfSdk.snk"
 
 All projects but <i>SfSdk.Tests</i> should compile now, as the projects contain just links to the <b>SfSdk.snk</b> file. These links are automatically resolved if the corresponding file exists.
 
-If you'd like to compile <i>SfSdk.Tests</i> either, you have to change the PublicKey of the ```InternalsVisibleToAttribute``` in the <i>SfSdk</i>'s <a href="./SfSdk/Properties/AssemblyInfo.cs" target="_blank">AssemblyInfo.cs</a> file to the corresponding public key of <b>your SfSdk.snk</b> file.
+If you'd like to compile <i>SfSdk.Tests</i> either, you have to change the PublicKey of the ```InternalsVisibleToAttribute``` in the <i>SfSdk</i>'s <a href="./SfSdk/Properties/AssemblyInfo.cs" target="_blank">AssemblyInfo.cs</a> file to the corresponding public key of <b>your SfSdk.snk</b> file. (Please undo changes to the PublicKey as you commit - I'm searching for a workaround for this!)
 
 <a href="http://blogs.msdn.com/b/kaevans/archive/2008/06/18/getting-public-key-token-of-assembly-within-visual-studio.aspx" target="_blank">Getting Public Key Token of Assembly Within Visual Studio</a> is a great MSDN article worth checking out. The mentioned shortcut is a huge timesaver!
 
