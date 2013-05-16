@@ -64,26 +64,23 @@ namespace SfBot
 
             // Read the stream from Isolated Storage.    
             Stream stream = new IsolatedStorageFileStream(Filename, FileMode.OpenOrCreate, isoStore);
-            if (stream != null)
+            try
             {
-                try
-                {
-                    // DeSerialize the Dictionary from stream.    
-                    object bytes = Formatter.Deserialize(stream);
+                // DeSerialize the Dictionary from stream.    
+                object bytes = Formatter.Deserialize(stream);
 
-                    var appData = (Dictionary<string, object>) bytes;
+                var appData = (Dictionary<string, object>) bytes;
 
-                    // Enumerate through the collection and load our Dictionary.            
-                    IDictionaryEnumerator enumerator = appData.GetEnumerator();
-                    while (enumerator.MoveNext())
-                    {
-                        AppDictionary[enumerator.Key.ToString()] = enumerator.Value;
-                    }
-                }
-                finally
+                // Enumerate through the collection and load our Dictionary.            
+                IDictionaryEnumerator enumerator = appData.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    stream.Close();
+                    AppDictionary[enumerator.Key.ToString()] = enumerator.Value;
                 }
+            }
+            finally
+            {
+                stream.Close();
             }
         }
 
@@ -102,14 +99,9 @@ namespace SfBot
         {
             get
             {
-                if (AppDictionary.ContainsKey(key))
-                {
-                    return AppDictionary[key];
-                }
-                else
-                {
-                    return defaultvalue;
-                }
+                return AppDictionary.ContainsKey(key)
+                    ? AppDictionary[key]
+                    : defaultvalue;
             }
             set
             {
@@ -127,17 +119,14 @@ namespace SfBot
             IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForAssembly();
 
             Stream stream = new IsolatedStorageFileStream(Filename, FileMode.Create, isoStore);
-            if (stream != null)
+            try
             {
-                try
-                {
-                    // Serialize dictionary into the IsolatedStorage.                                
-                    Formatter.Serialize(stream, AppDictionary);
-                }
-                finally
-                {
-                    stream.Close();
-                }
+                // Serialize dictionary into the IsolatedStorage.                                
+                Formatter.Serialize(stream, AppDictionary);
+            }
+            finally
+            {
+                stream.Close();
             }
         }
 

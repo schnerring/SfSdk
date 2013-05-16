@@ -40,7 +40,7 @@ namespace SfSdk.Logging
     /// </summary>
     internal static class LogManager
     {
-        private static readonly ILog NullLogInstance = new NullLog();
+//        private static readonly ILog NullLogInstance = new NullLog();
 
         /// <summary>
         ///     Creates an <see cref="ILog" /> for the provided type.

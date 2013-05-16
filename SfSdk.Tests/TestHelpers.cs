@@ -2,9 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Threading.Tasks;
 using SfSdk.Constants;
-using Xunit;
 
 namespace SfSdk.Tests
 {

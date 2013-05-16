@@ -59,19 +59,15 @@ namespace SfSdk
         {
             TypeConverter converter = TypeDescriptor.GetConverter(typeof (T));
             // TODO catch Invalid
-            if (converter != null)
+            try
             {
-                try
-                {
-                    //Cast ConvertFromString(string text) : object to (T)
-                    return (T) converter.ConvertFromString(input);
-                }
-                catch (Exception)
-                {
-                    throw new NotImplementedException();
-                }
+                //Cast ConvertFromString(string text) : object to (T)
+                return (T) converter.ConvertFromString(input);
             }
-            return default(T);
+            catch (Exception)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

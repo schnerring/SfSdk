@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
 using System.Linq;
 using Caliburn.Micro;
-using MahApps.Metro;
 using SFBot.ViewModels;
 using SfBot.Data;
 using SfBot.Shell;
-using SfBot.ViewModels.Details;
-using SfSdk;
 
 namespace SfBot
 {
@@ -23,8 +19,7 @@ namespace SfBot
             _container =
                 new CompositionContainer(
                     new AggregateCatalog(
-                        AssemblySource.Instance.Select(x => new AssemblyCatalog(x))
-                                               .OfType<ComposablePartCatalog>()));
+                        AssemblySource.Instance.Select(x => new AssemblyCatalog(x))));
 
             var batch = new CompositionBatch();
 

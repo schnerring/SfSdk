@@ -68,7 +68,7 @@ namespace SfSdk.Providers
             }
             catch (WebException)
             {
-                //                throw new NotImplementedException("Network connection lost.");
+                throw new NotImplementedException("Network connection lost.");
             }
         }
 

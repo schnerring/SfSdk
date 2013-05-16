@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.Authentication;
-using System.Threading.Tasks;
 
 namespace SfSdk.Tests
 {

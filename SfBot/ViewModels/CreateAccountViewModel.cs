@@ -7,7 +7,6 @@ using System.Security;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfSdk.Contracts;
-using SfSdk.Data;
 using SfSdk.Providers;
 
 namespace SfBot.ViewModels

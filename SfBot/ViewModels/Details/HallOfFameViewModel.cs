@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.Threading.Tasks;
-using SfSdk;
 
 namespace SfBot.ViewModels.Details
 {

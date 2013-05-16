@@ -3,7 +3,6 @@ using System.Runtime.Serialization;
 using Caliburn.Micro;
 using SfSdk;
 using SfSdk.Contracts;
-using SfSdk.Data;
 
 namespace SfBot.Data
 {
