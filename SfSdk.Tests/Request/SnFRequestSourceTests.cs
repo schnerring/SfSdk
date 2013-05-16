@@ -23,7 +23,7 @@ namespace SfSdk.Tests.Request
             _serverUri = f.ServerUri;
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task ExecuteAsyncReturnsIResultIfSuccessful()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace SfSdk.Tests.Request
             result.Errors.Should().HaveCount(count => count == 0);
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task ExecuteAsyncReturnsErrorsIfUnsuccessful()
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace SfSdk.Tests.Request
             result.Errors.Should().HaveCount(count => count > 0);
         }
 
-//        [Fact]
+//        [Fact] // Needs internet
         [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
         public void ExecuteAsyncThrowsExceptionWithoutNetworkConnection()
         {

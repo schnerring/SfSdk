@@ -11,7 +11,7 @@ namespace SfSdk.Tests.Providers
 {
     public class CountryProviderTests
     {
-        [Fact]
+        [Fact] // Needs internet
         public async Task GetCountriesAsyncReturns25Countries()
         {
             // Arrange / Act
@@ -21,7 +21,7 @@ namespace SfSdk.Tests.Providers
             countries.Should().HaveCount(25);
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task CountriesCollectionContainsProperNames()
         {
             // Arrange
@@ -61,7 +61,7 @@ namespace SfSdk.Tests.Providers
             countries.Select(c => c.Name).Should().Contain(countryNames);
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task CountriesCollectionContainsProperUris()
         {
             // Arrange
@@ -101,7 +101,7 @@ namespace SfSdk.Tests.Providers
             countries.Select(c => c.Uri).Should().Contain(countryUris);
         }
 
-//        [Fact]
+//        [Fact] // Needs internet
         [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
         public void GetCountriesAsyncThrowsExceptionWithoutNetworkConnection()
         {

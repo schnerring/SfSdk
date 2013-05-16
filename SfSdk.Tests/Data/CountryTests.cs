@@ -19,7 +19,7 @@ namespace SfSdk.Tests.Data
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "uri");
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task CreateAsyncReturnsICountryWithValidParameters()
         {
             // Arrange
@@ -35,7 +35,7 @@ namespace SfSdk.Tests.Data
             country.Uri.Should().Be(TestConstants.ValidCountryServerUri);
         }
 
-        [Fact]
+        [Fact] // Needs internet
         public async Task CreateAsyncReturnsICountryWithNameEqualNull()
         {
             // Arrange
