@@ -98,7 +98,6 @@ namespace SfBot.ViewModels
             IsBusy = true;
             BusyMessage = "Loading Countries...";
 
-            var provider = new CountryProvider();
             IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
             foreach (ICountry country in countries.Where(country => !Countries.Contains(country)).OrderBy(c => c.Name))

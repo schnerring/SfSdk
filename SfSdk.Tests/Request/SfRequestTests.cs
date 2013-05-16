@@ -40,9 +40,10 @@ namespace SfSdk.Tests.Request
         {
             // Arrange
             var sourceMock = new Mock<IRequestSource>();
-            const string invalidSessionid = "000";
             var sut = new SfRequest();
-            Func<Task> a = async () => await sut.ExecuteAsync(sourceMock.Object, invalidSessionid, SF.ActAccountCreate);
+            Func<Task> a =
+                async () =>
+                await sut.ExecuteAsync(sourceMock.Object, TestConstants.InvalidSessionId, SF.ActAccountCreate);
 
             // Act / Assert
             a.ShouldThrow<ArgumentException>()
@@ -61,14 +62,10 @@ namespace SfSdk.Tests.Request
 #pragma warning disable 1998
                       .Returns(async () => sfResponseMock.Object);
 #pragma warning restore 1998
-
-            const string validSessionId = "00000000000000000000000000000000";
             var sut = new SfRequest();
-            Func<Task<ISfResponse>> a =
-                async () => await sut.ExecuteAsync(sourceMock.Object, validSessionId, SF.ActAccountCreate);
 
             // Act
-            var result = await a();
+            var result = await sut.ExecuteAsync(sourceMock.Object, TestConstants.ValidSessionId, SF.ActAccountCreate);
 
             // Assert
             result.Should().NotBeNull();
@@ -87,9 +84,9 @@ namespace SfSdk.Tests.Request
 #pragma warning restore 1998
                       .Verifiable();
 
-            const string validSessionId = "00000000000000000000000000000000";
             var sut = new SfRequest();
-            Func<Task> a = async () => await sut.ExecuteAsync(sourceMock.Object, validSessionId, SF.ActAccountCreate);
+            Func<Task> a =
+                async () => await sut.ExecuteAsync(sourceMock.Object, TestConstants.ValidSessionId, SF.ActAccountCreate);
 
             // Act
             await a();

@@ -8,14 +8,11 @@ namespace SfSdk.Tests.Request
 {
     public class SnFUriWrapperTests
     {
-        private const string ValidSessionId = "00000000000000000000000000000000";
-        private const string ValidServerUrl = "http://s25.sfgame.de/";
-
         [Fact]
         public void ConstructorThrowsExceptionIfSessionIdIsNull()
         {
             // Arrange
-            Action sut = () => new SnFUriWrapper(null, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            Action sut = () => new SnFUriWrapper(null, TestConstants.ValidServerUri, SF.ActAccountCreate);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "sessionId");
@@ -25,7 +22,7 @@ namespace SfSdk.Tests.Request
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
             // Arrange
-            Action sut = () => new SnFUriWrapper(ValidSessionId, null, SF.ActAccountCreate);
+            Action sut = () => new SnFUriWrapper(TestConstants.ValidSessionId, null, SF.ActAccountCreate);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
@@ -35,8 +32,9 @@ namespace SfSdk.Tests.Request
         public void ConstructorThrowsExceptionIfSessionIdHasInvalidLength()
         {
             // Arrange
-            const string invalidSessionid = "000";
-            Action sut = () => new SnFUriWrapper(invalidSessionid, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            Action sut =
+                () =>
+                new SnFUriWrapper(TestConstants.InvalidSessionId, TestConstants.ValidServerUri, SF.ActAccountCreate);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -47,7 +45,8 @@ namespace SfSdk.Tests.Request
         public void ConstructorThrowsNoExceptionWithValidParameters()
         {
             // Arrange
-            Action sut = () => new SnFUriWrapper(ValidSessionId, new Uri(ValidServerUrl), SF.ActAccountCreate);
+            Action sut =
+                () => new SnFUriWrapper(TestConstants.ValidSessionId, TestConstants.ValidServerUri, SF.ActAccountCreate);
 
             // Act / Assert
             sut.ShouldNotThrow<Exception>();

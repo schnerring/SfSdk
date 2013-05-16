@@ -34,7 +34,7 @@ namespace SfBot.ViewModels.Details
         {
             IsBusy = true;
             _events.Publish(new LogEvent(Session, "Character request started"));
-            Character = await Session.CharacterScreenAsync();
+            Character = await Session.MyCharacterAsync();
             _events.Publish(new LogEvent(Session, "Character request finished"));
             IsBusy = false;
         }

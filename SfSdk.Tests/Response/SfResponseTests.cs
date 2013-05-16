@@ -7,11 +7,6 @@ namespace SfSdk.Tests.Response
 {
     public class SfResponseTests
     {
-        const string ImplementedSuccess = "187"; // SF.RespLogoutSuccess
-        const string NotImplementedSuccess = "000";
-        const string ImplementedError = "E006"; // SF.ErrLoginFailed
-        const string NotImplementedError = "E000";
-
         [Fact]
         public void ConstructorThrowsExceptionIfResponseStringIsNull()
         {
@@ -94,7 +89,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListIsInitializedAfterCreatingInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess);
 
             // Assert
             sut.Errors.Should().NotBeNull();
@@ -104,7 +99,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListCountIsZeroAfterCreatingSuccessInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess);
 
             // Assert
             sut.Errors.Should().HaveCount(0);
@@ -114,7 +109,7 @@ namespace SfSdk.Tests.Response
         public void ResultIsNotNullAfterCreatingInstanceWithImplementedSuccessCode()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess);
 
             // Assert
             sut.Response.Should().NotBeNull();
@@ -124,7 +119,7 @@ namespace SfSdk.Tests.Response
         public void ProcessSuccessThrowsExceptionForNotImplementedSuccessCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(NotImplementedSuccess);
+            Action sut = () => new SfResponse(TestConstants.NonExistingSuccess);
 
             // Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.ParamName == "success");
@@ -134,7 +129,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListCountIsGreaterZeroAfterCreatingErrorInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedError);
+            var sut = new SfResponse(TestConstants.ExistingError);
 
             // Assert
             sut.Errors.Should().HaveCount(c => c > 0);
@@ -144,7 +139,7 @@ namespace SfSdk.Tests.Response
         public void ResultIsNullAfterCreatingInstanceWithImplementedErrorCode()
         {
             // Arrange / Act
-            var sut = new SfResponse(ImplementedError);
+            var sut = new SfResponse(TestConstants.ExistingError);
 
             // Assert
             sut.Response.Should().BeNull();
@@ -154,7 +149,7 @@ namespace SfSdk.Tests.Response
         public void ProcessErrorThrowsExceptionForNotImplementedErrorCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(NotImplementedError);
+            Action sut = () => new SfResponse(TestConstants.NonExistingError);
 
             // Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.ParamName == "error");

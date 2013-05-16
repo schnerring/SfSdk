@@ -11,8 +11,6 @@ namespace SfSdk.Tests.Data
 {
     public class ServerTests
     {
-        private const string ValidUrl = "http://www.sfgame.de/";
-
         [Fact]
         public void CreateServersAsyncThrowsExceptionIfCountryIsNull()
         {
@@ -41,7 +39,7 @@ namespace SfSdk.Tests.Data
         {
             // Arrange
             var countryMock = new Mock<ICountry>();
-            countryMock.Setup(c => c.Uri).Returns(new Uri(ValidUrl));
+            countryMock.Setup(c => c.Uri).Returns(TestConstants.ValidCountryServerUri);
             Func<Task<IEnumerable<IServer>>> sut = async () => await Server.CreateServersAsync(countryMock.Object);
 
             // Act

@@ -12,7 +12,6 @@ namespace SfSdk.Tests.Request
     {
         // TODO implement tests to check returned data for every implemented action.
 
-        private const string EmptySessionId = "00000000000000000000000000000000";
         private string _passwordHash;
         private Uri _serverUri;
         private string _username;
@@ -33,7 +32,9 @@ namespace SfSdk.Tests.Request
             // Act
             // Login in this case
             ISfResponse result =
-                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"});
+                await
+                sut.RequestAsync(TestConstants.ValidSessionId, SF.ActLogin,
+                                 new[] {_username, _passwordHash, "v1.70&random=%2"});
 
             // Assert
             result.Should().NotBeNull();
@@ -49,7 +50,9 @@ namespace SfSdk.Tests.Request
             // Login in this case
             Func<Task<ISfResponse>> login =
                 async () =>
-                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] { _username, _passwordHash, "v1.70&random=%2" });
+                await
+                sut.RequestAsync(TestConstants.ValidSessionId, SF.ActLogin,
+                                 new[] {_username, _passwordHash, "v1.70&random=%2"});
 
             // Act
             ISfResponse result = await login();
@@ -77,7 +80,9 @@ namespace SfSdk.Tests.Request
 
             Func<Task> login =
                 async () =>
-                await sut.RequestAsync(EmptySessionId, SF.ActLogin, new[] {_username, _passwordHash, "v1.70&random=%2"});
+                await
+                sut.RequestAsync(TestConstants.ValidSessionId, SF.ActLogin,
+                                 new[] {_username, _passwordHash, "v1.70&random=%2"});
 
             // Act / Assert
             login.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");

@@ -23,8 +23,8 @@ namespace SfSdk.Tests.Data
         public async Task CreateAsyncReturnsICountryWithValidParameters()
         {
             // Arrange
-            var validUri = new UriBuilder("http://www.sfgame.de/").Uri;
-            Func<Task<ICountry>> sut = async () => await Country.CreateAsync("Germany", validUri);
+            Func<Task<ICountry>> sut =
+                async () => await Country.CreateAsync("Germany", TestConstants.ValidCountryServerUri);
 
             // Act
             var country = await sut();
@@ -32,23 +32,22 @@ namespace SfSdk.Tests.Data
             // Assert
             country.Should().NotBeNull();
             country.Name.Should().Be("Germany");
-            country.Uri.Should().Be(validUri);
+            country.Uri.Should().Be(TestConstants.ValidCountryServerUri);
         }
 
         [Fact]
         public async Task CreateAsyncReturnsICountryWithNameEqualNull()
         {
             // Arrange
-            var validUri = new UriBuilder("http://www.sfgame.de/").Uri;
-            Func<Task<ICountry>> sut = async () => await Country.CreateAsync(null, validUri);
+            Func<Task<ICountry>> sut = async () => await Country.CreateAsync(null, TestConstants.ValidCountryServerUri);
 
             // Act
             var country = await sut();
 
             // Assert
             country.Should().NotBeNull();
-            country.Name.Should().Be(validUri.AbsoluteUri);
-            country.Uri.Should().Be(validUri);
+            country.Name.Should().Be(TestConstants.ValidCountryServerUri.AbsoluteUri);
+            country.Uri.Should().Be(TestConstants.ValidCountryServerUri);
         }
     }
 }

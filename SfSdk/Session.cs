@@ -17,9 +17,28 @@ namespace SfSdk
     {
         private const string EmptySessionId = "00000000000000000000000000000000";
 
+        private readonly Func<Uri, IRequestSource> _sourceFactory;
+
         private Uri _serverUri;
         private string _sessionId;
         private IRequestSource _source;
+
+        /// <summary>
+        ///     Creates a new instance of type <see cref="Session"/> querying the default <see cref="SnFRequestSource"/>.
+        /// </summary>
+        public Session()
+        {
+            _sourceFactory = serverUri => new SnFRequestSource(serverUri);
+        }
+
+        /// <summary>
+        ///     Creates a new instance of type <see cref="Session"/>.
+        /// </summary>
+        /// <param name="sourceFactory">The factory which overrides the default behaviour with a <see cref="SnFRequestSource"/>.</param>
+        internal Session(Func<Uri, IRequestSource> sourceFactory)
+        {
+            _sourceFactory = sourceFactory;
+        }
 
         /// <summary>
         ///     The mushrooms count the currently logged in session.
@@ -45,12 +64,13 @@ namespace SfSdk
         /// <returns>The success of the login process as <see cref="bool"/>.</returns>
         public async Task<bool> LoginAsync(string username, string md5PasswordHash, Uri serverUri)
         {
-            if (username == null) throw new ArgumentNullException("username");
-            if (md5PasswordHash == null) throw new ArgumentNullException("md5PasswordHash");
+            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Username must not be null or empty.", "username");
+            if (md5PasswordHash == null || md5PasswordHash.Length != 32)
+                throw new ArgumentException("Password hash must not be null and have a length of 32.", "md5PasswordHash");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
             _serverUri = serverUri;
-            _source = new SnFRequestSource(_serverUri);
+            _source = _sourceFactory(_serverUri);
             var result =
                 await
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
@@ -87,7 +107,7 @@ namespace SfSdk
         ///     Represents the Character Screen Action.
         /// </summary>
         /// <returns>The <see cref="ICharacter"/> of the currently logged in account.</returns>
-        public async Task<ICharacter> CharacterScreenAsync()
+        public async Task<ICharacter> MyCharacterAsync()
         {
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenChar);
             return new Character(result.Response as ICharacterResponse);
