@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace SfSdk.Tests
@@ -80,7 +81,7 @@ namespace SfSdk.Tests
             // Arrange
             var sut = new Session(serverUri => new TestRequestSource());
 
-            // Act / Assert
+            // Act
             var loginSucceded =
                 await
                 sut.LoginAsync(TestConstants.ValidUsername, TestConstants.ValidPasswordHash,
@@ -91,12 +92,12 @@ namespace SfSdk.Tests
         }
 
         [Fact]
-        public async Task LoginAsyncReturnsTrueIfLoginFails()
+        public async Task LoginAsyncReturnsFalseIfLoginFails()
         {
             // Arrange
             var sut = new Session(serverUri => new TestRequestSource());
 
-            // Act / Assert
+            // Act
             var loginSucceded =
                 await
                 sut.LoginAsync(TestConstants.ValidUsername, TestConstants.InvalidPasswordHash,
@@ -106,6 +107,134 @@ namespace SfSdk.Tests
             loginSucceded.Should().BeFalse();
         }
 
-        // TODO: LogoutAsync, MyCharacterAsync, RequestCharacterAsync, HallOfFameAsync
+        [Fact]
+        public void LogoutAsyncThrowsExceptionIfSessionIsNotLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.LogoutAsync();
+
+            // Act / Assert
+            a.ShouldThrow<SessionLoggedOutException>()
+             .Where(e => e.Message == "LogoutAsync requires to be logged in.");
+        }
+
+        [Fact]
+        public async Task LogoutAsyncReturnsTrueIfSessionIsLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var logoutSucceeded = await sut.LogoutAsync();
+
+            // Assert
+            // TODO how to test the false case?
+            logoutSucceeded.Should().BeTrue();
+        }
+
+        [Fact]
+        public void MyCharacterAsyncThrowsExceptionIfSessionIsNotLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.MyCharacterAsync();
+
+            // Act / Assert
+            a.ShouldThrow<SessionLoggedOutException>()
+             .Where(e => e.Message == "MyCharacterAsync requires to be logged in.");
+        }
+
+        [Fact]
+        public async Task MyCharacterAsyncReturnsICharacterIfSessionIsLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var myCharacter = await sut.MyCharacterAsync();
+
+            // Assert
+            // TODO how to test null value for Character
+            myCharacter.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void RequestCharacterAsyncThrowsExceptionIfUsernameIsNull()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.RequestCharacterAsync(null);
+
+            // Act / Assert
+            a.ShouldThrow<ArgumentNullException>()
+             .Where(e => e.ParamName == "username");
+        }
+
+        [Fact]
+        public void RequestCharacterAsyncThrowsExceptionIfSessionIsNotLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.RequestCharacterAsync("Foo");
+
+            // Act / Assert
+            a.ShouldThrow<SessionLoggedOutException>()
+             .Where(e => e.Message == "RequestCharacterAsync requires to be logged in.");
+        }
+
+        [Fact]
+        public async Task RequestCharacterAsyncReturnsICharacterIfSessionIsLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var myCharacter = await sut.RequestCharacterAsync("Foo");
+
+            // Assert
+            // TODO how to test null value for Character
+            myCharacter.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void HallOfFameAsyncThrowsExceptionIfSessionIsNotLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.HallOfFameAsync();
+
+            // Act / Assert
+            a.ShouldThrow<SessionLoggedOutException>()
+             .Where(e => e.Message == "HallOfFameAsync requires to be logged in.");
+        }
+
+        [Fact]
+        public async Task HallOfFameAsyncReturnsShouldReturn15ICharactersIfSessionIsLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var characters = await sut.HallOfFameAsync();
+
+            // Assert
+            // TODO how to test null value for Character
+            characters.Should().HaveCount(c => c == 15);
+        }
+
+        // TODO: private code paths?
     }
 }

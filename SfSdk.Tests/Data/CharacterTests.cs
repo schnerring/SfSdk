@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Moq;
 using SfSdk.Constants;
+using SfSdk.Contracts;
 using SfSdk.Data;
 using SfSdk.Response;
 using Xunit;
@@ -11,14 +12,40 @@ namespace SfSdk.Tests.Data
 {
     public class CharacterTests
     {
+        private const string ValidUsername = "Foo";
+
         [Fact]
         public void ConstructorThrowsExceptionIfResponseIsNull()
         {
             // Arrange
-            Action sut = () => new Character(null);
+            Action sut = () => new Character(null, ValidUsername);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "response");
+        }
+
+        [Fact]
+        public void ConstructorThrowsExceptionIfUsernameIsNull()
+        {
+            // Arrange
+            var characterResponseMock = new Mock<ICharacterResponse>();
+            Action sut = () => new Character(characterResponseMock.Object, null);
+
+            // Act / Assert
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "username" && e.Message.StartsWith("Username must not be null or empty."));
+        }
+
+        [Fact]
+        public void ConstructorThrowsExceptionIfUsernameIsEmpty()
+        {
+            // Arrange
+            var characterResponseMock = new Mock<ICharacterResponse>();
+            Action sut = () => new Character(characterResponseMock.Object, string.Empty);
+
+            // Act / Assert
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "username" && e.Message.StartsWith("Username must not be null or empty."));
         }
 
         [Fact]
@@ -28,7 +55,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(null as Savegame);
 
-            Action sut = () => new Character(characterResponseMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -48,7 +75,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>();
@@ -67,7 +94,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>();
@@ -87,7 +114,39 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername);
+
+            // Act / Assert
+            sut.ShouldNotThrow<Exception>();
+        }
+
+        [Fact]
+        public void Constructor2ThrowsExceptionIfUsernameIsNull()
+        {
+            // Arrange
+            Action sut = () => new Character(0, null, string.Empty, 0, 0);
+
+            // Act / Assert
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "username" && e.Message.StartsWith("Username must not be null or empty."));
+        }
+
+        [Fact]
+        public void Constructor2ThrowsExceptionIfUsernameIsEmpty()
+        {
+            // Arrange
+            Action sut = () => new Character(0, string.Empty, string.Empty, 0, 0);
+
+            // Act / Assert
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "username" && e.Message.StartsWith("Username must not be null or empty."));
+        }
+
+        [Fact]
+        public void Constructor2DoesNotThrowExceptionIfParametersAreValid()
+        {
+            // Arrange
+            Action sut = () => new Character(0, ValidUsername, string.Empty, 0, 0);
 
             // Act / Assert
             sut.ShouldNotThrow<Exception>();
@@ -106,7 +165,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            var sut = new Character(characterResponseMock.Object);
+            var sut = new Character(characterResponseMock.Object, ValidUsername);
             Func<Task> refresh = async () => await sut.Refresh();
 
             // Act / Assert
