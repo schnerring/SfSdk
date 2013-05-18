@@ -57,6 +57,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Contracts\ICharacterBase.cs" />
     <Compile Include="Data\Character.cs" />
     <Compile Include="Request\IRequestSource.cs" />
     <Compile Include="Request\IUriWrapper.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="Request\SnFUriWrapper.cs" />
     <Compile Include="Request\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
+    <Compile Include="Response\HallOfFameResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Response\ResponseWithSavegame.cs" />
     <Compile Include="Response\Savegame.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Data\Server.cs" />
     <Compile Include="Request\SfRequest.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="SessionLoggedOutException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\SfSdk.snk">

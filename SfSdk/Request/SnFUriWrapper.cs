@@ -36,7 +36,7 @@ namespace SfSdk.Request
             _action = ((int) action).ToString(CultureInfo.InvariantCulture);
             while (_action.Length < 3)
                 _action = _action.Insert(0, "0");
-            if (args != null) _args = String.Join(";", args);
+            if (args != null) _args = string.Join(";", args);
             _requestUri = BuildRequestUri();
         }
 

@@ -55,8 +55,9 @@ namespace SfSdk.Contracts
         /// <summary>
         ///     Represents the Hall Of Fame Screen Action.
         /// </summary>
+        /// <param name="searchString">Search strings may contain the rank or the name of a to be searched character.</param>
         /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
         /// <returns>A <see cref="List{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
-        Task<ICharacter> HallOfFameAsync(bool forceLoad = false);
+        Task<IEnumerable<ICharacter>> HallOfFameAsync(string searchString = null, bool forceLoad = false);
     }
 }

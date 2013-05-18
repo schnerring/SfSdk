@@ -1,22 +1,10 @@
-using System.Threading.Tasks;
-
 namespace SfSdk.Contracts
 {
     /// <summary>
     ///     Contains information about a S&amp;F character.
     /// </summary>
-    public interface ICharacter
+    public interface ICharacter : ICharacterBase
     {
-        /// <summary>
-        ///     The character's username.
-        /// </summary>
-        string Username { get; }
-
-        /// <summary>
-        ///     The character's rank.
-        /// </summary>
-        int Rank { get; }
-
         /// <summary>
         ///     The character's strength.
         /// </summary>
@@ -76,10 +64,5 @@ namespace SfSdk.Contracts
         ///     The character's critical hit chance.
         /// </summary>
         double CriticalHit { get; }
-
-        /// <summary>
-        ///     Requests the S&amp;F server to refresh the character's data.
-        /// </summary>
-        Task Refresh();
     }
 }

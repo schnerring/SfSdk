@@ -3,7 +3,7 @@
 namespace SfSdk.Response
 {
     /// <summary>
-    ///     
+    ///     A response containing a savegame.
     /// </summary>
     internal interface IResponseWithSaveGame
     {
@@ -14,7 +14,7 @@ namespace SfSdk.Response
     }
 
     /// <summary>
-    ///     A base class of type <see cref="IResponse"/> containing the arguments of the resonse.
+    ///     A base class of type <see cref="IResponse"/> containing the arguments of the response.
     /// </summary>
     internal class ResponseWithSavegame : ResponseBase, IResponseWithSaveGame
     {

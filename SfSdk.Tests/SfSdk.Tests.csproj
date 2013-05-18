@@ -60,6 +60,7 @@
     <Compile Include="Providers\CountryProviderTests.cs" />
     <Compile Include="Request\SnFUriWrapperTests.cs" />
     <Compile Include="Response\CharacterResponseTests.cs" />
+    <Compile Include="Response\HallOfFameResponseTests.cs" />
     <Compile Include="Response\LogoutResponseTests.cs" />
     <Compile Include="Response\ResponseBaseTests.cs" />
     <Compile Include="Response\ResponseWithSavegameTests.cs" />
