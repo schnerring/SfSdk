@@ -14,6 +14,7 @@ namespace SfSdk.Data
     internal class Character : ICharacter
     {
         private readonly string _guild;
+        private readonly ISession _session;
         private readonly string _username;
         private bool _loaded;
 
@@ -22,15 +23,19 @@ namespace SfSdk.Data
         /// </summary>
         /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         /// <param name="username">The username of the character.</param>
-        public Character(ICharacterResponse response, string username)
+        /// <param name="session">The session, where the character is going to be attatched to.</param>
+        public Character(ICharacterResponse response, string username, ISession session)
         {
-            if (response == null) throw new ArgumentNullException("response");
+            if (response == null)
+                throw new ArgumentNullException("response");
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentException("Username must not be null or empty.", "username");
             if (response.Savegame == null)
                 throw new ArgumentException("Character response must contain a savegame.", "response");
+            if (session == null) throw new ArgumentNullException("session");
 
             _username = username;
+            _session = session;
             _guild = response.Guild;
             LoadFromSavegame(response.Savegame);
             _loaded = true;
@@ -44,18 +49,21 @@ namespace SfSdk.Data
         /// <param name="guild">The character's guild.</param>
         /// <param name="level">The character's level.</param>
         /// <param name="honor">The character's honor.</param>
-        public Character(int rank, string username, string guild, int level, int honor)
+        /// <param name="session">The session, where the character is going to be attatched to.</param>
+        public Character(int rank, string username, string guild, int level, int honor, ISession session)
         {
             if (string.IsNullOrEmpty(username))
                 throw new ArgumentException("Username must not be null or empty.", "username");
+            if (session == null) throw new ArgumentNullException("session");
             Rank = rank;
             _username = username;
             _guild = guild;
+            _session = session;
             Level = level;
             Honor = honor;
         }
 
-        public Task Refresh()
+        public Task Refresh(bool force = true)
         {
             throw new NotImplementedException();
             _loaded = true;

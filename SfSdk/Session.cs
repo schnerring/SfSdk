@@ -124,7 +124,7 @@ namespace SfSdk
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                        ? null
-                       : new Character(characterResponse, _username);
+                       : new Character(characterResponse, _username, this);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace SfSdk
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                        ? null
-                       : new Character(characterResponse, username);
+                       : new Character(characterResponse, username, this);
         }
 
         /// <summary>
@@ -161,9 +161,12 @@ namespace SfSdk
             
             var hasErrors = await HasErrors(result.Errors);
             var response = result.Response as IHallOfFameResponse;
-            return hasErrors || response == null
-                       ? null
-                       : response.Characters;
+            if (hasErrors | response == null) return null;
+            return
+                response.Characters.Select(c => new Character(c.Item1, c.Item2, c.Item3, c.Item4, c.Item5, this))
+                        .Cast<ICharacter>()
+                        .ToList();
+
         }
 
         private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)
