@@ -72,7 +72,7 @@ namespace SfSdk.Response
                 if (!int.TryParse(errorString, out errorCode))
                     throw new ArgumentException("Error code must be of type int.", "responseString");
 
-                var error = (SF)(-errorCode);
+                var error = (SF) (-errorCode);
                 string[] errorArgs = responseString.Substring(4).Split(';');
                 ProcessError(error, errorArgs);
                 return;
@@ -87,7 +87,7 @@ namespace SfSdk.Response
             if (!int.TryParse(successString, out successCode))
                 throw new ArgumentException("Success code must be of type int.", "responseString");
 
-            var success = (SF)successCode;
+            var success = (SF) successCode;
             string[] successArgs = responseString.Substring(3).Split(';');
             ProcessSuccess(success, successArgs);
         }
@@ -110,10 +110,10 @@ namespace SfSdk.Response
                     Response = new CharacterResponse(args);
                     break;
                 case SF.ActScreenEhrenhalle:
-                    string searchString = null;
-                    if (args.Length > 1)
-                        searchString = args[1];
-                    string[] tmp = args[0].Split('/');
+                    // TODO was hier?
+//                    var lastGuildShown = string.Empty;
+                case SF.RespScreenGildenhalle:
+                    Response = new HallOfFameResponse(args);
                     break;
                 case SF.ActGuildJoinAttack:
                     // TODO
