@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
 using SfSdk.Data;
+using SfSdk.Logging;
 using SfSdk.Request;
 using SfSdk.Response;
 
@@ -15,6 +16,8 @@ namespace SfSdk
     /// </summary>
     public class Session : ISession
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof (Session));
+
         private const string EmptySessionId = "00000000000000000000000000000000";
 
         private readonly Func<Uri, IRequestSource> _sourceFactory;
@@ -22,6 +25,8 @@ namespace SfSdk
         private Uri _serverUri;
         private string _sessionId;
         private IRequestSource _source;
+        private bool _isLoggedIn;
+        private string _username;
 
         /// <summary>
         ///     Creates a new instance of type <see cref="Session"/> querying the default <see cref="SnFRequestSource"/>.
@@ -64,11 +69,15 @@ namespace SfSdk
         /// <returns>The success of the login process as <see cref="bool"/>.</returns>
         public async Task<bool> LoginAsync(string username, string md5PasswordHash, Uri serverUri)
         {
-            if (string.IsNullOrEmpty(username)) throw new ArgumentException("Username must not be null or empty.", "username");
-            if (md5PasswordHash == null || md5PasswordHash.Length != 32)
+            if (string.IsNullOrEmpty(username))
+                throw new ArgumentException("Username must not be null or empty.", "username");
+            if (md5PasswordHash == null || md5PasswordHash.Length != 32) 
                 throw new ArgumentException("Password hash must not be null and have a length of 32.", "md5PasswordHash");
-            if (serverUri == null) throw new ArgumentNullException("serverUri");
+            if (serverUri == null)
+                throw new ArgumentNullException("serverUri");
 
+            _isLoggedIn = false;
+            _username = username;
             _serverUri = serverUri;
             _source = _sourceFactory(_serverUri);
             var result =
@@ -76,15 +85,17 @@ namespace SfSdk
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
                                              new[] { username, md5PasswordHash, "v1.70&random=%2" });
 
+            var hasErrors = await HasErrors(result.Errors);
             var response = result.Response as LoginResponse;
-            if (result.Errors.Count > 0 || response == null) return false;
+            if (response == null || hasErrors) return _isLoggedIn;
 
             _sessionId = response.SessionId;
             Mushrooms = response.Mushrooms;
             Gold = response.Gold;
             Silver = response.Silver;
 
-            return true;
+            _isLoggedIn = true;
+            return _isLoggedIn;
         }
 
         /// <summary>
@@ -93,14 +104,12 @@ namespace SfSdk
         /// <returns>The success of the logout as <see cref="bool"/>.</returns>
         public async Task<bool> LogoutAsync()
         {
+            if (!_isLoggedIn) throw new SessionLoggedOutException("LogoutAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActLogout);
-            if (result.Errors.Count > 1)
-            {
-                return result.Errors.Any(e => e == SF.ErrSessionIdExpired.ToString());
-            }
             var response = result.Response as LogoutResponse;
-            if (response == null) return false;
-            return true;
+            var hasErrors = await HasErrors(result.Errors);
+            _isLoggedIn = response == null || hasErrors;
+            return !_isLoggedIn;
         }
 
         /// <summary>
@@ -109,8 +118,13 @@ namespace SfSdk
         /// <returns>The <see cref="ICharacter"/> of the currently logged in account.</returns>
         public async Task<ICharacter> MyCharacterAsync()
         {
+            if (!_isLoggedIn) throw new SessionLoggedOutException("MyCharacterAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenChar);
-            return new Character(result.Response as ICharacterResponse);
+            var hasErrors = await HasErrors(result.Errors);
+            var characterResponse = result.Response as ICharacterResponse;
+            return hasErrors || characterResponse == null
+                       ? null
+                       : new Character(characterResponse, _username);
         }
 
         /// <summary>
@@ -120,19 +134,61 @@ namespace SfSdk
         /// <returns>The <see cref="ICharacter"/> if the name could be found, null if not.</returns>
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
+            if (username == null) throw new ArgumentNullException("username");
+            if (!_isLoggedIn) throw new SessionLoggedOutException("RequestCharacterAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActRequestChar, new[] { username });
-            return new Character(result.Response as ICharacterResponse);
+            var hasErrors = await HasErrors(result.Errors);
+            var characterResponse = result.Response as ICharacterResponse;
+            return hasErrors || characterResponse == null
+                       ? null
+                       : new Character(characterResponse, username);
         }
 
         /// <summary>
         ///     Represents the Hall Of Fame Screen Action.
         /// </summary>
+        /// <param name="searchString">Search strings may contain the rank or the name of a to be searched character.</param>
         /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
         /// <returns>A <see cref="List{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
-        public async Task<ICharacter> HallOfFameAsync(bool forceLoad = false)
+        public async Task<IEnumerable<ICharacter>> HallOfFameAsync(string searchString = null, bool forceLoad = false)
         {
-            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle);
-            return new Character(result.Response as ICharacterResponse);
+            if (!_isLoggedIn) throw new SessionLoggedOutException("HallOfFameAsync requires to be logged in.");
+            
+            var request = new SfRequest();
+            ISfResponse result;
+            if (searchString == null) result = await request.ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle);
+            else result = await request.ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle, new[] {searchString});
+            
+            var hasErrors = await HasErrors(result.Errors);
+            var response = result.Response as IHallOfFameResponse;
+            return hasErrors || response == null
+                       ? null
+                       : response.Characters;
+        }
+
+        private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)
+        {
+            var hasErrors = false;
+            if (errors.Count == 0) return false;
+            foreach (var err in errors.Select(error => (SF) Enum.Parse(typeof(SF), error)))
+            {
+                hasErrors = true;
+                switch (err)
+                {
+                    case SF.ErrSessionIdExpired:
+                        await LogoutAsync();
+                        break;
+                    case SF.ErrLoginFailed:
+                        break;
+                    default:
+                        var ex =
+                            new NotImplementedException(
+                                string.Format("This error is not handled: {0}.", err));
+                        Log.Error(ex);
+                        throw ex;
+                }
+            }
+            return hasErrors;
         }
     }
 }
