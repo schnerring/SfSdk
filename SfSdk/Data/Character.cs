@@ -20,9 +20,7 @@ namespace SfSdk.Data
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />.
         /// </summary>
-        /// <param name="response">
-        ///     The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.
-        /// </param>
+        /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         /// <param name="username">The username of the character.</param>
         public Character(ICharacterResponse response, string username)
         {
@@ -35,6 +33,7 @@ namespace SfSdk.Data
             _username = username;
             _guild = response.Guild;
             LoadFromSavegame(response.Savegame);
+            _loaded = true;
         }
 
         /// <summary>
@@ -59,6 +58,7 @@ namespace SfSdk.Data
         public Task Refresh()
         {
             throw new NotImplementedException();
+            _loaded = true;
         }
 
         private void LoadFromSavegame(ISavegame sg)
@@ -122,7 +122,6 @@ namespace SfSdk.Data
                 (int)
                 Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
                            (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
-            _loaded = true;
         }
 
         public string Guild
