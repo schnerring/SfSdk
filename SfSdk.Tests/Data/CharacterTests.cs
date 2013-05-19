@@ -296,7 +296,7 @@ namespace SfSdk.Tests.Data
             await sut.Refresh(force: true);
 
             // Assert
-            // Data should be requested two times, as the second request was forced
+            // Data should be requested two times, due to the second request was forced
             sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Exactly(2));
         }
 

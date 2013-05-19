@@ -18,22 +18,22 @@ namespace SfSdk.Data
         private readonly string _guild;
         private readonly ISession _session;
         private readonly string _username;
-        private bool _isLoaded;
-        private int _rank;
-        private int _level;
-        private int _honor;
-        private int _strength;
-        private int _dexterity;
-        private int _intelligence;
         private int _constitution;
-        private int _luck;
-        private int _defense;
-        private int _evasion;
-        private int _resistance;
-        private int _damageMin;
-        private int _damageMax;
-        private int _hitPoints;
         private double _criticalHit;
+        private int _damageMax;
+        private int _damageMin;
+        private int _defense;
+        private int _dexterity;
+        private int _evasion;
+        private int _hitPoints;
+        private int _honor;
+        private int _intelligence;
+        private bool _isLoaded;
+        private int _level;
+        private int _luck;
+        private int _rank;
+        private int _resistance;
+        private int _strength;
 
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
@@ -49,7 +49,8 @@ namespace SfSdk.Data
                 throw new ArgumentException("Username must not be null or empty.", "username");
             if (response.Savegame == null)
                 throw new ArgumentException("Character response must contain a savegame.", "response");
-            if (session == null) throw new ArgumentNullException("session");
+            if (session == null)
+                throw new ArgumentNullException("session");
 
             _username = username;
             _session = session;
@@ -88,72 +89,9 @@ namespace SfSdk.Data
         public async Task Refresh(bool force = false)
         {
             if (_isLoaded && !force) return;
-            var character = await _session.RequestCharacterAsync(_username);
+            ICharacter character = await _session.RequestCharacterAsync(_username);
             this.CopyPropertiesFrom(character);
             IsLoaded = true;
-        }
-
-        private void LoadFromSavegame(ISavegame sg)
-        {
-            Rank = sg.GetValue(SF.SgRank);
-            Level = sg.GetValue(SF.SgLevel);
-            Honor = sg.GetValue(SF.SgHonor);
-
-            Strength = sg.GetValue(SF.SgAttrStaerke) + sg.GetValue(SF.SgAttrStaerkeBonus);
-            Dexterity = sg.GetValue(SF.SgAttrBeweglichkeit) + sg.GetValue(SF.SgAttrBeweglichkeitBonus);
-            Constitution = sg.GetValue(SF.SgAttrIntelligenz) + sg.GetValue(SF.SgAttrIntelligenzBonus);  // mistake in
-            Intelligence = sg.GetValue(SF.SgAttrAusdauer) + sg.GetValue(SF.SgAttrAusdauerBonus);        // original source code
-            Luck = sg.GetValue(SF.SgAttrWillenskraft) + sg.GetValue(SF.SgAttrWillenskraftBonus);
-
-            int level = sg.GetValue(SF.SgLevel);
-            int potionGain = sg.GetValue(SF.SgPotionGain);
-            var charClass = (SfClass) sg.GetValue(SF.SgClass);
-            int damageMin = sg.GetValue(SF.SgDamageMin);
-            int damageMax = sg.GetValue(SF.SgDamageMax);
-
-            Defense = Strength/2;
-            Evasion = Dexterity/2;
-            Resistance = Intelligence/2;
-
-            CriticalHit = Math.Round(Luck*5/(double) (level*2), 2);
-            if (CriticalHit < 0) CriticalHit = 0;
-            else if (CriticalHit > 50) CriticalHit = 50;
-
-            int tmpHealth = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                int potionType = sg.GetValue(SF.SgPotionType + i);
-                if (potionType == 16)
-                    tmpHealth = potionGain;
-            }
-
-            double tmpDamageFactor;
-            int tmpLifeFactor;
-
-            switch (charClass)
-            {
-                case SfClass.Warrior:
-                    tmpDamageFactor = 1 + (double) Strength/10;
-                    tmpLifeFactor = 5;
-                    break;
-                case SfClass.Mage:
-                    tmpDamageFactor = 1 + (double) Intelligence/10;
-                    tmpLifeFactor = 2;
-                    break;
-                case SfClass.Scout:
-                    tmpDamageFactor = 1 + (double) Dexterity/10;
-                    tmpLifeFactor = 4;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            DamageMin = (int) Math.Round(damageMin*tmpDamageFactor);
-            DamageMax = (int) Math.Round(damageMax*tmpDamageFactor);
-            HitPoints =
-                (int)
-                Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
-                           (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
         }
 
         public string Guild
@@ -342,12 +280,79 @@ namespace SfSdk.Data
             }
         }
 
+        #region INPC
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void NotifyOfPropertyChange([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        private void LoadFromSavegame(ISavegame sg)
+        {
+            Rank = sg.GetValue(SF.SgRank);
+            Level = sg.GetValue(SF.SgLevel);
+            Honor = sg.GetValue(SF.SgHonor);
+
+            Strength = sg.GetValue(SF.SgAttrStaerke) + sg.GetValue(SF.SgAttrStaerkeBonus);
+            Dexterity = sg.GetValue(SF.SgAttrBeweglichkeit) + sg.GetValue(SF.SgAttrBeweglichkeitBonus);
+            Constitution = sg.GetValue(SF.SgAttrIntelligenz) + sg.GetValue(SF.SgAttrIntelligenzBonus); // mistake in
+            Intelligence = sg.GetValue(SF.SgAttrAusdauer) + sg.GetValue(SF.SgAttrAusdauerBonus); // original source code
+            Luck = sg.GetValue(SF.SgAttrWillenskraft) + sg.GetValue(SF.SgAttrWillenskraftBonus);
+
+            int level = sg.GetValue(SF.SgLevel);
+            int potionGain = sg.GetValue(SF.SgPotionGain);
+            var charClass = (SfClass) sg.GetValue(SF.SgClass);
+            int damageMin = sg.GetValue(SF.SgDamageMin);
+            int damageMax = sg.GetValue(SF.SgDamageMax);
+
+            Defense = Strength/2;
+            Evasion = Dexterity/2;
+            Resistance = Intelligence/2;
+
+            CriticalHit = Math.Round(Luck*5/(double) (level*2), 2);
+            if (CriticalHit < 0) CriticalHit = 0;
+            else if (CriticalHit > 50) CriticalHit = 50;
+
+            int tmpHealth = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                int potionType = sg.GetValue(SF.SgPotionType + i);
+                if (potionType == 16)
+                    tmpHealth = potionGain;
+            }
+
+            double tmpDamageFactor;
+            int tmpLifeFactor;
+
+            switch (charClass)
+            {
+                case SfClass.Warrior:
+                    tmpDamageFactor = 1 + (double) Strength/10;
+                    tmpLifeFactor = 5;
+                    break;
+                case SfClass.Mage:
+                    tmpDamageFactor = 1 + (double) Intelligence/10;
+                    tmpLifeFactor = 2;
+                    break;
+                case SfClass.Scout:
+                    tmpDamageFactor = 1 + (double) Dexterity/10;
+                    tmpLifeFactor = 4;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            DamageMin = (int) Math.Round(damageMin*tmpDamageFactor);
+            DamageMax = (int) Math.Round(damageMax*tmpDamageFactor);
+            HitPoints =
+                (int)
+                Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
+                           (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
         }
     }
 }
