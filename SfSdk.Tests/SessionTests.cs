@@ -234,6 +234,6 @@ namespace SfSdk.Tests
             characters.Should().HaveCount(c => c == 15);
         }
 
-        // TODO: private code paths?
+        // TODO: HallOfFameAsyncForce, private code paths?
     }
 }
