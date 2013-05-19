@@ -18,7 +18,7 @@ namespace SfSdk.Data
         private readonly string _guild;
         private readonly ISession _session;
         private readonly string _username;
-        private bool _loaded;
+        private bool _isLoaded;
         private int _rank;
         private int _level;
         private int _honor;
@@ -36,7 +36,7 @@ namespace SfSdk.Data
         private double _criticalHit;
 
         /// <summary>
-        ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />.
+        ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
         /// </summary>
         /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         /// <param name="username">The username of the character.</param>
@@ -55,11 +55,11 @@ namespace SfSdk.Data
             _session = session;
             _guild = response.Guild;
             LoadFromSavegame(response.Savegame);
-            _loaded = true;
+            IsLoaded = true;
         }
 
         /// <summary>
-        ///     Creates a new <see cref="Character" /> instance, without its details loaded. />.
+        ///     Creates a new <see cref="Character" /> instance, without its details loaded.
         /// </summary>
         /// <param name="rank">The character's rank.</param>
         /// <param name="username">The character's username.</param>
@@ -80,11 +80,17 @@ namespace SfSdk.Data
             Honor = honor;
         }
 
+        /// <summary>
+        ///     Refreshes the data of the character by requesting it again.
+        /// </summary>
+        /// <param name="force">Indicates whether request shall be forced, even if the character has already been loaded.</param>
+        /// <returns></returns>
         public async Task Refresh(bool force = false)
         {
-            if (_loaded && !force) return;
+            if (_isLoaded && !force) return;
             var character = await _session.RequestCharacterAsync(_username);
-            _loaded = true;
+            this.CopyPropertiesFrom(character);
+            IsLoaded = true;
         }
 
         private void LoadFromSavegame(ISavegame sg)
@@ -321,6 +327,17 @@ namespace SfSdk.Data
             {
                 if (value.Equals(_criticalHit)) return;
                 _criticalHit = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsLoaded
+        {
+            get { return _isLoaded; }
+            private set
+            {
+                if (value == _isLoaded) return;
+                _isLoaded = value;
                 NotifyOfPropertyChange();
             }
         }

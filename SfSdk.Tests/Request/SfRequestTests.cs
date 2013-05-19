@@ -93,7 +93,8 @@ namespace SfSdk.Tests.Request
 
             // Assert
             sourceMock.Verify(
-                source => source.RequestAsync(It.IsAny<string>(), It.IsAny<SF>(), It.IsAny<IEnumerable<string>>()));
+                source => source.RequestAsync(It.IsAny<string>(), It.IsAny<SF>(), It.IsAny<IEnumerable<string>>()),
+                Times.Once());
         }
     }
 }

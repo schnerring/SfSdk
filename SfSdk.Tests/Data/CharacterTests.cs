@@ -188,10 +188,11 @@ namespace SfSdk.Tests.Data
         }
 
         [Fact]
-        public void RefreshThrowsNotImplementedException()
+        public async Task RefreshRequestsNoDataIfCharacterIsLoadedAndForceIsFalse()
         {
             // Arrange
             var sessionMock = new Mock<ISession>();
+
             var savegameMock = new Mock<ISavegame>();
             savegameMock.Setup(sg => sg.GetValue<int>(It.IsAny<SF>())).Returns(1);
             savegameMock.Setup(sg => sg.GetValue<int>(It.IsAny<int>())).Returns(1);
@@ -202,10 +203,123 @@ namespace SfSdk.Tests.Data
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
             var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
-            Func<Task> refresh = async () => await sut.Refresh();
 
-            // Act / Assert
-            refresh.ShouldThrow<NotImplementedException>();
+            // Act
+            await sut.Refresh();
+
+            // Assert
+            sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Never());
+        }
+
+        [Fact]
+        public async Task RefreshRequestsDataIfCharacterIsLoadedAndForceIsTrue()
+        {
+            // Arrange
+            var characterMock = new Mock<ICharacter>();
+
+            var sessionMock = new Mock<ISession>();
+            sessionMock.Setup(s => s.RequestCharacterAsync(It.IsAny<string>()))
+                       .ReturnsAsync(characterMock.Object)
+                       .Verifiable();
+
+            var savegameMock = new Mock<ISavegame>();
+            savegameMock.Setup(sg => sg.GetValue<int>(It.IsAny<SF>())).Returns(1);
+            savegameMock.Setup(sg => sg.GetValue<int>(It.IsAny<int>())).Returns(1);
+            savegameMock.Setup(sg => sg.GetValue(It.IsAny<SF>())).Returns(1);
+            savegameMock.Setup(sg => sg.GetValue(It.IsAny<int>())).Returns(1);
+
+            var characterResponseMock = new Mock<ICharacterResponse>();
+            characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
+
+            var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+
+            // Act
+            await sut.Refresh(force: true);
+
+            // Assert
+            sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task RefreshRequestsDataIfCharacterIsNotLoaded()
+        {
+            // Arrange
+            var characterMock = new Mock<ICharacter>();
+            var sessionMock = new Mock<ISession>();
+            sessionMock.Setup(s => s.RequestCharacterAsync(It.IsAny<string>()))
+                       .ReturnsAsync(characterMock.Object)
+                       .Verifiable();
+            var sut = new Character(0, ValidUsername, string.Empty, 0, 0, sessionMock.Object);
+
+            // Act
+            await sut.Refresh();
+
+            // Assert
+            // Data should only be requested once, as the request was not forced
+            sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task RefreshRequestsNoDataIfCharacterIsLoadedAndForceIsFalse2()
+        {
+            // Arrange
+            var characterMock = new Mock<ICharacter>();
+            var sessionMock = new Mock<ISession>();
+            sessionMock.Setup(s => s.RequestCharacterAsync(It.IsAny<string>()))
+                       .ReturnsAsync(characterMock.Object)
+                       .Verifiable();
+            var sut = new Character(0, ValidUsername, string.Empty, 0, 0, sessionMock.Object);
+
+            // Act
+            await sut.Refresh();
+            await sut.Refresh();
+
+            // Assert
+            // Data should only be requested once, as the request was not forced
+            sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Once());
+        }
+
+        [Fact]
+        public async Task RefreshRequestsDataIfCharacterIsLoadedAndForceIsTrue2()
+        {
+
+            // Arrange
+            var characterMock = new Mock<ICharacter>();
+            var sessionMock = new Mock<ISession>();
+            sessionMock.Setup(s => s.RequestCharacterAsync(It.IsAny<string>()))
+                       .ReturnsAsync(characterMock.Object)
+                       .Verifiable();
+            var sut = new Character(0, ValidUsername, string.Empty, 0, 0, sessionMock.Object);
+
+            // Act
+            await sut.Refresh();
+            await sut.Refresh(force: true);
+
+            // Assert
+            // Data should be requested two times, as the second request was forced
+            sessionMock.Verify(s => s.RequestCharacterAsync(It.IsAny<string>()), Times.Exactly(2));
+        }
+
+        [Fact]
+        public async Task RefreshSetsPropertiesToBeUpdatedIfNewDataIsReceived()
+        {
+            // Arrange
+            var characterMock = new Mock<ICharacter>();
+            // Setup difference
+            characterMock.Setup(c => c.Rank).Returns(1);
+            
+            var sessionMock = new Mock<ISession>();
+            sessionMock.Setup(s => s.RequestCharacterAsync(It.IsAny<string>()))
+                       .ReturnsAsync(characterMock.Object);
+
+            var sut = new Character(0, ValidUsername, string.Empty, 0, 0, sessionMock.Object);
+            sut.MonitorEvents();
+
+            // Act
+            await sut.Refresh();
+
+            // Assert
+            sut.ShouldRaise("PropertyChanged");
         }
     }
 }

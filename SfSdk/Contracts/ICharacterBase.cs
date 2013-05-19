@@ -33,6 +33,11 @@ namespace SfSdk.Contracts
         int Honor { get; }
 
         /// <summary>
+        ///     Indicates whether the character's details have already been loaded or not.
+        /// </summary>
+        bool IsLoaded { get; }
+
+        /// <summary>
         ///     Requests the S&amp;F server to refresh the character's data.
         /// </summary>
         Task Refresh(bool force = true);
