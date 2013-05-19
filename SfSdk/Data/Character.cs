@@ -1,5 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
@@ -11,12 +13,27 @@ namespace SfSdk.Data
     ///     Implements the functionality of creating a new <see cref="ICharacter" />.
     /// </summary>
     [DebuggerDisplay("{Rank}, {Level}, {Honor}, {Username}, {Guild}")]
-    internal class Character : ICharacter
+    internal class Character : ICharacter, INotifyPropertyChanged
     {
         private readonly string _guild;
         private readonly ISession _session;
         private readonly string _username;
         private bool _loaded;
+        private int _rank;
+        private int _level;
+        private int _honor;
+        private int _strength;
+        private int _dexterity;
+        private int _intelligence;
+        private int _constitution;
+        private int _luck;
+        private int _defense;
+        private int _evasion;
+        private int _resistance;
+        private int _damageMin;
+        private int _damageMax;
+        private int _hitPoints;
+        private double _criticalHit;
 
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />.
@@ -63,9 +80,10 @@ namespace SfSdk.Data
             Honor = honor;
         }
 
-        public Task Refresh(bool force = true)
+        public async Task Refresh(bool force = false)
         {
-            throw new NotImplementedException();
+            if (_loaded && !force) return;
+            var character = await _session.RequestCharacterAsync(_username);
             _loaded = true;
         }
 
@@ -142,34 +160,177 @@ namespace SfSdk.Data
             get { return _username; }
         }
 
-        public int Rank { get; private set; }
+        public int Rank
+        {
+            get { return _rank; }
+            private set
+            {
+                if (value == _rank) return;
+                _rank = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Level { get; private set; }
+        public int Level
+        {
+            get { return _level; }
+            private set
+            {
+                if (value == _level) return;
+                _level = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Honor { get; private set; }
+        public int Honor
+        {
+            get { return _honor; }
+            private set
+            {
+                if (value == _honor) return;
+                _honor = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Strength { get; private set; }
+        public int Strength
+        {
+            get { return _strength; }
+            private set
+            {
+                if (value == _strength) return;
+                _strength = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Dexterity { get; private set; }
+        public int Dexterity
+        {
+            get { return _dexterity; }
+            private set
+            {
+                if (value == _dexterity) return;
+                _dexterity = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Intelligence { get; private set; }
+        public int Intelligence
+        {
+            get { return _intelligence; }
+            private set
+            {
+                if (value == _intelligence) return;
+                _intelligence = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Constitution { get; private set; }
+        public int Constitution
+        {
+            get { return _constitution; }
+            private set
+            {
+                if (value == _constitution) return;
+                _constitution = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Luck { get; private set; }
+        public int Luck
+        {
+            get { return _luck; }
+            private set
+            {
+                if (value == _luck) return;
+                _luck = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Defense { get; private set; }
+        public int Defense
+        {
+            get { return _defense; }
+            private set
+            {
+                if (value == _defense) return;
+                _defense = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Evasion { get; private set; }
+        public int Evasion
+        {
+            get { return _evasion; }
+            private set
+            {
+                if (value == _evasion) return;
+                _evasion = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int Resistance { get; private set; }
+        public int Resistance
+        {
+            get { return _resistance; }
+            private set
+            {
+                if (value == _resistance) return;
+                _resistance = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int DamageMin { get; private set; }
+        public int DamageMin
+        {
+            get { return _damageMin; }
+            private set
+            {
+                if (value == _damageMin) return;
+                _damageMin = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int DamageMax { get; private set; }
+        public int DamageMax
+        {
+            get { return _damageMax; }
+            private set
+            {
+                if (value == _damageMax) return;
+                _damageMax = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public int HitPoints { get; private set; }
+        public int HitPoints
+        {
+            get { return _hitPoints; }
+            private set
+            {
+                if (value == _hitPoints) return;
+                _hitPoints = value;
+                NotifyOfPropertyChange();
+            }
+        }
 
-        public double CriticalHit { get; private set; }
+        public double CriticalHit
+        {
+            get { return _criticalHit; }
+            private set
+            {
+                if (value.Equals(_criticalHit)) return;
+                _criticalHit = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void NotifyOfPropertyChange([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

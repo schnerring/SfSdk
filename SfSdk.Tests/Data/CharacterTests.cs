@@ -169,7 +169,6 @@ namespace SfSdk.Tests.Data
         public void Constructor2ThrowsExceptionIfSessionIsNull()
         {
             // Arrange
-            var sessionMock = new Mock<ISession>();
             Action sut = () => new Character(0, ValidUsername, string.Empty, 0, 0, null);
 
             // Act / Assert
