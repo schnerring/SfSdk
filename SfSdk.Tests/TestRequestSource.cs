@@ -40,6 +40,10 @@ namespace SfSdk.Tests
                     // 2013/05/17
                     const string actScreenEhrenhalle = "+007-1/Hadrians S25/Shades of Night/231/47970/-2/brigada00/Shades of Night/231/47329/-3/seelenjäger/Insane/219/46668/-4/tofo/Shades of Night/224/46381/-5/VerführunG/Shades of Night/223/46293/-6/Pad/Shades of Night/221/46259/-7/Tenegros/Shades of Night/227/46228/-8/Xayne/Shades of Night/224/46186/-9/Araton/Shades of Night/227/46125/10/Blutseele/Insane/-221/46109/-11/Pizza/Insane/219/46107/-12/Susanno/Tigers and Dragons/221/45993/-13/MissGeschick/Insane/221/45967/14/Delphi/Shades of Night/-220/45946/-15/Pfledex/100 Fäuste/213/45945/;";
                     return new SfResponse(actScreenEhrenhalle);
+                case SF.ActAlbum:
+                    // 2013/08/28
+                    const string actAlbum = "192gAAAAAIAAAIAAAQAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+                    return new SfResponse(actAlbum);
                 default:
                     throw new NotImplementedException(action.ToString());
             }

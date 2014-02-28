@@ -11,9 +11,9 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfArgumentsHaveInvalidLength()
         {
             // Arrange
-            var validArgs = new string[2];
-            validArgs[0] = string.Empty.ToValidSavegameString();
-            Action sut = () => new LoginResponse(validArgs);
+            var invalidArgs = new string[2];
+            invalidArgs[0] = string.Empty.ToValidSavegameString();
+            Action sut = () => new LoginResponse(invalidArgs);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()

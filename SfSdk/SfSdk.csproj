@@ -67,6 +67,7 @@
     <Compile Include="Request\SnFUriWrapper.cs" />
     <Compile Include="Request\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
+    <Compile Include="Response\ScrapbookResponse.cs" />
     <Compile Include="Response\HallOfFameResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Response\ResponseWithSavegame.cs" />

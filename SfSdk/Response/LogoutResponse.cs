@@ -6,7 +6,7 @@ namespace SfSdk.Response
     ///     The reponse type returned on <see cref="SF.RespLogoutSuccess" />.<br />
     ///     Triggered by action <see cref="SF.ActLogout" />.
     /// </summary>
-    internal interface ILogoutResponse
+    internal interface ILogoutResponse : IResponse
     {
     }
 

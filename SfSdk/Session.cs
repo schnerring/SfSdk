@@ -169,6 +169,13 @@ namespace SfSdk
 
         }
 
+        public async Task<object> ScrapbookAsync()
+        {
+            if (!_isLoggedIn) throw new SessionLoggedOutException("ScrapbookAsync requires to be logged in.");
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActAlbum);
+            return null;
+        }
+
         private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)
         {
             var hasErrors = false;

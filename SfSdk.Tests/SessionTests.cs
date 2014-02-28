@@ -234,6 +234,31 @@ namespace SfSdk.Tests
             characters.Should().HaveCount(c => c == 15);
         }
 
+        [Fact]
+        public void ScrapbookAsyncThrowsExceptionIfSessionIsLoggedIn()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            Func<Task> a = async () => await sut.ScrapbookAsync();
+
+            // Act / Assert
+            a.ShouldThrow<SessionLoggedOutException>()
+             .Where(e => e.Message == "ScrapbookAsync requires to be logged in.");
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturnsObject()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+            
+            // Act / Assert
+            var results = await sut.ScrapbookAsync();
+        }
+
         // TODO: HallOfFameAsyncForce, private code paths?
     }
 }

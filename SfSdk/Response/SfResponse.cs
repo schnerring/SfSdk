@@ -118,6 +118,9 @@ namespace SfSdk.Response
                 case SF.ActGuildJoinAttack:
                     // TODO
                     break;
+                case SF.RespAlbum:
+                    Response = new ScrapbookResponse(args);
+                    break;
                 default:
                     var e = new ArgumentOutOfRangeException("success");
                     Log.Error(e);

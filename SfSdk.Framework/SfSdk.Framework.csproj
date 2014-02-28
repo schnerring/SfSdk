@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="HallOfFameCrawler.cs" />
     <Compile Include="HallOfFameSearchPredicate.cs" />
+    <Compile Include="HallOfFameSearchPredicateTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
