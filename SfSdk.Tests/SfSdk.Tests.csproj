@@ -55,8 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CharacterTests.cs" />
-    <Compile Include="Data\CountryTests.cs" />
-    <Compile Include="Data\ServerTests.cs" />
     <Compile Include="MoqExtensions.cs" />
     <Compile Include="Providers\CountryProviderTests.cs" />
     <Compile Include="Request\SnFUriWrapperTests.cs" />

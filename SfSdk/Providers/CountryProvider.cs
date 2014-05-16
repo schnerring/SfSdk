@@ -1,89 +1,27 @@
-﻿using System.IO;
-using System.Linq;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
-using SfSdk.Contracts;
-using SfSdk.Data;
-
-namespace SfSdk.Providers
+﻿namespace SfSdk.Providers
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Threading.Tasks;
+
+    using Newtonsoft.Json;
+
+    using SfSdk.Contracts;
+    using SfSdk.Data;
+
     /// <summary>
     ///     A service to receive information about countries where S&amp;F is available.
     /// </summary>
     public class CountryProvider : ICountryProvider
     {
-        private static string _response;
-
         /// <summary>
-        ///     Returns all the countries where S&amp;F is available.
+        ///     Returns all the countries from the Servers file.
         /// </summary>
-        /// <param name="forceRefresh">Indicates whether the <see cref="ICountry"/>'s details shall be re-requested or the cached results shall be returned.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="ICountry"/>.</returns>
-        public async Task<IEnumerable<ICountry>> GetCountriesAsync(bool forceRefresh = false)
+        public async Task<IEnumerable<ICountry>> GetCountriesAsync()
         {
-            if (_response == null || forceRefresh)
-            {
-                await GetResponse();
-            }
-
-            var document = new HtmlDocument();
-            document.LoadHtml(_response);
-
-            var inputElements = document.DocumentNode.SelectNodes("//input");
-            IEnumerable<Task<ICountry>> tasks = inputElements.Where(i => i.Attributes.Any(a => a.Name == "title") &&
-                                                                         i.Attributes.Any(a => a.Name == "onclick"))
-                                                             .Select(i => CreateCountryAsync(i, forceRefresh));
-            return await Task.WhenAll(tasks);
-        }
-
-        private static async Task GetResponse()
-        {
-            // todo refactor WebRequest properly
-
-            var webRequest = (HttpWebRequest)WebRequest.Create(new UriBuilder("http://www.sfgame.de/").Uri);
-
-            //            webRequest.Host = "s25.sfgame.de";
-            //            webRequest.KeepAlive = true;
-            //            webRequest.UserAgent =
-            //                "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.43 Safari/537.31";
-            //            webRequest.Accept = "*/*";
-            //            webRequest.Referer = "http://s25.sfgame.de/";
-            //            webRequest.Headers.Add(HttpRequestHeader.AcceptEncoding, "gzip,deflate,sdch");
-            //            webRequest.Headers.Add(HttpRequestHeader.AcceptLanguage, "de-DE,de;q=0.8,en-US;q=0.6,en;q=0.4");
-            //            webRequest.Headers.Add(HttpRequestHeader.AcceptCharset, "ISO-8859-1,utf-8;q=0.7,*;q=0.3");
-            //            webRequest.Headers.Add(HttpRequestHeader.Cookie, "904abc7e0bd65dd5396d8696ae2446e8=1");
-            try
-            {
-                using (var webResponse = (HttpWebResponse)await webRequest.GetResponseAsync())
-                using (var responseStream = webResponse.GetResponseStream())
-                {
-                    if (responseStream == null) throw new NotImplementedException(); // TODO test
-                    using (var streamReader = new StreamReader(responseStream))
-                        _response = await streamReader.ReadToEndAsync();
-                }
-
-            }
-            catch (WebException)
-            {
-                throw new NotImplementedException("Network connection lost.");
-            }
-        }
-
-        private static async Task<ICountry> CreateCountryAsync(HtmlNode node, bool forceRefresh)
-        {
-            // TODO catch exceptions?
-            var name = node.Attributes.Where(a => a.Name == "title").Select(a => a.Value).FirstOrDefault();
-            var url = node.Attributes.Where(a => a.Name == "onclick").Select(a => a.Value).FirstOrDefault();
-            Uri uri = null;
-            if (url != null)
-            {
-                url = url.Substring(url.IndexOf('\'') + 1, url.LastIndexOf('\'') - url.IndexOf('\'') - 1);
-                uri = new UriBuilder(url).Uri;
-            }
-            return await Country.CreateAsync(name, uri, forceRefresh);
+            var jsonData = File.ReadAllText("Servers.json");
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<List<Country>>(jsonData));
         }
     }
 }

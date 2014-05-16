@@ -99,7 +99,7 @@ namespace SfBot.ViewModels
 
             IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
-            foreach (ICountry country in countries.Where(country => !Countries.Contains(country)).OrderBy(c => c.Name))
+            foreach (ICountry country in countries.Where(country => !Countries.Contains(country)).OrderBy(c => c.CountryName))
                 Countries.Add(country);
 
             IsBusy = false;

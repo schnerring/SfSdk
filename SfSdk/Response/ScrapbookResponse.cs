@@ -14,29 +14,33 @@ namespace SfSdk.Response
     }
 
     /// <summary>
-    ///     The reponse type returned on <see cref="SF.RespAlbum" />.<br />
+    ///     The response type returned on <see cref="SF.RespAlbum" />.<br />
     ///     Triggered by action <see cref="SF.ActAlbum" />.
     /// </summary>
     internal class ScrapbookResponse : ResponseBase, IScrapbookResponse
     {
         public ScrapbookResponse(string[] args) : base(args)
         {
-            if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
+            if (Args.Length < 1)
+            {
+                throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
+            }
+
             var byteArray = Convert.FromBase64String(Args.First());
             var array = new List<int>();
            
             var i = 0;
             while (i < byteArray.Length)
             {
-                array.Add((byteArray[i] & 128)/128);
-                array.Add((byteArray[i] & 64)/64);
-                array.Add((byteArray[i] & 32)/32);
-                array.Add((byteArray[i] & 16)/16);
-                array.Add((byteArray[i] & 8)/8);
-                array.Add((byteArray[i] & 4)/4);
-                array.Add((byteArray[i] & 2)/2);
-                array.Add((byteArray[i] & 1));
-                i++;
+                array.Add((byteArray[i] & 128) / 128);
+                array.Add((byteArray[i] & 64) / 64);
+                array.Add((byteArray[i] & 32) / 32);
+                array.Add((byteArray[i] & 16) / 16);
+                array.Add((byteArray[i] & 8) / 8);
+                array.Add((byteArray[i] & 4) / 4);
+                array.Add((byteArray[i] & 2) / 2);
+                array.Add(byteArray[i] & 1);
+                ++i;
             }
 
             var categoryCount = new[] { 0, 0, 0, 0, 0 };
@@ -49,39 +53,44 @@ namespace SfSdk.Response
             {
                 if (array[i] == 1)
                 {
-                    int category;
                     if (i < 300)
                     {
-                        categoryCount[0]++;
+                        ++categoryCount[0];
                     }
                     else if (i < 792)
                     {
-                        categoryCount[1]++;
+                        ++categoryCount[1];
                     }
                     else if (i < 1804)
                     {
-                        categoryCount[2]++;
+                        ++categoryCount[2];
                     }
                     else if (i < 2500)
                     {
-                        categoryCount[3]++;
+                        ++categoryCount[3];
                     }
                     else
                     {
-                        categoryCount[4]++;
+                        ++categoryCount[4];
                     }
-                    contentCount++;
+                    ++contentCount;
                 }
-                i++;
+                ++i;
             }
 
-            if (contentCount > contentMax) contentCount = contentMax;
+            if (contentCount > contentMax)
+            {
+                contentCount = contentMax;
+            }
+
             i = 0;
             while (i < 5)
             {
                 if (categoryCount[i] > categoryMax[i])
+                {
                     categoryCount[i] = categoryMax[i];
-                i++;
+                }
+                ++i;
             }
 
             int itemOnPage;
@@ -91,13 +100,14 @@ namespace SfSdk.Response
                 itemOnPage = 0;
                 while (itemOnPage < 4)
                 {
-                    var monster = new MonsterItem {HasItem = array[monsterPage*4 + i] == 1};
+                    var monster = new MonsterItem { HasItem = array[monsterPage * 4 + i] == 1 };
+
 //                    SetContent(SF.CntAlbumMonster + i, SF.ImgOppimgMonster + monsterPage*4 + 1);
 //                    monster.Text = monsterPage*4 + 1 >= 220
 //                        ? txt[SF.TxtNewMonsterNames + monsterPage*4 + 1]
 //                        : txt[SF.TxtMonsterName + monsterPage*4 + 1];
                     items.Add(monster);
-                    itemOnPage++;
+                    ++itemOnPage;
                 }
             }
 
@@ -116,7 +126,7 @@ namespace SfSdk.Response
                             SetAlbumItems(itemOnPage, valuable, array, 300 + valuablePage*20 + i*5, 8, 1 + valuablePage*4 + i, 0);
                         }
                     }
-                    itemOnPage++;
+                    ++itemOnPage;
                 }
             }
         }

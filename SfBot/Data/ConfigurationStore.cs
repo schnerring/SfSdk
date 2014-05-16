@@ -38,7 +38,7 @@ namespace SfBot.Data
                 var accList = (List<Account>) _formatter.Deserialize(stream);
                 Accounts =
                     new ObservableCollection<Account>(
-                        accList.OrderBy(a => a.Country.Name).ThenBy(a => a.Server.Name).ThenBy(a => a.Username));
+                        accList.OrderBy(a => a.Country.CountryName).ThenBy(a => a.Server.ServerName).ThenBy(a => a.Username));
             }
         }
 
@@ -46,7 +46,7 @@ namespace SfBot.Data
         {
             if (account == null)
                 throw new ArgumentNullException("account");
-            if (!Accounts.Any(a => a.Username == account.Username && a.Server.Uri == account.Server.Uri))
+            if (!Accounts.Any(a => a.Username == account.Username && a.Server.ServerUri == account.Server.ServerUri))
             {
                 Accounts.Add(account);
                 _events.Publish(new AccountAddedEvent(account));

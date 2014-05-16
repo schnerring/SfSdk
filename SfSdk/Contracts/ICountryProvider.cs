@@ -9,10 +9,9 @@ namespace SfSdk.Contracts
     public interface ICountryProvider
     {
         /// <summary>
-        ///     Returns all the countries where S&amp;F is available.
+        ///     Returns all the countries from the Servers file.
         /// </summary>
-        /// <param name="forceRefresh">Indicates whether the <see cref="ICountry"/>'s details shall be re-requested or the cached results shall be returned.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="ICountry"/>.</returns>
-        Task<IEnumerable<ICountry>> GetCountriesAsync(bool forceRefresh = false);
+        Task<IEnumerable<ICountry>> GetCountriesAsync();
     }
 }
