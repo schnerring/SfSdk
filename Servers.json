@@ -1,0 +1,15 @@
+[
+  {
+    "CountryName": "Deutschland",
+    "Servers": [
+      {
+        "ServerName": "Welt 1",
+        "ServerUri": "http://s1.sfgame.de/"
+      },
+      {
+        "ServerName": "Welt 25",
+        "ServerUri": "http://s25.sfgame.de/"
+      }
+    ]
+  }
+]
