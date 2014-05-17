@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Country.cs" company="">
-//   
+//   Copyright (c) 2014 ebeeb
 // </copyright>
 // <summary>
 //   Implements the functionality of creating a new ICountry.

@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ICountry.cs" company="">
-//   
+//   Copyright (c) 2014 ebeeb
 // </copyright>
 // <summary>
 //   Contains information about a country where S&F is available.

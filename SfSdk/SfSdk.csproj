@@ -61,6 +61,7 @@
     <Compile Include="Contracts\ICharacterBase.cs" />
     <Compile Include="Data\Character.cs" />
     <Compile Include="PropertiesMapper.cs" />
+    <Compile Include="Providers\LanguageResourceProvider.cs" />
     <Compile Include="Request\IRequestSource.cs" />
     <Compile Include="Request\IUriWrapper.cs" />
     <Compile Include="Logging\Logging.cs" />
