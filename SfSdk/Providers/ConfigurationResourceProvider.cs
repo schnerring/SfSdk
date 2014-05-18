@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LanguageResourceProvider.cs" company="">
+// <copyright file="configurationResourceProvider.cs" company="">
 //   Copyright (c) 2014 ebeeb
 // </copyright>
 // <summary>
-//   A service to receive S&F language resources.
+//   A service to receive S&F configuration resources.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,9 +16,9 @@ namespace SfSdk.Providers
     using System.Threading.Tasks;
 
     /// <summary>
-    ///     A service to receive S&amp;F language resources.
+    ///     A service to receive S&amp;F configuration resources.
     /// </summary>
-    public class LanguageResourceProvider
+    public class ConfigurationResourceProvider
     {
         private static readonly Random Random = new Random(DateTime.Now.Millisecond);
 
@@ -28,15 +28,15 @@ namespace SfSdk.Providers
         private static readonly Dictionary<string, string> ResourceDataDict = new Dictionary<string, string>();
 
         /// <summary>
-        ///     Downloads the english language resources.
+        ///     Downloads the english configuration resources.
         /// </summary>
         /// <returns>
-        ///     A dictionary containing the language resources.
+        ///     A dictionary containing the configuration resources.
         /// </returns>
         /// <exception cref="NotImplementedException">
         ///     When no network connection is available
         /// </exception>
-        public async Task<Dictionary<int, string>> GetLanguageResourcesAsnyc(Uri serverUri)
+        public async Task<Dictionary<int, string>> GetConfigurationResourcesAsnyc(Uri serverUri)
         {
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
@@ -52,7 +52,7 @@ namespace SfSdk.Providers
                     {
                         ResourceDataDict[serverUrl] =
                             await
-                                wc.DownloadStringTaskAsync(new Uri(serverUri, "lang/sfgame_en.txt?rnd=" + Random.Next()));
+                                wc.DownloadStringTaskAsync(new Uri(serverUri, "client_cfg.php"));
                     }
                 }
             }
@@ -65,15 +65,15 @@ namespace SfSdk.Providers
         }
 
         /// <summary>
-        ///     Downloads the english language resources.
+        ///     Downloads the english configuration resources.
         /// </summary>
         /// <returns>
-        ///     A dictionary containing the language resources.
+        ///     A dictionary containing the configuration resources.
         /// </returns>
         /// <exception cref="NotImplementedException">
         ///     When no network connection is available
         /// </exception>
-        public Dictionary<int, string> GetLanguageResources(Uri serverUri)
+        public Dictionary<int, string> GetConfigurationResources(Uri serverUri)
         {
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
@@ -88,7 +88,7 @@ namespace SfSdk.Providers
                     if (string.IsNullOrWhiteSpace(ResourceDataDict[serverUrl]))
                     {
                         ResourceDataDict[serverUrl] =
-                            wc.DownloadString(new Uri(serverUri, "lang/sfgame_en.txt?rnd=" + Random.Next()));
+                            wc.DownloadString(new Uri(serverUri, "client_cfg.php"));
                     }
                 }
             }
@@ -102,11 +102,21 @@ namespace SfSdk.Providers
 
         private static Dictionary<int, string> ProcessStringData(string stringData)
         {
-            return
+            var result = new Dictionary<int, string>();
+            var configurationData =
                 stringData.Split('\n')
-                    .Select(line => line.Split('\t'))
-                    .Where(lineParts => lineParts.Length == 2)
-                    .ToDictionary(lineParts => int.Parse(lineParts[0]), lineParts => lineParts[1]);
+                          .Select(line => line
+                          .Split('\t'))
+                          .Where(lineParts => lineParts.Length == 2);
+
+            foreach (var line in configurationData)
+            {
+                var index = int.Parse(line[0]);
+                if (result.ContainsKey(index)) continue;
+                result.Add(index, line[1]);
+            }
+
+            return result;
         }
     }
 }
