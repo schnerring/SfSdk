@@ -6,6 +6,9 @@
 //   A service to receive S&F language resources.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
+
+using System.IO;
+
 namespace SfSdk.Providers
 {
     using System;
@@ -82,7 +85,7 @@ namespace SfSdk.Providers
                 {
                     if (string.IsNullOrWhiteSpace(ResourceDataDict[serverUrl]))
                     {
-                        ResourceDataDict[serverUrl] = wc.DownloadString("http://s1.sfgame.us/lang/sfgame_en.txt");
+                        ResourceDataDict[serverUrl] = wc.DownloadString(new Uri(serverUri, "lang/sfgame_en.txt"));
                     }
                 }
             }
