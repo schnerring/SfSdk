@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SfSdk.Constants;
+using SfSdk.Logging;
 using SfSdk.Providers;
 
 namespace SfSdk.Response
@@ -30,14 +31,20 @@ namespace SfSdk.Response
     /// </summary>
     internal class ScrapbookResponse : ResponseBase, IScrapbookResponse
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookResponse));
+
         private static Dictionary<int, string> LanguageResourceDict;
+        private static Dictionary<int, string> ConfigurationResourceDict;
 
         public ScrapbookResponse(string[] args, Uri serverUri) : base(args)
         {
             if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
+            Log.Info("Resource download started.");
             LanguageResourceDict = new LanguageResourceProvider().GetLanguageResources(serverUri);
+            ConfigurationResourceDict = new ConfigurationResourceProvider().GetConfigurationResources(serverUri);
+            Log.Info("Resource download finished.");
 
             byte[] byteArray = Convert.FromBase64String(Args.First());
             var array = new List<int>();
@@ -113,10 +120,10 @@ namespace SfSdk.Response
                 itemOnPage = 0;
                 while (itemOnPage < 4)
                 {
-                    bool hasItem = array[(monsterPage*4) + i] == 1;
+                    bool hasItem = array[(monsterPage * 4) + itemOnPage] == 1;
                     var monster = new MonsterItem(hasItem);
 
-                    SetContent((int) SF.CntAlbumMonster + i, (int) SF.ImgOppimgMonster + monsterPage*4 + i);
+                    SetContent((int) SF.CntAlbumMonster + itemOnPage, (int) SF.ImgOppimgMonster + monsterPage*4 + itemOnPage);
 
                     monster.Text = monsterPage*4 + 1 >= 220
                         ? LanguageResourceDict[(int) SF.TxtNewMonsterNames + monsterPage*4 + 1 - 220]
@@ -133,32 +140,28 @@ namespace SfSdk.Response
                 {
 //                    var valuable = new ValuableItem();
                     if (valuablePage <= 5)
-                        if (valuablePage < 5 || i <= 0)
-                            SetAlbumItems(array, itemOnPage, 300 + valuablePage*20 + i*5, 8, 1 + valuablePage*4 + i, 0);
+                        if (valuablePage < 5 || itemOnPage <= 0)
+                            SetAlbumItems(array, itemOnPage, 300 + valuablePage*20 + itemOnPage*5, 8, 1 + valuablePage*4 + itemOnPage, 0);
                         else
                         {
                             string entryText = string.Empty;
                         }
                     else if (valuablePage <= 7)
-                        SetAlbumEpic(array, itemOnPage, 510 + (valuablePage - 6)*4 + i, 8,
-                            50 + (valuablePage - 6)*4 + i, 0);
+                        SetAlbumEpic(array, itemOnPage, 510 + (valuablePage - 6) * 4 + itemOnPage, 8, 50 + (valuablePage - 6) * 4 + itemOnPage, 0);
                     else if (valuablePage <= 11)
-                        SetAlbumItems(array, itemOnPage, 526 + (valuablePage - 8)*20 + (i*5), 9,
-                            1 + (valuablePage - 8)*4 + i, 0);
+                        SetAlbumItems(array, itemOnPage, 526 + (valuablePage - 8) * 20 + (itemOnPage * 5), 9,
+                            1 + (valuablePage - 8) * 4 + itemOnPage, 0);
                     else if (valuablePage <= 13)
-                        SetAlbumItems(array, itemOnPage, 686 + (valuablePage - 12)*4 + i, 9,
-                            50 + (valuablePage - 12)*4 + i, 0);
+                        SetAlbumItems(array, itemOnPage, 686 + (valuablePage - 12) * 4 + itemOnPage, 9, 50 + (valuablePage - 12) * 4 + itemOnPage, 0);
                     else if (valuablePage <= 23)
-                        if (valuablePage < 23 || i <= 0)
-                            SetAlbumEpic(array, itemOnPage, 702 + (valuablePage - 14)*4 + i, 10,
-                                1 + (valuablePage - 14)*4 + i, 0);
+                        if (valuablePage < 23 || itemOnPage <= 0)
+                            SetAlbumEpic(array, itemOnPage, 702 + (valuablePage - 14) * 4 + itemOnPage, 10, 1 + (valuablePage - 14) * 4 + itemOnPage, 0);
                         else
                         {
                             string entryText = string.Empty;
                         }
                     else if (valuablePage <= 25)
-                        SetAlbumEpic(array, itemOnPage, 760 + 16 + (valuablePage - 24)*4 + i, 10,
-                            50 + (valuablePage - 24)*4 + i, 0);
+                        SetAlbumEpic(array, itemOnPage, 760 + 16 + (valuablePage - 24) * 4 + itemOnPage, 10, 50 + (valuablePage - 24) * 4 + itemOnPage, 0);
                     ++itemOnPage;
                 }
             }
@@ -232,6 +235,12 @@ namespace SfSdk.Response
 
         private void SetContent(int contentId, int imageId)
         {
+            Load(imageId);
+        }
+
+        private void Load(int actorId)
+        {
+            
         }
     }
 
