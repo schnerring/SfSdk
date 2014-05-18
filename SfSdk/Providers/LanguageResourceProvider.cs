@@ -22,7 +22,7 @@ namespace SfSdk.Providers
         /// <summary>
         ///     Caches the data which is downloaded.
         /// </summary>
-        private static string resourceData;
+        private static readonly Dictionary<string, string> ResourceDataDict = new Dictionary<string, string>();
 
         /// <summary>
         ///     Downloads the english language resources.
@@ -33,15 +33,21 @@ namespace SfSdk.Providers
         /// <exception cref="NotImplementedException">
         ///     When no network connection is available
         /// </exception>
-        public async Task<Dictionary<int, string>> GetLanguageResourcesAsnyc()
+        public async Task<Dictionary<int, string>> GetLanguageResourcesAsnyc(Uri serverUri)
         {
+            if (serverUri == null) throw new ArgumentNullException("serverUri");
+
+            var serverUrl = serverUri.ToString();
+            if (!ResourceDataDict.ContainsKey(serverUrl))
+                ResourceDataDict.Add(serverUrl, null);
+
             try
             {
                 using (var wc = new WebClient())
                 {
-                    if (string.IsNullOrWhiteSpace(resourceData))
+                    if (string.IsNullOrWhiteSpace(ResourceDataDict[serverUrl]))
                     {
-                        resourceData = await wc.DownloadStringTaskAsync("http://s1.sfgame.us/lang/sfgame_en.txt");
+                        ResourceDataDict[serverUrl] = await wc.DownloadStringTaskAsync("http://s1.sfgame.us/lang/sfgame_en.txt");
                     }
                 }
             }
@@ -50,11 +56,51 @@ namespace SfSdk.Providers
                 throw new NotImplementedException("Network connection lost.");
             }
 
+            return ProcessStringData(ResourceDataDict[serverUrl]);
+        }
+
+        /// <summary>
+        ///     Downloads the english language resources.
+        /// </summary>
+        /// <returns>
+        ///     A dictionary containing the language resources.
+        /// </returns>
+        /// <exception cref="NotImplementedException">
+        ///     When no network connection is available
+        /// </exception>
+        public Dictionary<int, string> GetLanguageResources(Uri serverUri)
+        {
+            if (serverUri == null) throw new ArgumentNullException("serverUri");
+
+            var serverUrl = serverUri.ToString();
+            if (!ResourceDataDict.ContainsKey(serverUrl))
+                ResourceDataDict.Add(serverUrl, null);
+
+            try
+            {
+                using (var wc = new WebClient())
+                {
+                    if (string.IsNullOrWhiteSpace(ResourceDataDict[serverUrl]))
+                    {
+                        ResourceDataDict[serverUrl] = wc.DownloadString("http://s1.sfgame.us/lang/sfgame_en.txt");
+                    }
+                }
+            }
+            catch (WebException)
+            {
+                throw new NotImplementedException("Network connection lost.");
+            }
+
+            return ProcessStringData(ResourceDataDict[serverUrl]);
+        }
+
+        private static Dictionary<int, string> ProcessStringData(string stringData)
+        {
             return
-                resourceData.Split('\n')
-                            .Select(line => line.Split('\t'))
-                            .Where(lineParts => lineParts.Length == 2)
-                            .ToDictionary(lineParts => int.Parse(lineParts[0]), lineParts => lineParts[1]);
+                stringData.Split('\n')
+                    .Select(line => line.Split('\t'))
+                    .Where(lineParts => lineParts.Length == 2)
+                    .ToDictionary(lineParts => int.Parse(lineParts[0]), lineParts => lineParts[1]);
         }
     }
 }

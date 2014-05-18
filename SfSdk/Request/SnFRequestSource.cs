@@ -43,7 +43,7 @@ namespace SfSdk.Request
                 {
                     if (stream == null) throw new NotImplementedException();
                     using (var reader = new StreamReader(stream))
-                        return new SfResponse(reader.ReadToEnd());
+                        return new SfResponse(reader.ReadToEnd(), _serverUri);
                 }
             }
             catch (WebException)

@@ -7,12 +7,14 @@ namespace SfSdk.Tests.Response
 {
     public class ScrapbookResponseTests
     {
+        private const string ValidResponseString = "gAAAAAIAAAIAAAQAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
+
         [Fact]
         public void ConstructorThrowsExceptionIfArgumentsHaveInvalidLength()
         {
             // Arrange
             var invalidArgs = new string[0];
-            Action sut = () => new ScrapbookResponse(invalidArgs);
+            Action sut = () => new ScrapbookResponse(invalidArgs, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -21,12 +23,25 @@ namespace SfSdk.Tests.Response
         }
 
         [Fact]
+        public void ConstructorThrowsExceptionIfServerUriIsNull()
+        {
+            // Arrange
+            var validArgs = new string[1];
+            validArgs[0] = ValidResponseString;
+            Action sut = () => new ScrapbookResponse(validArgs, null);
+
+            // Act / Assert
+            sut.ShouldThrow<ArgumentException>()
+               .Where(e => e.ParamName == "serverUri");
+        }
+
+        [Fact]
         public void ConstructorThrowsNoExceptionIfWithValidArguments()
         {
             // Arrange
             var validArgs = new string[1];
-            validArgs[0] = "gAAAAAIAAAIAAAQAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==";
-            Action sut = () => new ScrapbookResponse(validArgs);
+            validArgs[0] = ValidResponseString;
+            Action sut = () => new ScrapbookResponse(validArgs, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldNotThrow<Exception>();

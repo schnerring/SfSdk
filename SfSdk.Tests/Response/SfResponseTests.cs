@@ -11,7 +11,7 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfResponseStringIsNull()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(null);
+            Action sut = () => new SfResponse(null, null);
 
             // Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "responseString");
@@ -21,28 +21,28 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfResponseStringIsEmpty()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(string.Empty);
+            Action sut = () => new SfResponse(string.Empty, null);
 
             // Assert
             sut.ShouldThrow<ArgumentException>()
                .Where(e => e.Message.StartsWith("Response string must not be empty.") && e.ParamName == "responseString");
         }
 
-        //        [Fact]
-        //        public void ConstructorThrowsExceptionIfResponseStringStartsWithPlus()
-        //        {
-        //            // Arrange / Act
-        //            Action sut = () => new SfResponse("+");
-        //
-        //            // Assert
-        //            sut.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Response string starts with \"+\".");
-        //        }
+        [Fact]
+        public void ConstructorThrowsExceptionIfServerUriIsNull()
+        {
+            // Arrange / Act
+            Action sut = () => new SfResponse("a", null);
+
+            // Assert
+            sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
+        }
 
         [Fact]
         public void ConstructorThrowsExceptionIfErrorResponseStringHasInvalidLength()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse("E01");
+            Action sut = () => new SfResponse("E01", TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentException>()
@@ -56,7 +56,7 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfErrorResponseStringHasInvalidCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse("E01A");
+            Action sut = () => new SfResponse("E01A", TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentException>()
@@ -67,7 +67,7 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfSuccessResponseStringHasInvalidLength()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse("01");
+            Action sut = () => new SfResponse("01", TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentException>()
@@ -78,7 +78,7 @@ namespace SfSdk.Tests.Response
         public void ConstructorThrowsExceptionIfSuccessResponseStringHasInvalidCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse("abc");
+            Action sut = () => new SfResponse("abc", TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentException>()
@@ -89,7 +89,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListIsInitializedAfterCreatingInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(TestConstants.ExistingSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess, TestConstants.ValidServerUri);
 
             // Assert
             sut.Errors.Should().NotBeNull();
@@ -99,7 +99,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListCountIsZeroAfterCreatingSuccessInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(TestConstants.ExistingSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess, TestConstants.ValidServerUri);
 
             // Assert
             sut.Errors.Should().HaveCount(0);
@@ -109,7 +109,7 @@ namespace SfSdk.Tests.Response
         public void ResultIsNotNullAfterCreatingInstanceWithImplementedSuccessCode()
         {
             // Arrange / Act
-            var sut = new SfResponse(TestConstants.ExistingSuccess);
+            var sut = new SfResponse(TestConstants.ExistingSuccess, TestConstants.ValidServerUri);
 
             // Assert
             sut.Response.Should().NotBeNull();
@@ -119,7 +119,7 @@ namespace SfSdk.Tests.Response
         public void ProcessSuccessThrowsExceptionForNotImplementedSuccessCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(TestConstants.NonExistingSuccess);
+            Action sut = () => new SfResponse(TestConstants.NonExistingSuccess, TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.ParamName == "success");
@@ -129,7 +129,7 @@ namespace SfSdk.Tests.Response
         public void ErrorsListCountIsGreaterZeroAfterCreatingErrorInstance()
         {
             // Arrange / Act
-            var sut = new SfResponse(TestConstants.ExistingError);
+            var sut = new SfResponse(TestConstants.ExistingError, TestConstants.ValidServerUri);
 
             // Assert
             sut.Errors.Should().HaveCount(c => c > 0);
@@ -139,7 +139,7 @@ namespace SfSdk.Tests.Response
         public void ResultIsNullAfterCreatingInstanceWithImplementedErrorCode()
         {
             // Arrange / Act
-            var sut = new SfResponse(TestConstants.ExistingError);
+            var sut = new SfResponse(TestConstants.ExistingError, TestConstants.ValidServerUri);
 
             // Assert
             sut.Response.Should().BeNull();
@@ -149,7 +149,7 @@ namespace SfSdk.Tests.Response
         public void ProcessErrorThrowsExceptionForNotImplementedErrorCode()
         {
             // Arrange / Act
-            Action sut = () => new SfResponse(TestConstants.NonExistingError);
+            Action sut = () => new SfResponse(TestConstants.NonExistingError, TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>().Where(e => e.ParamName == "error");
