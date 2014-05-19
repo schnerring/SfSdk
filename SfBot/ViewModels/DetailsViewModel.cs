@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using SfBot.Data;
 using SfBot.Events;
 using SfBot.ViewModels.Details;
+using SFBot.ViewModels.Details;
 
 namespace SFBot.ViewModels
 {
@@ -19,12 +20,14 @@ namespace SFBot.ViewModels
         [ImportingConstructor]
         public DetailsViewModel(IEventAggregator events,
                                 CharacterViewModel characterViewModel,
-                                HallOfFameViewModel hallOfFameViewModel)
+                                HallOfFameViewModel hallOfFameViewModel,
+                                ScrapbookViewModel scrapbookViewModel)
         {
             _items = new BindableCollection<ISessionScreen>
                 {
                     characterViewModel,
-                    hallOfFameViewModel
+                    hallOfFameViewModel,
+                    scrapbookViewModel
                 };
             events.Subscribe(this);
         }

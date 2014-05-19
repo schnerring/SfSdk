@@ -649,7 +649,7 @@ namespace SfSdk.Providers
 
             if (item.Text.Contains('|'))
             {
-                item.HintText = item.Text.Split('|')[1].Replace('#', '\n');
+                item.HintText = item.Text.Split('|')[1].Replace('#', ' ');
                 item.Text = item.Text.Split('|')[0];
             }
 

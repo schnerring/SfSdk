@@ -89,6 +89,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controls\BusyIndicator.cs" />
+    <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Converters\DamageConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Data\Account.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="ViewModels\Details\CharacterViewModel.cs" />
     <Compile Include="ViewModels\Details\ILoadableScreen.cs" />
     <Compile Include="ViewModels\Details\LogEntry.cs" />
+    <Compile Include="ViewModels\Details\ScrapbookViewModel.cs" />
     <Compile Include="ViewModels\Details\SessionScreenBase.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\DetailsViewModel.cs" />
@@ -138,6 +140,9 @@
     <Compile Include="Views\Details\HallOfFameView.xaml.cs">
       <DependentUpon>HallOfFameView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Details\ScrapbookView.xaml.cs">
+      <DependentUpon>ScrapbookView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FooterView.xaml.cs">
       <DependentUpon>FooterView.xaml</DependentUpon>
     </Compile>
@@ -160,6 +165,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\TabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\TextBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,6 +201,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Details\HallOfFameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Details\ScrapbookView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
