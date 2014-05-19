@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IServer.cs" company="">
-//   Copyright (c) 2014 ebeeb
-// </copyright>
-// <summary>
-//   Contains information about a sub-server of a country where S&amp;F is available.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-namespace SfSdk.Contracts
+﻿namespace SfSdk.Contracts
 {
     using System;
 

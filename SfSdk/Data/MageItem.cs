@@ -1,6 +1,11 @@
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    internal class MageItem : ScrapbookItemBase
+    /// <summary>
+    ///     A mage item.
+    /// </summary>
+    internal class MageItem : ScrapbookItemBase, IMageItem
     {
     }
 }

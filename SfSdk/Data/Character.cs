@@ -280,18 +280,6 @@ namespace SfSdk.Data
             }
         }
 
-        #region INPC
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void NotifyOfPropertyChange([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
-
         private void LoadFromSavegame(ISavegame sg)
         {
             Rank = sg.GetValue(SF.SgRank);
@@ -354,5 +342,17 @@ namespace SfSdk.Data
                 Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
                            (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
         }
+
+        #region INPC
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void NotifyOfPropertyChange([CallerMemberName] string propertyName = null)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
     }
 }

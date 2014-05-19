@@ -1,6 +1,11 @@
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    internal class ValuableItem : ScrapbookItemBase
+    /// <summary>
+    ///     A valuable item.
+    /// </summary>
+    internal class ValuableItem : ScrapbookItemBase, IValuableItem
     {
     }
 }

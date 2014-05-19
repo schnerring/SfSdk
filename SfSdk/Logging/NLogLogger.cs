@@ -3,10 +3,17 @@ using NLog;
 
 namespace SfSdk.Logging
 {
-    internal class NLogLogger : ILog
+    /// <summary>
+    ///     A logger implementing NLog.
+    /// </summary>
+    public class NLogLogger : ILog
     {
         private readonly Logger _logger;
 
+        /// <summary>
+        ///     Creates an instance of the <see cref="NLogLogger"/>.
+        /// </summary>
+        /// <param name="type">The type of the class which shall be logged.</param>
         public NLogLogger(Type type)
         {
             _logger = NLog.LogManager.GetLogger(type.Name);

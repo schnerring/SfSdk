@@ -2,14 +2,29 @@ using System;
 
 namespace SfSdk.Contracts
 {
-    internal interface IScrapbookItem
+    /// <summary>
+    ///     A scrapbook item containing the base properties of any scrapbook item.
+    /// </summary>
+    public interface IScrapbookItem
     {
-        string Text { get; set; }
+        /// <summary>
+        ///     The item's text.
+        /// </summary>
+        string Text { get; }
 
-        string HintText { get; set; }
+        /// <summary>
+        ///     The item's extended text.
+        /// </summary>
+        string HintText { get; }
 
-        bool HasItem { get; set; }
+        /// <summary>
+        ///     Returns true if the scrapbook owner has the item.
+        /// </summary>
+        bool HasItem { get; }
 
-        Uri ImageUri { get; set; }
+        /// <summary>
+        ///     The item's image <see cref="Uri"/>.
+        /// </summary>
+        Uri ImageUri { get; }
     }
 }

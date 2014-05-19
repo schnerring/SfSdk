@@ -1,6 +1,11 @@
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    internal class MonsterItem : ScrapbookItemBase
+    /// <summary>
+    ///     A monster item.
+    /// </summary>
+    internal class MonsterItem : ScrapbookItemBase, IMonsterItem
     {
     }
 }

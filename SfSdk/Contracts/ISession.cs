@@ -64,6 +64,6 @@ namespace SfSdk.Contracts
         ///     Represents the Request Scrapbook Action.
         /// </summary>
         /// <returns>The Scrapbook of a character.</returns>
-        Task<object> ScrapbookAsync();
+        Task<IEnumerable<IScrapbookItem>> ScrapbookAsync();
     }
 }

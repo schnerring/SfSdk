@@ -1,6 +1,11 @@
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    internal class WarriorItem : ScrapbookItemBase
+    /// <summary>
+    ///     A warrior item.
+    /// </summary>
+    internal class WarriorItem : ScrapbookItemBase, IWarriorItem
     {
     }
 }

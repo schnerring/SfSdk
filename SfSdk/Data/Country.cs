@@ -1,39 +1,29 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Country.cs" company="">
-//   Copyright (c) 2014 ebeeb
-// </copyright>
-// <summary>
-//   Implements the functionality of creating a new ICountry.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Newtonsoft.Json;
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Newtonsoft.Json;
-
-    using SfSdk.Contracts;
-
     /// <summary>
-    ///     Implements the functionality of creating a new <see cref="ICountry"/>.
+    ///     Implements the functionality of creating a new <see cref="ICountry" />.
     /// </summary>
     [Serializable]
     internal class Country : ICountry
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Country"/> class. 
+        ///     Initializes a new instance of the <see cref="Country" /> class.
         ///     This constructor is required for the JSON deserializer to be able
         ///     to identify concrete classes to use when deserializing the interface properties.
         /// </summary>
         /// <param name="servers">
-        /// The servers.
+        ///     The servers.
         /// </param>
         [JsonConstructor]
         internal Country(IEnumerable<Server> servers)
         {
-            this.Servers = servers.ToList<IServer>();
+            Servers = servers.ToList<IServer>();
         }
 
         /// <summary>

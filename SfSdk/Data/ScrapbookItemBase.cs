@@ -4,6 +4,9 @@ using SfSdk.Contracts;
 
 namespace SfSdk.Data
 {
+    /// <summary>
+    ///     A scrapbook item containing the base properties of any scrapbook item.
+    /// </summary>
     [DebuggerDisplay("{Text}")]
     internal abstract class ScrapbookItemBase : IScrapbookItem
     {
