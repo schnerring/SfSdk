@@ -1,9 +1,9 @@
-﻿using SfSdk;
+﻿using SfBot.Data;
 
 namespace SfBot.ViewModels.Details
 {
     public interface ISessionScreen
     {
-        void Init(Session session);
+        void Init(Account account);
     }
 }

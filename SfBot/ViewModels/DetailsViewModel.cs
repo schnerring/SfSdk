@@ -69,7 +69,7 @@ namespace SFBot.ViewModels
             IsLoggedIn = message.IsLoggedIn;
             if (!message.IsLoggedIn) return;
             foreach (ISessionScreen sessionScreen in _items)
-                sessionScreen.Init(_account.Session);
+                sessionScreen.Init(_account);
             SelectedItem = _items.FirstOrDefault();
         }
 

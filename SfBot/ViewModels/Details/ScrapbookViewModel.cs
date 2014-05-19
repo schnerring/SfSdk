@@ -57,9 +57,9 @@ namespace SFBot.ViewModels.Details
         public override async Task LoadAsync()
         {
             IsBusy = true;
-            _events.Publish(new LogEvent(Session, "Scrapbook request started"));
+            _events.Publish(new LogEvent(Account.Session, "Scrapbook request started"));
 
-            var items = (await Session.ScrapbookAsync()).ToList();
+            var items = (await Account.Session.ScrapbookAsync()).ToList();
 
             foreach (var monsterItem in items.OfType<IMonsterItem>()) _monsterItems.Add(monsterItem);
             foreach (var valuableItem in items.OfType<IValuableItem>()) _valuableItems.Add(valuableItem);
@@ -67,7 +67,7 @@ namespace SFBot.ViewModels.Details
             foreach (var mageItem in items.OfType<IMageItem>()) _mageItems.Add(mageItem);
             foreach (var scoutItem in items.OfType<IScoutItem>()) _scoutItems.Add(scoutItem);
 
-            _events.Publish(new LogEvent(Session, "Scrapbook request finished"));
+            _events.Publish(new LogEvent(Account.Session, "Scrapbook request finished"));
             IsBusy = false;
         }
 

@@ -27,6 +27,7 @@ namespace SfSdk
         private IRequestSource _source;
         private bool _isLoggedIn;
         private string _username;
+        private string _md5PasswordHash;
 
         /// <summary>
         ///     Creates a new instance of type <see cref="Session"/> querying the default <see cref="SnFRequestSource"/>.
@@ -80,12 +81,13 @@ namespace SfSdk
 
             _isLoggedIn = false;
             _username = username;
+            _md5PasswordHash = md5PasswordHash;
             _serverUri = serverUri;
             _source = _sourceFactory(_serverUri);
             var result =
                 await
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
-                                             new[] { username, md5PasswordHash, "v1.70&random=%2" });
+                                             new[] { _username, _md5PasswordHash, "v1.70&random=%2" });
 
             var hasErrors = await HasErrors(result.Errors);
             var response = result.Response as LoginResponse;
@@ -204,8 +206,7 @@ namespace SfSdk
                 switch (err)
                 {
                     case SF.ErrSessionIdExpired:
-                        await LogoutAsync();
-                        break;
+                        throw new SessionLoggedOutException("Sessionid expired.");
                     case SF.ErrLoginFailed:
                         break;
                     default:

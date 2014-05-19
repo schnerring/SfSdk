@@ -33,9 +33,9 @@ namespace SfBot.ViewModels.Details
         public override async Task LoadAsync()
         {
             IsBusy = true;
-            _events.Publish(new LogEvent(Session, "Character request started"));
-            Character = await Session.MyCharacterAsync();
-            _events.Publish(new LogEvent(Session, "Character request finished"));
+            _events.Publish(new LogEvent(Account.Session, "Character request started"));
+            Character = await Account.Session.MyCharacterAsync();
+            _events.Publish(new LogEvent(Account.Session, "Character request finished"));
             IsBusy = false;
         }
 

@@ -24,7 +24,7 @@ namespace SfBot.ViewModels.Details
         public override async Task LoadAsync()
         {
             IsBusy = true;
-            _characters.AddRange(await Session.HallOfFameAsync());
+            _characters.AddRange(await Account.Session.HallOfFameAsync());
             IsBusy = false;
         }
 
