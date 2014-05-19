@@ -8,8 +8,12 @@ namespace SfBot
 {
     public static class Helpers
     {
-        // Extension
-        public static string ConvertToMd5Hash(this string input)
+        /// <summary>
+        ///     Gets the MD5 hash from a <see cref="string"/>.
+        /// </summary>
+        /// <param name="input">The string to be hashed.</param>
+        /// <returns>The MD5 hash as <see cref="string"/>.</returns>
+        public static string ToMd5Hash(this string input)
         {
             using (MD5 md5Hash = MD5.Create())
             {
@@ -22,9 +26,9 @@ namespace SfBot
 
                 // Loop through each byte of the hashed data  
                 // and format each one as a hexadecimal string. 
-                for (int i = 0; i < data.Length; i++)
+                foreach (byte t in data)
                 {
-                    sBuilder.Append(data[i].ToString("x2"));
+                    sBuilder.Append(t.ToString("x2"));
                 }
 
                 // Return the hexadecimal string. 

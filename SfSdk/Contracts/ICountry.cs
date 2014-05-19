@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+
 namespace SfSdk.Contracts
 {
-    using System.Collections.Generic;
-
     /// <summary>
     ///     Contains information about a country where S&amp;F is available.
     /// </summary>

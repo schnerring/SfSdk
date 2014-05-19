@@ -107,7 +107,7 @@ namespace SfBot.ViewModels
 
         public void Ok(SecureString securePassword)
         {
-            PasswordHash = securePassword.ConvertToUnsecureString().ConvertToMd5Hash();
+            PasswordHash = securePassword.ConvertToUnsecureString().ToMd5Hash();
             TryClose(true);
         }
 

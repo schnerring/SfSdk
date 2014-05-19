@@ -4,6 +4,9 @@ using SfSdk.Constants;
 
 namespace SfSdk.Providers
 {
+    /// <summary>
+    ///     A service to receive S&amp;F resources.
+    /// </summary>
     internal interface IResourceProvider
     {
         /// <summary>

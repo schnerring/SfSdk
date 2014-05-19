@@ -67,6 +67,8 @@ namespace SfSdk
         /// <param name="md5PasswordHash">The MD5 hash of the password.</param>
         /// <param name="serverUri">The <see cref="Uri"/> of the server to be logged on.</param>
         /// <returns>The success of the login process as <see cref="bool"/>.</returns>
+        /// <exception cref="ArgumentException">When username or password hash have invalid formats.</exception>
+        /// <exception cref="ArgumentNullException">When serverUri is null.</exception>
         public async Task<bool> LoginAsync(string username, string md5PasswordHash, Uri serverUri)
         {
             if (string.IsNullOrEmpty(username))
@@ -102,6 +104,7 @@ namespace SfSdk
         ///     Logs the current session out.
         /// </summary>
         /// <returns>The success of the logout as <see cref="bool"/>.</returns>
+        /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
         public async Task<bool> LogoutAsync()
         {
             if (!_isLoggedIn) throw new SessionLoggedOutException("LogoutAsync requires to be logged in.");
@@ -116,6 +119,7 @@ namespace SfSdk
         ///     Represents the Character Screen Action.
         /// </summary>
         /// <returns>The <see cref="ICharacter"/> of the currently logged in account.</returns>
+        /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
         public async Task<ICharacter> MyCharacterAsync()
         {
             if (!_isLoggedIn) throw new SessionLoggedOutException("MyCharacterAsync requires to be logged in.");
@@ -132,6 +136,8 @@ namespace SfSdk
         /// </summary>
         /// <param name="username">The username to search.</param>
         /// <returns>The <see cref="ICharacter"/> if the name could be found, null if not.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
         public async Task<ICharacter> RequestCharacterAsync(string username)
         {
             if (username == null) throw new ArgumentNullException("username");
@@ -149,31 +155,43 @@ namespace SfSdk
         /// </summary>
         /// <param name="searchString">Search strings may contain the rank or the name of a to be searched character.</param>
         /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
-        /// <returns>A <see cref="List{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
+        /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
+        /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
         public async Task<IEnumerable<ICharacter>> HallOfFameAsync(string searchString = null, bool forceLoad = false)
         {
             if (!_isLoggedIn) throw new SessionLoggedOutException("HallOfFameAsync requires to be logged in.");
-            
-            var request = new SfRequest();
-            ISfResponse result;
-            if (searchString == null) result = await request.ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle);
-            else result = await request.ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle, new[] {searchString});
+
+            string[] args = null;
+            if (searchString != null) args = new[] { searchString };
+
+            var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle, args);
             
             var hasErrors = await HasErrors(result.Errors);
             var response = result.Response as IHallOfFameResponse;
-            if (hasErrors | response == null) return null;
+            if (hasErrors || response == null) return null;
             return
-                response.Characters.Select(c => new Character(c.Item1, c.Item2, c.Item3, c.Item4, c.Item5, this))
+                response.Characters
+                        .Select(c => new Character(c.Item1, c.Item2, c.Item3, c.Item4, c.Item5, this))
                         .Cast<ICharacter>()
                         .ToList();
 
         }
 
-        public async Task<object> ScrapbookAsync()
+        /// <summary>
+        ///     Represents the Album Action.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="IScrapbookItem"/>/>.</returns>
+        /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
+        public async Task<IEnumerable<IScrapbookItem>> ScrapbookAsync()
         {
             if (!_isLoggedIn) throw new SessionLoggedOutException("ScrapbookAsync requires to be logged in.");
+
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActAlbum);
-            return null;
+            var hasErrors = await HasErrors(result.Errors);
+            var response = result.Response as IScrapbookResponse;
+            
+            if (hasErrors || response == null) return null;
+            return response.Items;
         }
 
         private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)

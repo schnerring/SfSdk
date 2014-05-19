@@ -5,6 +5,9 @@ using SfSdk.Constants;
 
 namespace SfSdk.Providers
 {
+    /// <summary>
+    ///     A service to receive S&amp;F resources.
+    /// </summary>
     internal abstract class ResourceProviderBase : IResourceProvider
     {
         /// <summary>
@@ -15,6 +18,12 @@ namespace SfSdk.Providers
 
         public abstract Dictionary<SF, string> GetResources(Uri serverUri);
 
+        /// <summary>
+        ///     The wrapper method for GetResources
+        /// </summary>
+        /// <param name="serverUrl">The server url.</param>
+        /// <param name="fillResourceDict">The dictionary to be filled.</param>
+        /// <returns></returns>
         protected Dictionary<SF, string> GetResources(string serverUrl, Func<string> fillResourceDict)
         {
             if (!ResourceDataDict.ContainsKey(serverUrl))

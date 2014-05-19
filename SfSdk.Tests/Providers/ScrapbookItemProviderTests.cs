@@ -5,13 +5,13 @@ using Xunit;
 
 namespace SfSdk.Tests.Providers
 {
-    public class ItemProviderTests
+    public class ScrapbookItemProviderTests
     {
         [Fact]
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
             // Arrange / Act
-            Action sut = () => new ItemProvider(null);
+            Action sut = () => new ScrapbookItemProvider(null);
 
             // Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
@@ -21,23 +21,10 @@ namespace SfSdk.Tests.Providers
         public void ConstructorThrowsNoExceptionWithValidArguments()
         {
             // Arrange / Act
-            Action sut = () => new ItemProvider(TestConstants.ValidServerUri);
+            Action sut = () => new ScrapbookItemProvider(TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldNotThrow<Exception>();
-        }
-
-        [Fact]
-        public void GetImageUriReturnsValidUri()
-        {
-            // Arrange
-            var sut = new ItemProvider(TestConstants.ValidServerUri);
-
-            // Act
-            var serverUri = sut.GetImageUri(24855, 24855);
-
-            // Assert
-            serverUri.Should().NotBeNull();
         }
     }
 }

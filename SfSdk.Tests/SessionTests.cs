@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SfSdk.Contracts;
+using SfSdk.Data;
 using Xunit;
 
 namespace SfSdk.Tests
@@ -247,16 +250,99 @@ namespace SfSdk.Tests
         }
 
         [Fact]
-        public async Task ScrapbookAsyncReturnsObject()
+        public async Task ScrapbookAsyncReturns252MonsterItems()
         {
             // Arrange
             var sut = new Session(serverUri => new TestRequestSource());
             await sut.LoginAsync(TestConstants.ValidUsername,
                                  TestConstants.ValidPasswordHash,
                                  TestConstants.ValidServerUri);
-            
-            // Act / Assert
+
+            // Act
             var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.OfType<IMonsterItem>().Count().Should().Be(252);
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturns246ValuableItems()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.OfType<IValuableItem>().Count().Should().Be(246);
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturns506WarriorItems()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.OfType<IWarriorItem>().Count().Should().Be(506);
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturns348MageItems()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.OfType<IMageItem>().Count().Should().Be(348);
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturns348ScoutItems()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.OfType<IScoutItem>().Count().Should().Be(348);
+        }
+
+        [Fact]
+        public async Task ScrapbookAsyncReturns1700Items()
+        {
+            // Arrange
+            var sut = new Session(serverUri => new TestRequestSource());
+            await sut.LoginAsync(TestConstants.ValidUsername,
+                                 TestConstants.ValidPasswordHash,
+                                 TestConstants.ValidServerUri);
+
+            // Act
+            var results = await sut.ScrapbookAsync();
+
+            // Assert
+            results.Count().Should().Be(1700);
         }
 
         // TODO: HallOfFameAsyncForce, private code paths?

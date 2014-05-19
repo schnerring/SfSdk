@@ -58,7 +58,7 @@
     <Compile Include="MoqExtensions.cs" />
     <Compile Include="Providers\ConfigurationResourceProviderTests.cs" />
     <Compile Include="Providers\CountryProviderTests.cs" />
-    <Compile Include="Providers\ItemProviderTests.cs" />
+    <Compile Include="Providers\ScrapbookItemProviderTests.cs" />
     <Compile Include="Providers\LanguageResourceProviderTests.cs" />
     <Compile Include="Request\SnFUriWrapperTests.cs" />
     <Compile Include="Response\CharacterResponseTests.cs" />

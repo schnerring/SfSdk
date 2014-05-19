@@ -59,10 +59,15 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Contracts\ICharacterBase.cs" />
+    <Compile Include="Contracts\IMageItem.cs" />
+    <Compile Include="Contracts\IScoutItem.cs" />
+    <Compile Include="Contracts\IValuableItem.cs" />
+    <Compile Include="Contracts\IWarriorItem.cs" />
     <Compile Include="Data\Character.cs" />
+    <Compile Include="Contracts\IMonsterItem.cs" />
     <Compile Include="PropertiesMapper.cs" />
     <Compile Include="Providers\ConfigurationResourceProvider.cs" />
-    <Compile Include="Providers\ItemProvider.cs" />
+    <Compile Include="Providers\ScrapbookItemProvider.cs" />
     <Compile Include="Providers\IResourceProvider.cs" />
     <Compile Include="Providers\LanguageResourceProvider.cs" />
     <Compile Include="Providers\ResourceProviderBase.cs" />
