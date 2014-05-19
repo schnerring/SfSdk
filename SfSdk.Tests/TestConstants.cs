@@ -12,7 +12,8 @@ namespace SfSdk.Tests
         public const string InvalidSessionId = "000";
         public static readonly Uri ValidServerUri = new Uri("http://s25.sfgame.de/");
         public static readonly Uri ValidImageServerUri = new Uri("http://img.playa-games.com/res/sfgame/");
-        public static Uri ValidCountryServerUri = new Uri("http://www.sfgame.de/");
+        public static readonly Uri ValidCountryServerUri = new Uri("http://www.sfgame.de/");
+        public static readonly int[] ValidAlbumContent = new int[3200];
 
 
         public const string ExistingSuccess = "187"; // SF.RespLogoutSuccess

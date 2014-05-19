@@ -41,24 +41,24 @@ namespace SfSdk.Response
             var scrapbookItemProvider = new ScrapbookItemProvider(serverUri);
 
             var byteArray = Convert.FromBase64String(Args.First());
-            var albumContent = new List<int>();
+            var scrapbookContent = new List<int>();
             foreach (var b in byteArray)
             {
-                albumContent.Add((b & 128)/128);
-                albumContent.Add((b & 64)/64);
-                albumContent.Add((b & 32)/32);
-                albumContent.Add((b & 16)/16);
-                albumContent.Add((b & 8)/8);
-                albumContent.Add((b & 4)/4);
-                albumContent.Add((b & 2)/2);
-                albumContent.Add(b & 1);
+                scrapbookContent.Add((b & 128)/128);
+                scrapbookContent.Add((b & 64)/64);
+                scrapbookContent.Add((b & 32)/32);
+                scrapbookContent.Add((b & 16)/16);
+                scrapbookContent.Add((b & 8)/8);
+                scrapbookContent.Add((b & 4)/4);
+                scrapbookContent.Add((b & 2)/2);
+                scrapbookContent.Add(b & 1);
             }
 
-            Items.AddRange(scrapbookItemProvider.CreateMonsterItems(albumContent));
-            Items.AddRange(scrapbookItemProvider.CreateValuableItems(albumContent));
-            Items.AddRange(scrapbookItemProvider.CreateWarriorItems(albumContent));
-            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<MageItem>(albumContent));
-            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<ScoutItem>(albumContent));
+            Items.AddRange(scrapbookItemProvider.CreateMonsterItems(scrapbookContent));
+            Items.AddRange(scrapbookItemProvider.CreateValuableItems(scrapbookContent));
+            Items.AddRange(scrapbookItemProvider.CreateWarriorItems(scrapbookContent));
+            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<MageItem>(scrapbookContent));
+            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<ScoutItem>(scrapbookContent));
         }
     }
 }

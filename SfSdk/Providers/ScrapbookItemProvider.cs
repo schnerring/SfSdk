@@ -47,9 +47,9 @@ namespace SfSdk.Providers
         /// <summary>
         ///     Creates monster items.
         /// </summary>
-        /// <param name="albumContent">The album content.</param>
-        /// <returns>The album's monster items.</returns>
-        public IEnumerable<IScrapbookItem> CreateMonsterItems(List<int> albumContent)
+        /// <param name="scrapbookContent">The scrapbook's content.</param>
+        /// <returns>The scrapbook's monster items.</returns>
+        public IEnumerable<IScrapbookItem> CreateMonsterItems(List<int> scrapbookContent)
         {
             var result = new List<IScrapbookItem>();
 
@@ -57,7 +57,7 @@ namespace SfSdk.Providers
                 for (int i = 0; i < 4; ++i)
                     result.Add(new MonsterItem
                     {
-                        HasItem = albumContent[(page*4) + i] == 1,
+                        HasItem = scrapbookContent[(page*4) + i] == 1,
                         ImageUri = GetImageUri((int) SF.CntAlbumMonster + i, (int) SF.ImgOppimgMonster + page*4 + i),
                         Text = page*4 + 1 >= 220
                             ? _languageResourceDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
@@ -70,9 +70,9 @@ namespace SfSdk.Providers
         /// <summary>
         ///     Creates valuable items.
         /// </summary>
-        /// <param name="albumContent">The album content.</param>
-        /// <returns>The album's valuable items.</returns>
-        public IEnumerable<IScrapbookItem> CreateValuableItems(List<int> albumContent)
+        /// <param name="scrapbookContent">The scrapbook's content.</param>
+        /// <returns>The scrapbook's valuable items.</returns>
+        public IEnumerable<IScrapbookItem> CreateValuableItems(List<int> scrapbookContent)
         {
             var result = new List<IScrapbookItem>();
 
@@ -84,25 +84,25 @@ namespace SfSdk.Providers
 
                     if (page <= 5)
                         if (page < 5 || i <= 0)
-                            itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(albumContent, i, 300 + page*20 + i*5,
+                            itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(scrapbookContent, i, 300 + page*20 + i*5,
                                 8, 1 + page*4 + i, 0));
                         else continue;
                     else if (page <= 7)
-                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(albumContent, i, 510 + (page - 6)*4 + i, 8,
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(scrapbookContent, i, 510 + (page - 6)*4 + i, 8,
                             50 + (page - 6)*4 + i, 0));
                     else if (page <= 11)
-                        itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(albumContent, i, 526 + (page - 8)*20 + i*5,
+                        itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(scrapbookContent, i, 526 + (page - 8)*20 + i*5,
                             9, 1 + (page - 8)*4 + i, 0));
                     else if (page <= 13)
-                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(albumContent, i, 686 + (page - 12)*4 + i, 9,
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(scrapbookContent, i, 686 + (page - 12)*4 + i, 9,
                             50 + (page - 12)*4 + i, 0));
                     else if (page <= 23)
                         if (page < 23 || i <= 0)
-                            itemsToAdd.Add(CreateEpicItem<ValuableItem>(albumContent, i, 702 + (page - 14)*4 + i, 10,
+                            itemsToAdd.Add(CreateEpicItem<ValuableItem>(scrapbookContent, i, 702 + (page - 14)*4 + i, 10,
                                 1 + (page - 14)*4 + i, 0));
                         else continue;
                     else if (page <= 25)
-                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(albumContent, i, 760 + 16 + (page - 24)*4 + i, 10,
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(scrapbookContent, i, 760 + 16 + (page - 24)*4 + i, 10,
                             50 + (page - 24)*4 + i, 0));
 
                     result.AddRange(itemsToAdd);
@@ -115,9 +115,9 @@ namespace SfSdk.Providers
         /// <summary>
         ///     Creates warrior items.
         /// </summary>
-        /// <param name="albumContent">The album content.</param>
-        /// <returns>The album's warrior items.</returns>
-        public IEnumerable<IScrapbookItem> CreateWarriorItems(List<int> albumContent)
+        /// <param name="scrapbookContent">The scrapbook's content.</param>
+        /// <returns>The scrapbook's warrior items.</returns>
+        public IEnumerable<IScrapbookItem> CreateWarriorItems(List<int> scrapbookContent)
         {
             var result = new List<IScrapbookItem>();
 
@@ -129,59 +129,59 @@ namespace SfSdk.Providers
 
                     if (page <= 7)
                         if (page < 7 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 776 + 16 + page*20 + i*5, 1, 1 + page*4 + i, 1));
                         else continue;
                     else if (page <= 9)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1076 + 16 + (page - 8)*4 + i, 1,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1076 + 16 + (page - 8)*4 + i, 1,
                             50 + (page - 8)*4 + i, 1));
                     else if (page <= 12)
                         if (page < 12 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1092 + 16 + (page - 10)*20 + i*5, 2, 1 + (page - 10)*4 + i, 1));
                         else continue;
                     else if (page <= 14)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1192 + 16 + (page - 13)*4 + i, 2,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1192 + 16 + (page - 13)*4 + i, 2,
                             50 + (page - 13)*4 + i, 1));
                     else if (page <= 17)
                         if (page < 17 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1208 + 16 + (page - 15)*20 + i*5, 3, 1 + (page - 15)*4 + i, 1));
                         else continue;
                     else if (page <= 19)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1308 + 16 + (page - 18)*4 + i, 3,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1308 + 16 + (page - 18)*4 + i, 3,
                             50 + (page - 18)*4 + i, 1));
                     else if (page <= 22)
                         if (page < 22 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1324 + 16 + (page - 20)*20 + i*5, 4, 1 + (page - 20)*4 + i, 1));
                         else continue;
                     else if (page <= 24)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1424 + 16 + (page - 23)*4 + i, 4,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1424 + 16 + (page - 23)*4 + i, 4,
                             50 + (page - 23)*4 + i, 1));
                     else if (page <= 27)
                         if (page < 27 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1440 + 16 + (page - 25)*20 + i*5, 5, 1 + (page - 25)*4 + i, 1));
                         else continue;
                     else if (page <= 29)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1540 + 16 + (page - 28)*4 + i, 5,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1540 + 16 + (page - 28)*4 + i, 5,
                             50 + (page - 28)*4 + i, 1));
                     else if (page <= 32)
                         if (page < 32 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1556 + 16 + (page - 30)*20 + (i*5), 6, 1 + (page - 30)*4 + i, 1));
                         else continue;
                     else if (page <= 34)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1656 + 16 + (page - 33)*4 + i, 6,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1656 + 16 + (page - 33)*4 + i, 6,
                             50 + (page - 33)*4 + i, 1));
                     else if (page <= 37)
                         if (page < 37 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(albumContent, i,
+                            itemsToAdd.AddRange(CreateMultipleItems<WarriorItem>(scrapbookContent, i,
                                 1672 + 16 + (page - 35)*20 + i*5, 7, 1 + (page - 35)*4 + i, 1));
                         else continue;
                     else if (page <= 39)
-                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(albumContent, i, 1772 + 16 + (page - 38)*4 + i, 7,
+                        itemsToAdd.Add(CreateEpicItem<WarriorItem>(scrapbookContent, i, 1772 + 16 + (page - 38)*4 + i, 7,
                             50 + (page - 38)*4 + i, 1));
 
                     result.AddRange(itemsToAdd);
@@ -194,14 +194,14 @@ namespace SfSdk.Providers
         /// <summary>
         ///     Creates mage or scout items.
         /// </summary>
-        /// <param name="albumContent">The album content.</param>
+        /// <param name="scrapbookContent">The scrapbook's content.</param>
         /// <typeparam name="TScrapbookItem">A concrete type of IMageItem or IScoutItem.</typeparam>
-        /// <returns>The album's mage or scout items.</returns>
+        /// <returns>The scrapbook's mage or scout items.</returns>
         /// <exception cref="ArgumentException">
         ///     When TScrapbookItem is not of type <see cref="IMageItem" /> or
         ///     <see cref="IScoutItem" />.
         /// </exception>
-        public IEnumerable<IScrapbookItem> CreateMageOrScoutItems<TScrapbookItem>(List<int> albumContent)
+        public IEnumerable<IScrapbookItem> CreateMageOrScoutItems<TScrapbookItem>(List<int> scrapbookContent)
             where TScrapbookItem : new()
         {
             var result = new List<IScrapbookItem>();
@@ -213,11 +213,11 @@ namespace SfSdk.Providers
                 throw new ArgumentException("TScrapbookItem be of type MageItem or ScoutItem.");
 
             int hunterOffs = 0;
-            int albumCat = 3;
+            int scrapbookCat = 3;
             if (typeof (TScrapbookItem) == typeof (ScoutItem))
             {
                 hunterOffs = 696 + 16;
-                albumCat = 4;
+                scrapbookCat = 4;
             }
 
             for (int page = 0; page <= 29; ++page)
@@ -228,52 +228,52 @@ namespace SfSdk.Providers
 
                     if (page <= 2)
                         if (page < 2 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                1788 + hunterOffs + page*20 + i*5, 1, 1 + page*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                1788 + hunterOffs + page*20 + i*5, 1, 1 + page*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 4)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            1888 + hunterOffs + (page - 3)*4 + i, 1, 50 + (page - 3)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            1888 + hunterOffs + (page - 3)*4 + i, 1, 50 + (page - 3)*4 + i, scrapbookCat - 1));
                     else if (page <= 7)
                         if (page < 7 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                1904 + hunterOffs + (page - 5)*20 + i*5, 3, 1 + (page - 5)*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                1904 + hunterOffs + (page - 5)*20 + i*5, 3, 1 + (page - 5)*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 9)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            2004 + hunterOffs + (page - 8)*4 + i, 3, 50 + (page - 8)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            2004 + hunterOffs + (page - 8)*4 + i, 3, 50 + (page - 8)*4 + i, scrapbookCat - 1));
                     else if (page <= 12)
                         if (page < 12 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                2020 + hunterOffs + (page - 10)*20 + i*5, 4, 1 + (page - 10)*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                2020 + hunterOffs + (page - 10)*20 + i*5, 4, 1 + (page - 10)*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 14)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            2120 + hunterOffs + (page - 13)*4 + i, 4, 50 + (page - 13)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            2120 + hunterOffs + (page - 13)*4 + i, 4, 50 + (page - 13)*4 + i, scrapbookCat - 1));
                     else if (page <= 17)
                         if (page < 17 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                2136 + hunterOffs + (page - 15)*20 + i*5, 5, 1 + (page - 15)*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                2136 + hunterOffs + (page - 15)*20 + i*5, 5, 1 + (page - 15)*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 19)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            2236 + hunterOffs + (page - 18)*4 + i, 5, 50 + (page - 18)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            2236 + hunterOffs + (page - 18)*4 + i, 5, 50 + (page - 18)*4 + i, scrapbookCat - 1));
                     else if (page <= 22)
                         if (page < 22 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                2252 + hunterOffs + (page - 20)*20 + i*5, 6, 1 + (page - 20)*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                2252 + hunterOffs + (page - 20)*20 + i*5, 6, 1 + (page - 20)*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 24)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            2352 + hunterOffs + (page - 23)*4 + i, 6, 50 + (page - 23)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            2352 + hunterOffs + (page - 23)*4 + i, 6, 50 + (page - 23)*4 + i, scrapbookCat - 1));
                     else if (page <= 27)
                         if (page < 27 || i <= 1)
-                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(albumContent, i,
-                                2368 + hunterOffs + (page - 25)*20 + i*5, 7, 1 + (page - 25)*4 + i, albumCat - 1));
+                            itemsToAdd.AddRange(CreateMultipleItems<TScrapbookItem>(scrapbookContent, i,
+                                2368 + hunterOffs + (page - 25)*20 + i*5, 7, 1 + (page - 25)*4 + i, scrapbookCat - 1));
                         else continue;
                     else if (page <= 29)
-                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(albumContent, i,
-                            2468 + hunterOffs + (page - 28)*4 + i, 7, 50 + (page - 28)*4 + i, albumCat - 1));
+                        itemsToAdd.Add(CreateEpicItem<TScrapbookItem>(scrapbookContent, i,
+                            2468 + hunterOffs + (page - 28)*4 + i, 7, 50 + (page - 28)*4 + i, scrapbookCat - 1));
 
                     result.AddRange(itemsToAdd);
                 }
@@ -312,7 +312,7 @@ namespace SfSdk.Providers
             return 0;
         }
 
-        private string GetItemName(int sgIndex, int sg, int albumMode = -1)
+        private string GetItemName(int sgIndex, int sg, int scrapbookMode = -1)
         {
             int itemPic = 0;
             int itemTyp = 0;
@@ -321,11 +321,11 @@ namespace SfSdk.Providers
             int txtBase = 0;
             string txtSuffix = string.Empty;
 
-            if (albumMode >= 0)
+            if (scrapbookMode >= 0)
             {
                 itemTyp = sgIndex;
                 itemPic = sg;
-                itemClass = albumMode;
+                itemClass = scrapbookMode;
             }
 
             if (itemTyp >= 8)
@@ -592,7 +592,7 @@ namespace SfSdk.Providers
             Log.Warn("Image with the same URL already added!");
         }
 
-        private IEnumerable<IScrapbookItem> CreateMultipleItems<TScrapbookItem>(IReadOnlyList<int> albumContent,
+        private IEnumerable<IScrapbookItem> CreateMultipleItems<TScrapbookItem>(IReadOnlyList<int> scrapbookContent,
             int itemOnPage, int aOffs, int itemType, int itemPic, int itemClass) where TScrapbookItem : new()
         {
             var results = new List<TScrapbookItem>
@@ -612,7 +612,7 @@ namespace SfSdk.Providers
             List<ScrapbookItemBase> items = results.Cast<ScrapbookItemBase>().ToList();
             while (i < 5)
             {
-                items[i].HasItem = albumContent[aOffs + i] == 1;
+                items[i].HasItem = scrapbookContent[aOffs + i] == 1;
                 items[i].Text = itemText;
                 ++i;
             }
@@ -635,7 +635,7 @@ namespace SfSdk.Providers
             return items;
         }
 
-        private IScrapbookItem CreateEpicItem<TScrapbookItem>(IReadOnlyList<int> albumContent, int itemOnPage, int aOffs,
+        private IScrapbookItem CreateEpicItem<TScrapbookItem>(IReadOnlyList<int> scrapbookContent, int itemOnPage, int aOffs,
             int itemType, int itemPic, int itemClass) where TScrapbookItem : new()
         {
             var result = new TScrapbookItem();
@@ -644,7 +644,7 @@ namespace SfSdk.Providers
             if (item == null)
                 throw new ArgumentException("TScrapbookItem must be derived type of ScrapbookItemBase");
 
-            item.HasItem = albumContent[aOffs] == 1;
+            item.HasItem = scrapbookContent[aOffs] == 1;
             item.Text = GetItemName(itemType, itemPic, itemClass);
 
             if (item.Text.Contains('|'))

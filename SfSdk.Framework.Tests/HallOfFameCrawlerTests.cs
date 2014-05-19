@@ -92,7 +92,7 @@ namespace SfSdk.Framework.Tests
         }
 
         [Fact]
-        public void SearchThrowsExceptionIfSearchPredicateMaxHonorIsLessTahnMinHonor()
+        public void SearchThrowsExceptionIfSearchPredicateMaxHonorIsLessThanMinHonor()
         {
             // Arrange
             var sessionMock = new Mock<ISession>();
