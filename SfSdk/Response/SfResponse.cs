@@ -33,11 +33,13 @@ namespace SfSdk.Response
         /// </summary>
         /// <param name="responseString">The response string of the request.</param>
         /// <param name="serverUri">The server <see cref="Uri"/>.</param>
+        /// <exception cref="ArgumentNullException">When responseString or serverUri is null.</exception>
+        /// <exception cref="ArgumentException">When response string is empty.</exception>
         public SfResponse(string responseString, Uri serverUri)
         {
             if (responseString == null)
                 throw new ArgumentNullException("responseString");
-            if (string.IsNullOrEmpty(responseString))
+            if (string.IsNullOrWhiteSpace(responseString))
                 throw new ArgumentException("Response string must not be empty.", "responseString");
             if (serverUri == null)
                 throw new ArgumentNullException("serverUri");

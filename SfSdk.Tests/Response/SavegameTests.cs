@@ -18,7 +18,7 @@ namespace SfSdk.Tests.Response
             sut.ShouldThrow<ArgumentException>()
                .Where(
                    e =>
-                   e.Message.StartsWith("The savegame string is not valid not long enough.") &&
+                   e.Message.StartsWith("The savegame string is not valid.") &&
                    e.ParamName == "savegameString");
         }
 

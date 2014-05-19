@@ -55,6 +55,7 @@ namespace SfSdk
         /// <typeparam name="T">The expected type of the input string.</typeparam>
         /// <param name="input">The input string.</param>
         /// <returns>If the conversion succeeds the value of the converted input, if not the default value of type T.</returns>
+        /// <exception cref="NotImplementedException">When convert fails.</exception>
         public static T Convert<T>(this string input)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(typeof (T));

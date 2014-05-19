@@ -38,7 +38,7 @@ namespace SfSdk.Tests.Request
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
-               .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("SessionId must have a length of 32."));
+               .Where(e => e.ParamName == "sessionId" && e.Message.StartsWith("sessionId must have a length of 32."));
         }
 
         [Fact]

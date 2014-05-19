@@ -35,17 +35,20 @@ namespace SfSdk.Data
         private int _resistance;
         private int _strength;
 
+
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
         /// </summary>
         /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         /// <param name="username">The username of the character.</param>
         /// <param name="session">The session, where the character is going to be attatched to.</param>
+        /// <exception cref="ArgumentNullException">When savegame is empty or username is null or empty.</exception>
+        /// <exception cref="ArgumentException">When session or response is null.</exception>
         public Character(ICharacterResponse response, string username, ISession session)
         {
             if (response == null)
                 throw new ArgumentNullException("response");
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Username must not be null or empty.", "username");
             if (response.Savegame == null)
                 throw new ArgumentException("Character response must contain a savegame.", "response");
@@ -59,6 +62,7 @@ namespace SfSdk.Data
             IsLoaded = true;
         }
 
+
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, without its details loaded.
         /// </summary>
@@ -68,9 +72,11 @@ namespace SfSdk.Data
         /// <param name="level">The character's level.</param>
         /// <param name="honor">The character's honor.</param>
         /// <param name="session">The session, where the character is going to be attatched to.</param>
+        /// <exception cref="ArgumentException">When username is null or empty.</exception>
+        /// <exception cref="ArgumentNullException">When session is null.</exception>
         public Character(int rank, string username, string guild, int level, int honor, ISession session)
         {
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Username must not be null or empty.", "username");
             if (session == null) throw new ArgumentNullException("session");
             Rank = rank;
@@ -85,7 +91,7 @@ namespace SfSdk.Data
         ///     Refreshes the data of the character by requesting it again.
         /// </summary>
         /// <param name="force">Indicates whether request shall be forced, even if the character has already been loaded.</param>
-        /// <returns></returns>
+        /// <returns>Task.</returns>
         public async Task Refresh(bool force = false)
         {
             if (_isLoaded && !force) return;

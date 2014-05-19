@@ -25,11 +25,13 @@ namespace SfSdk.Request
         /// <param name="serverUri">The server URI where the request is going to be received on.</param>
         /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
         /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
+        /// <exception cref="ArgumentNullException">When sessionId or serverUri is null.</exception>
+        /// <exception cref="ArgumentException">When sessionId has not a length of 32.</exception>
         public SnFUriWrapper(string sessionId, Uri serverUri, SF action, IEnumerable<string> args = null)
         {
             if (sessionId == null) throw new ArgumentNullException("sessionId");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
-            if (sessionId.Length != 32) throw new ArgumentException("SessionId must have a length of 32.", "sessionId");
+            if (sessionId.Length != 32) throw new ArgumentException("sessionId must have a length of 32.", "sessionId");
 
             _sessionId = sessionId;
             _serverUri = serverUri;

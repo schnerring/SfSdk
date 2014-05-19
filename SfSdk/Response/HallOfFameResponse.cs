@@ -36,6 +36,7 @@ namespace SfSdk.Response
         ///     Creates a new hall of fame response.
         /// </summary>
         /// <param name="args">The response arguments.</param>
+        /// <exception cref="ArgumentException">When the arguments have not a minimum length of 1.</exception>
         public HallOfFameResponse(string[] args) : base(args)
         {
             if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");

@@ -417,16 +417,16 @@ namespace SfSdk.Providers
             {
                 if (_languageResourceDict[SF.TxtItmnameExt] == "1")
                 {
-                    return (string.IsNullOrEmpty(txtSuffix) ? string.Empty : txtSuffix + " ") +
+                    return (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : txtSuffix + " ") +
                            _languageResourceDict[(SF) txtBase + itemPic - 1];
                 }
 
                 if (_languageResourceDict[SF.TxtItmnameExt] != "2")
                     return _languageResourceDict[(SF) txtBase + itemPic - 1] +
-                           (string.IsNullOrEmpty(txtSuffix) ? string.Empty : " " + txtSuffix);
+                           (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : " " + txtSuffix);
             }
 
-            if (string.IsNullOrEmpty(txtSuffix))
+            if (string.IsNullOrWhiteSpace(txtSuffix))
                 return _languageResourceDict[(SF) txtBase + itemPic - 1];
 
             string[] parts = txtSuffix.Split(new[] {"%1"}, StringSplitOptions.None);

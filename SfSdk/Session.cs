@@ -71,7 +71,7 @@ namespace SfSdk
         /// <exception cref="ArgumentNullException">When serverUri is null.</exception>
         public async Task<bool> LoginAsync(string username, string md5PasswordHash, Uri serverUri)
         {
-            if (string.IsNullOrEmpty(username))
+            if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Username must not be null or empty.", "username");
             if (md5PasswordHash == null || md5PasswordHash.Length != 32) 
                 throw new ArgumentException("Password hash must not be null and have a length of 32.", "md5PasswordHash");

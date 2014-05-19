@@ -23,7 +23,9 @@ namespace SfSdk.Providers
         /// </summary>
         /// <param name="serverUrl">The server url.</param>
         /// <param name="fillResourceDict">The dictionary to be filled.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     A dictionary containing the language resources.
+        /// </returns>
         protected Dictionary<SF, string> GetResources(string serverUrl, Func<string> fillResourceDict)
         {
             if (!ResourceDataDict.ContainsKey(serverUrl))

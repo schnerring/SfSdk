@@ -1,14 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScrapbookResponse.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   The reponse type returned on <see cref="SF.RespAlbum" />.<br />
-//   Triggered by action <see cref="SF.ActAlbum" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using SfSdk.Constants;
@@ -35,6 +25,13 @@ namespace SfSdk.Response
     {
         public List<IScrapbookItem> Items { get; private set; }
 
+        /// <summary>
+        ///     Creates a new scrapbook response.
+        /// </summary>
+        /// <param name="args">The response arguments.</param>
+        /// <param name="serverUri">The server's <see cref="Uri"/>.</param>
+        /// <exception cref="ArgumentException">When the arguments have not a minimum length of 1.</exception>
+        /// <exception cref="ArgumentNullException">When serverUri is null.</exception>
         public ScrapbookResponse(string[] args, Uri serverUri) : base(args)
         {
             if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
