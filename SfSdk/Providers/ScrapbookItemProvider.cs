@@ -16,7 +16,7 @@ namespace SfSdk.Providers
         private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookItemProvider));
 
         private readonly Uri _imageServerUri;
-        private Dictionary<SF, string> _configurationResourcesDict;
+        private readonly Dictionary<SF, string> _configurationResourcesDict;
         private readonly Dictionary<SF, string> _languageResourceDict;
         private readonly Dictionary<int, string> _urlDict = new Dictionary<int, string>();
 
