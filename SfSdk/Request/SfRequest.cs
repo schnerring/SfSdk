@@ -22,11 +22,13 @@ namespace SfSdk.Request
         /// <param name="action">The action which shall be executed. See <see cref="SF" /> which start with "Act".</param>
         /// <param name="args">Additional arguments like e.g. the search string for searches or the user credentials for logging in.</param>
         /// <returns>A <see cref="SfResponse" /> containing the result information.</returns>
+        /// <exception cref="ArgumentNullException">When source or sessionId is null.</exception>
+        /// <exception cref="ArgumentException">When sessionId has not a length of 32.</exception>
         public async Task<ISfResponse> ExecuteAsync(IRequestSource source, string sessionId, SF action, IEnumerable<string> args = null)
         {
             if (source == null) throw new ArgumentNullException("source");
             if (sessionId == null) throw new ArgumentNullException("sessionId");
-            if (sessionId.Length != 32) throw new ArgumentException("SessionId must have a length of 32.", "sessionId");
+            if (sessionId.Length != 32) throw new ArgumentException("sessionId must have a length of 32.", "sessionId");
 
             var id = Guid.NewGuid();
 

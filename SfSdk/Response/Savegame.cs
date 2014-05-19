@@ -46,16 +46,17 @@ namespace SfSdk.Response
     internal class Savegame : ISavegame
     {
         private readonly Dictionary<int, string> _savegameDict = new Dictionary<int, string>();
-
+        
         /// <summary>
         ///     Creates a new savegame.
         /// </summary>
         /// <param name="savegameString">A <see cref="string" /> containing the savegame parts.</param>
+        /// <exception cref="ArgumentException">When the savegame string is not valid.</exception>
         public Savegame(string savegameString)
         {
             var savegameParts = ("0/" + savegameString).Split('/');
             if (savegameParts.Length <= (int) SF.SgServerTime)
-                throw new ArgumentException("The savegame string is not valid not long enough.",
+                throw new ArgumentException("The savegame string is not valid.",
                                             "savegameString");
 
             for (int i = 0; i < savegameParts.Length; i++)

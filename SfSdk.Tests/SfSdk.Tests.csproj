@@ -55,10 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\CharacterTests.cs" />
-    <Compile Include="Data\CountryTests.cs" />
-    <Compile Include="Data\ServerTests.cs" />
     <Compile Include="MoqExtensions.cs" />
+    <Compile Include="Providers\ConfigurationResourceProviderTests.cs" />
     <Compile Include="Providers\CountryProviderTests.cs" />
+    <Compile Include="Providers\ScrapbookItemProviderTests.cs" />
+    <Compile Include="Providers\LanguageResourceProviderTests.cs" />
     <Compile Include="Request\SnFUriWrapperTests.cs" />
     <Compile Include="Response\CharacterResponseTests.cs" />
     <Compile Include="Response\HallOfFameResponseTests.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Response\ResponseBaseTests.cs" />
     <Compile Include="Response\ResponseWithSavegameTests.cs" />
     <Compile Include="Response\SavegameTests.cs" />
+    <Compile Include="Response\ScrapbookResponseTests.cs" />
     <Compile Include="Response\SfResponseTests.cs" />
     <Compile Include="Request\SnFRequestSourceTests.cs" />
     <Compile Include="SessionTests.cs" />

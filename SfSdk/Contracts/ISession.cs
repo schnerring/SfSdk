@@ -59,5 +59,11 @@ namespace SfSdk.Contracts
         /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
         /// <returns>A <see cref="List{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
         Task<IEnumerable<ICharacter>> HallOfFameAsync(string searchString = null, bool forceLoad = false);
+
+        /// <summary>
+        ///     Represents the Request Scrapbook Action.
+        /// </summary>
+        /// <returns>The Scrapbook of a character.</returns>
+        Task<IEnumerable<IScrapbookItem>> ScrapbookAsync();
     }
 }

@@ -99,7 +99,7 @@ namespace SfBot.ViewModels
 
             IEnumerable<ICountry> countries = await new CountryProvider().GetCountriesAsync();
 
-            foreach (ICountry country in countries.Where(country => !Countries.Contains(country)).OrderBy(c => c.Name))
+            foreach (ICountry country in countries.Where(country => !Countries.Contains(country)).OrderBy(c => c.CountryName))
                 Countries.Add(country);
 
             IsBusy = false;
@@ -107,7 +107,7 @@ namespace SfBot.ViewModels
 
         public void Ok(SecureString securePassword)
         {
-            PasswordHash = securePassword.ConvertToUnsecureString().ConvertToMd5Hash();
+            PasswordHash = securePassword.ConvertToUnsecureString().ToMd5Hash();
             TryClose(true);
         }
 

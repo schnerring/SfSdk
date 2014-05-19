@@ -1,21 +1,20 @@
-﻿using System;
-using System.Runtime.Serialization;
-
-namespace SfSdk.Contracts
+﻿namespace SfSdk.Contracts
 {
+    using System;
+
     /// <summary>
     ///     Contains information about a sub-server of a country where S&amp;F is available.
     /// </summary>
-    public interface IServer : ISerializable
+    public interface IServer
     {
         /// <summary>
-        ///     The game server's name.
+        ///     Gets the server's name.
         /// </summary>
-        string Name { get; }
+        string ServerName { get; }
 
         /// <summary>
-        ///     The game server's <see cref="Uri"/>.
+        ///     Gets game server's <see cref="Uri"/>.
         /// </summary>
-        Uri Uri { get; }
+        Uri ServerUri { get; }
     }
 }

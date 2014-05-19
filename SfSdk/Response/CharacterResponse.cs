@@ -29,10 +29,12 @@ namespace SfSdk.Response
         private readonly string _comment;
         private readonly string _guild;
 
+
         /// <summary>
         ///     Creates a new character response.
         /// </summary>
         /// <param name="args">The response arguments.</param>
+        /// <exception cref="ArgumentException">When the arguments have not a minimum length of 3.</exception>
         public CharacterResponse(string[] args) : base(args)
         {
             if (Args.Length < 3) throw new ArgumentException("The arguments must have a minimum length of 3.", "args");

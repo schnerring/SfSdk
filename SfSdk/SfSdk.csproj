@@ -39,8 +39,9 @@
     <AssemblyOriginatorKeyFile>..\SfSdk.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.2.0.1.2\lib\net45\NLog.dll</HintPath>
@@ -58,8 +59,18 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Contracts\ICharacterBase.cs" />
+    <Compile Include="Contracts\IMageItem.cs" />
+    <Compile Include="Contracts\IScoutItem.cs" />
+    <Compile Include="Contracts\IValuableItem.cs" />
+    <Compile Include="Contracts\IWarriorItem.cs" />
     <Compile Include="Data\Character.cs" />
+    <Compile Include="Contracts\IMonsterItem.cs" />
     <Compile Include="PropertiesMapper.cs" />
+    <Compile Include="Providers\ConfigurationResourceProvider.cs" />
+    <Compile Include="Providers\ScrapbookItemProvider.cs" />
+    <Compile Include="Providers\IResourceProvider.cs" />
+    <Compile Include="Providers\LanguageResourceProvider.cs" />
+    <Compile Include="Providers\ResourceProviderBase.cs" />
     <Compile Include="Request\IRequestSource.cs" />
     <Compile Include="Request\IUriWrapper.cs" />
     <Compile Include="Logging\Logging.cs" />
@@ -67,6 +78,12 @@
     <Compile Include="Request\SnFUriWrapper.cs" />
     <Compile Include="Request\SnFRequestSource.cs" />
     <Compile Include="Response\CharacterResponse.cs" />
+    <Compile Include="Contracts\IScrapbookItem.cs" />
+    <Compile Include="Data\MageItem.cs" />
+    <Compile Include="Data\MonsterItem.cs" />
+    <Compile Include="Data\ScoutItem.cs" />
+    <Compile Include="Data\ScrapbookItemBase.cs" />
+    <Compile Include="Response\ScrapbookResponse.cs" />
     <Compile Include="Response\HallOfFameResponse.cs" />
     <Compile Include="Response\ResponseBase.cs" />
     <Compile Include="Response\ResponseWithSavegame.cs" />
@@ -87,10 +104,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\Server.cs" />
     <Compile Include="Request\SfRequest.cs" />
+    <Compile Include="Data\ValuableItem.cs" />
+    <Compile Include="Data\WarriorItem.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="SessionLoggedOutException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Servers.json">
+      <Link>Servers.json</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="..\SfSdk.snk">
       <Link>Properties\SfSdk.snk</Link>
     </None>

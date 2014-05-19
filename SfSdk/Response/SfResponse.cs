@@ -26,13 +26,25 @@ namespace SfSdk.Response
     internal class SfResponse : ISfResponse
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(SfResponse));
+        private readonly Uri _serverUri;
 
         /// <summary>
         ///     Creates a new <see cref="SfResponse" />.
         /// </summary>
         /// <param name="responseString">The response string of the request.</param>
-        public SfResponse(string responseString)
+        /// <param name="serverUri">The server <see cref="Uri"/>.</param>
+        /// <exception cref="ArgumentNullException">When responseString or serverUri is null.</exception>
+        /// <exception cref="ArgumentException">When response string is empty.</exception>
+        public SfResponse(string responseString, Uri serverUri)
         {
+            if (responseString == null)
+                throw new ArgumentNullException("responseString");
+            if (string.IsNullOrWhiteSpace(responseString))
+                throw new ArgumentException("Response string must not be empty.", "responseString");
+            if (serverUri == null)
+                throw new ArgumentNullException("serverUri");
+
+            _serverUri = serverUri;
             Errors = new List<string>();
             ParseResponseString(responseString);
         }
@@ -49,14 +61,8 @@ namespace SfSdk.Response
 
         private void ParseResponseString(string responseString)
         {
-            if (responseString == null)
-                throw new ArgumentNullException("responseString");
-            if (string.IsNullOrEmpty(responseString))
-                throw new ArgumentException("Response string must not be empty.", "responseString");
-
             if (responseString.StartsWith("+"))
             {
-                //                throw new ArgumentException("Response string starts with \"+\".", "responseString");
                 responseString = responseString.Substring(1);
             }
 
@@ -117,6 +123,9 @@ namespace SfSdk.Response
                     break;
                 case SF.ActGuildJoinAttack:
                     // TODO
+                    break;
+                case SF.RespAlbum:
+                    Response = new ScrapbookResponse(args, _serverUri);
                     break;
                 default:
                     var e = new ArgumentOutOfRangeException("success");

@@ -39,9 +39,9 @@ namespace SfSdk
 
                 // Loop through each byte of the hashed data  
                 // and format each one as a hexadecimal string. 
-                for (int i = 0; i < data.Length; i++)
+                foreach (byte t in data)
                 {
-                    sBuilder.Append(data[i].ToString("x2"));
+                    sBuilder.Append(t.ToString("x2"));
                 }
 
                 // Return the hexadecimal string. 
@@ -55,6 +55,7 @@ namespace SfSdk
         /// <typeparam name="T">The expected type of the input string.</typeparam>
         /// <param name="input">The input string.</param>
         /// <returns>If the conversion succeeds the value of the converted input, if not the default value of type T.</returns>
+        /// <exception cref="NotImplementedException">When convert fails.</exception>
         public static T Convert<T>(this string input)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(typeof (T));

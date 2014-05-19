@@ -1,60 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SfSdk.Contracts;
 
 namespace SfSdk.Data
 {
     /// <summary>
-    ///     Implements the functionality of creating a new <see cref="ICountry"/>.
+    ///     Implements the functionality of creating a new <see cref="ICountry" />.
     /// </summary>
     [Serializable]
     internal class Country : ICountry
     {
-        private Country(string name, Uri uri)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Country" /> class.
+        ///     This constructor is required for the JSON deserializer to be able
+        ///     to identify concrete classes to use when deserializing the interface properties.
+        /// </summary>
+        /// <param name="servers">
+        ///     The servers.
+        /// </param>
+        [JsonConstructor]
+        internal Country(IEnumerable<Server> servers)
         {
-            Name = name;
-            Uri = uri;
+            Servers = servers.ToList<IServer>();
         }
-
-        public string Name { get; private set; }
-        public Uri Uri { get; private set; }
-        public IList<IServer> Servers { get; private set; }
 
         /// <summary>
-        ///     Creates an <see cref="ICountry"/>.
+        ///     Gets the country's name.
         /// </summary>
-        /// <param name="name">The country's name.</param>
-        /// <param name="uri">The country's <see cref="Uri"/></param>
-        /// <param name="forceRefresh">Indicates whether the country's details shall be re-requested or the cached results shall be returned.</param>
-        /// <returns>A <see cref="ICountry"/>.</returns>
-        public static async Task<ICountry> CreateAsync(string name, Uri uri, bool forceRefresh = false)
-        {
-            if (uri == null) throw new ArgumentNullException("uri");
+        [JsonProperty]
+        public string CountryName { get; private set; }
 
-            var country = new Country(name ?? uri.ToString(), uri);
-            country.Servers = (await Server.CreateServersAsync(country, forceRefresh)).ToList();
-            return country;
-        }
-
-        #region Serialization
-
-        // TODO Implement serialization properly
-
-        protected Country(SerializationInfo info, StreamingContext context)
-        {
-            Name = info.GetString("Name");
-            Uri = (Uri) info.GetValue("Uri", typeof (Uri));
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Name", Name);
-            info.AddValue("Uri", Uri);
-        }
-
-        #endregion
+        /// <summary>
+        ///     Gets the servers.
+        /// </summary>
+        public IList<IServer> Servers { get; private set; }
     }
 }

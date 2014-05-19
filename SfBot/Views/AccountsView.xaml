@@ -49,8 +49,8 @@
                                     </Grid.RowDefinitions>
                                     <TextBlock Text="{Binding Username}" FontSize="18" />
                                     <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                        <TextBlock Text="{Binding Country.Name, Converter={StaticResource ToUpperConverter}, StringFormat='{}{0} - '}" />
-                                        <TextBlock Text="{Binding Server.Name, Converter={StaticResource ToUpperConverter}}"
+                                        <TextBlock Text="{Binding Country.CountryName, Converter={StaticResource ToUpperConverter}, StringFormat='{}{0} - '}" />
+                                        <TextBlock Text="{Binding Server.ServerName, Converter={StaticResource ToUpperConverter}}"
                                                    FontSize="11" />
                                     </StackPanel>
                                 </Grid>

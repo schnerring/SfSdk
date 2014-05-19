@@ -45,6 +45,7 @@ namespace SfSdk.Response
         ///     Creates a new login response.
         /// </summary>
         /// <param name="args">The response arguments.</param>
+        /// <exception cref="ArgumentException">When the arguments have not a minimum length of 3.</exception>
         public LoginResponse(string[] args) : base(args)
         {
             if (Args.Length < 3) throw new ArgumentException("The arguments must have a minimum length of 3.", "args");

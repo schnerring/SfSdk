@@ -16,11 +16,16 @@ namespace SfSdk.Response
     /// <summary>
     ///     A base class of type <see cref="IResponse"/> containing the arguments of the response.
     /// </summary>
-    internal class ResponseWithSavegame : ResponseBase, IResponseWithSaveGame
+    internal abstract class ResponseWithSavegame : ResponseBase, IResponseWithSaveGame
     {
         private readonly ISavegame _savegame;
 
-        public ResponseWithSavegame(string[] args) : base(args)
+        /// <summary>
+        ///     Creates a new response with savegame.
+        /// </summary>
+        /// <param name="args">The response arguments.</param>
+        /// <exception cref="ArgumentException">When the arguments have not a minimum length of 1.</exception>
+        protected ResponseWithSavegame(string[] args) : base(args)
         {
             if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
 

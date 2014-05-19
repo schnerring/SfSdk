@@ -1,7 +1,5 @@
 ﻿// ------------------------------------------------------------------------------
 // Copyright (c) 2010 Blue Spire Consulting, Inc.
-// CURRENT: Caliburn.Micro Caliburn.Micro v1.5.1
-// DATE:    Fri Mar 22, 2013 at 9:00 AM
 // URL:     http://caliburnmicro.codeplex.com/
 // ------------------------------------------------------------------------------
 
