@@ -1,84 +1,48 @@
-﻿namespace SfSdk.Tests.Providers
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions;
+using SfSdk.Constants;
+using SfSdk.Providers;
+using Xunit;
+
+namespace SfSdk.Tests.Providers
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using FluentAssertions;
-
-    using SfSdk.Providers;
-
-    using Xunit;
-
     public class LanguageResourceProviderTests
     {
         [Fact]
-        public void GetLanguageResourcesAsyncThrowsExceptionIfServerUriIsNull()
+        public void GetResourcesThrowsExceptionIfServerUriIsNull()
         {
             // Arrange  / Act
-            Func<Task> sut = async () => await new LanguageResourceProvider().GetLanguageResourcesAsnyc(null);
+            Action sut = () => new LanguageResourceProvider().GetResources(null);
 
             // Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
         }
 
         [Fact] // Needs internet
-        public async Task GetLanguageResourcesAsyncReturnsLanguageInformation()
+        public void GetResourcesReturnsLanguageInformation()
         {
             // Arrange  / Act
-            var languageResources = await new LanguageResourceProvider().GetLanguageResourcesAsnyc(TestConstants.ValidServerUri);
+            Dictionary<SF, string> languageResources =
+                new LanguageResourceProvider().GetResources(TestConstants.ValidServerUri);
 
             // Assert
             languageResources.Count.Should().BeGreaterOrEqualTo(100);
         }
 
-//         [Fact] // Needs internet
-        [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
-        public void GetLanguageResourcesAsyncThrowsExceptionWithoutNetworkConnection()
-        {
-            TestHelpers.Disconnect();
-
-            // Arrange
-            var sut = new LanguageResourceProvider();
-            Func<Task> getLanguageResources = async () => await sut.GetLanguageResourcesAsnyc(TestConstants.ValidServerUri);
-
-            // Act / Assert
-            getLanguageResources.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");
-
-            TestHelpers.Connect();
-        }
-
-        [Fact]
-        public void GetLanguageResourcesThrowsExceptionIfServerUriIsNull()
-        {
-            // Arrange  / Act
-            Action sut = () =>  new LanguageResourceProvider().GetLanguageResources(null);
-
-            // Assert
-            sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
-        }
-
-        [Fact] // Needs internet
-        public void GetLanguageResourcesReturnsLanguageInformation()
-        {
-            // Arrange  / Act
-            var languageResources = new LanguageResourceProvider().GetLanguageResources(TestConstants.ValidServerUri);
-
-            // Assert
-            languageResources.Count.Should().BeGreaterOrEqualTo(100);
-        }
 
 //        [Fact] // Needs internet
         [Fact(Skip = "Interrupts Network connection, run manually if needed.")]
-        public void GetLanguageResourcesThrowsExceptionWithoutNetworkConnection()
+        public void GetResourcesThrowsExceptionWithoutNetworkConnection()
         {
             TestHelpers.Disconnect();
 
             // Arrange
             var sut = new LanguageResourceProvider();
-            Action getLanguageResources = () => sut.GetLanguageResources(TestConstants.ValidServerUri);
+            Action getResources = () => sut.GetResources(TestConstants.ValidServerUri);
 
             // Act / Assert
-            getLanguageResources.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");
+            getResources.ShouldThrow<NotImplementedException>().Where(e => e.Message == "Network connection lost.");
 
             TestHelpers.Connect();
         }

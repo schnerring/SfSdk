@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SfSdk.Constants;
+using SfSdk.Contracts;
+using SfSdk.Data;
 using SfSdk.Logging;
 using SfSdk.Providers;
 
@@ -33,18 +35,14 @@ namespace SfSdk.Response
     {
         private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookResponse));
 
-        private static Dictionary<int, string> LanguageResourceDict;
-        private static Dictionary<int, string> ConfigurationResourceDict;
+        private readonly ItemProvider _itemProvider;
 
         public ScrapbookResponse(string[] args, Uri serverUri) : base(args)
         {
             if (Args.Length < 1) throw new ArgumentException("The arguments must have a minimum length of 1.", "args");
             if (serverUri == null) throw new ArgumentNullException("serverUri");
-
-            Log.Info("Resource download started.");
-            LanguageResourceDict = new LanguageResourceProvider().GetLanguageResources(serverUri);
-            ConfigurationResourceDict = new ConfigurationResourceProvider().GetConfigurationResources(serverUri);
-            Log.Info("Resource download finished.");
+            
+            _itemProvider = new ItemProvider(serverUri);
 
             byte[] byteArray = Convert.FromBase64String(Args.First());
             var array = new List<int>();
@@ -113,191 +111,125 @@ namespace SfSdk.Response
                 ++i;
             }
 
-            int itemOnPage;
             var items = new List<IScrapbookItem>();
             for (int monsterPage = 0; monsterPage <= 62; monsterPage++)
             {
-                itemOnPage = 0;
-                while (itemOnPage < 4)
+                for (int itemOnPage = 0; itemOnPage < 4; ++itemOnPage)
                 {
                     bool hasItem = array[(monsterPage * 4) + itemOnPage] == 1;
-                    var monster = new MonsterItem(hasItem);
+                    var monster = new MonsterItem()
+                    {
+                        HasItem = hasItem,
+                        ImageUri =
+                            _itemProvider.GetImageUri((int) SF.CntAlbumMonster + itemOnPage,
+                                                       (int) SF.ImgOppimgMonster + monsterPage*4 + itemOnPage),
+                        Text = monsterPage*4 + 1 >= 220
+                            ? _itemProvider.GetMonsterItemName(SF.TxtNewMonsterNames + monsterPage*4 + 1 - 220)
+                            : _itemProvider.GetMonsterItemName(SF.TxtMonsterName + monsterPage*4 + 1)
+                    };
 
-                    SetContent((int) SF.CntAlbumMonster + itemOnPage, (int) SF.ImgOppimgMonster + monsterPage*4 + itemOnPage);
-
-                    monster.Text = monsterPage*4 + 1 >= 220
-                        ? LanguageResourceDict[(int) SF.TxtNewMonsterNames + monsterPage*4 + 1 - 220]
-                        : LanguageResourceDict[(int) SF.TxtMonsterName + monsterPage*4 + 1];
                     items.Add(monster);
-                    ++itemOnPage;
                 }
             }
 
             for (int valuablePage = 0; valuablePage <= 25; valuablePage++)
             {
-                itemOnPage = 0;
-                while (itemOnPage < 4)
+                for (int itemOnPage = 0; itemOnPage < 4; ++itemOnPage)
                 {
-//                    var valuable = new ValuableItem();
+                    var itemsToAdd = new List<IScrapbookItem>();
+
                     if (valuablePage <= 5)
                         if (valuablePage < 5 || itemOnPage <= 0)
-                            SetAlbumItems(array, itemOnPage, 300 + valuablePage*20 + itemOnPage*5, 8, 1 + valuablePage*4 + itemOnPage, 0);
-                        else
-                        {
-                            string entryText = string.Empty;
-                        }
+                            itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(array, itemOnPage, 300 + valuablePage*20 + itemOnPage*5, 8, 1 + valuablePage*4 + itemOnPage, 0));
+                        else continue;
                     else if (valuablePage <= 7)
-                        SetAlbumEpic(array, itemOnPage, 510 + (valuablePage - 6) * 4 + itemOnPage, 8, 50 + (valuablePage - 6) * 4 + itemOnPage, 0);
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(array, itemOnPage, 510 + (valuablePage - 6)*4 + itemOnPage, 8, 50 + (valuablePage - 6)*4 + itemOnPage, 0));
                     else if (valuablePage <= 11)
-                        SetAlbumItems(array, itemOnPage, 526 + (valuablePage - 8) * 20 + (itemOnPage * 5), 9,
-                            1 + (valuablePage - 8) * 4 + itemOnPage, 0);
+                        itemsToAdd.AddRange(CreateMultipleItems<ValuableItem>(array, itemOnPage, 526 + (valuablePage - 8) * 20 + itemOnPage * 5, 9, 1 + (valuablePage - 8) * 4 + itemOnPage, 0));
                     else if (valuablePage <= 13)
-                        SetAlbumItems(array, itemOnPage, 686 + (valuablePage - 12) * 4 + itemOnPage, 9, 50 + (valuablePage - 12) * 4 + itemOnPage, 0);
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(array, itemOnPage, 686 + (valuablePage - 12) * 4 + itemOnPage, 9, 50 + (valuablePage - 12) * 4 + itemOnPage, 0));
                     else if (valuablePage <= 23)
                         if (valuablePage < 23 || itemOnPage <= 0)
-                            SetAlbumEpic(array, itemOnPage, 702 + (valuablePage - 14) * 4 + itemOnPage, 10, 1 + (valuablePage - 14) * 4 + itemOnPage, 0);
-                        else
-                        {
-                            string entryText = string.Empty;
-                        }
+                            itemsToAdd.Add(CreateEpicItem<ValuableItem>(array, itemOnPage, 702 + (valuablePage - 14) * 4 + itemOnPage, 10, 1 + (valuablePage - 14) * 4 + itemOnPage, 0));
+                        else continue;
                     else if (valuablePage <= 25)
-                        SetAlbumEpic(array, itemOnPage, 760 + 16 + (valuablePage - 24) * 4 + itemOnPage, 10, 50 + (valuablePage - 24) * 4 + itemOnPage, 0);
-                    ++itemOnPage;
+                        itemsToAdd.Add(CreateEpicItem<ValuableItem>(array, itemOnPage, 760 + 16 + (valuablePage - 24) * 4 + itemOnPage, 10, 50 + (valuablePage - 24) * 4 + itemOnPage, 0));
+                    
+                    items.AddRange(itemsToAdd);
                 }
             }
+
+            var monsterItems = items.Where(itm => itm is MonsterItem).ToList();
+            var valuableItems = items.Where(itm => itm is ValuableItem).ToList();
         }
 
-        private void SetAlbumItems(List<int> albumContent, int itemOnPage, int aOffs, int itemType, int itemPic,
-            int itemClass)
+        private IEnumerable<IScrapbookItem> CreateMultipleItems<TScrapbookItem>(List<int> albumContent, int itemOnPage, int aOffs, int itemType, int itemPic, int itemClass) where TScrapbookItem: new()
         {
-            var itemSet = new int[5];
-            int i = 0;
-            bool hasAnyItem = false;
+            var results = new List<TScrapbookItem>
+            {
+                new TScrapbookItem(),
+                new TScrapbookItem(),
+                new TScrapbookItem(),
+                new TScrapbookItem(),
+                new TScrapbookItem()
+            };
 
+            if (!(results is IEnumerable<IScrapbookItem>))
+                throw new ArgumentException("TScrapbookItem must implement IScrapbookItem");
+            
+            var itemText = _itemProvider.GetItemName(itemType, itemPic, itemClass);
+            var i = 0;
+            var items = results.Cast<IScrapbookItem>().ToList();
             while (i < 5)
             {
-                itemSet[i] = albumContent[aOffs + i];
-                if (itemSet[i] == 1) hasAnyItem = true;
+                items[i].HasItem = albumContent[aOffs + i] == 1;
+                items[i].Text = itemText;
                 ++i;
             }
 
-            if (hasAnyItem)
+            if (itemClass > 0)
             {
-                string entryText = GetItemName(itemType, itemPic, itemClass);
-                if (itemClass > 0)
-                {
-                    --itemClass;
-                }
-                SetContent((int) SF.CntAlbumWeapon1 + itemOnPage, GetItemId(itemType, itemPic, 0, itemClass));
-                SetContent((int) SF.CntAlbumWeapon2 + itemOnPage, GetItemId(itemType, itemPic, 1, itemClass));
-                SetContent((int) SF.CntAlbumWeapon3 + itemOnPage, GetItemId(itemType, itemPic, 2, itemClass));
-                SetContent((int) SF.CntAlbumWeapon4 + itemOnPage, GetItemId(itemType, itemPic, 3, itemClass));
-                SetContent((int) SF.CntAlbumWeapon5 + itemOnPage, GetItemId(itemType, itemPic, 4, itemClass));
-
-                // enable popup?
+                --itemClass;
             }
+
+            items[0].ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeapon1 + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 0, itemClass));
+            items[1].ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeapon2 + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 1, itemClass));
+            items[2].ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeapon3 + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 2, itemClass));
+            items[3].ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeapon4 + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 3, itemClass));
+            items[4].ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeapon5 + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 4, itemClass));
+
+            // enable popup?
+
+            return items;
         }
 
-        private int GetItemId(int itemType, int itemPic, object someObject = null, int itemClass = -1)
+        private IScrapbookItem CreateEpicItem<TScrapbookItem>(List<int> albumContent, int itemOnPage, int aOffs, int itemType, int itemPic, int itemClass) where TScrapbookItem : new()
         {
-            throw new NotImplementedException();
-        }
+            var result = new TScrapbookItem();
 
-        private string GetItemName(int sgIndex, int sg, int albumMode = -1)
-        {
-            throw new NotImplementedException();
-        }
+            if (!(result is IScrapbookItem))
+                throw new ArgumentException("TScrapbookItem must implement IScrapbookItem");
 
-        private void SetAlbumEpic(List<int> albumContent, int itemOnPage, int aOffs, int itemType, int itemPic,
-            int itemClass)
-        {
-            bool hasItem = albumContent[aOffs] == 1;
-            if (hasItem)
+            var item = (IScrapbookItem) result;
+            item.HasItem = albumContent[aOffs] == 1;
+            item.Text = _itemProvider.GetItemName(itemType, itemPic, itemClass);
+
+            if (item.Text.Contains('|'))
             {
-                string entryText = GetItemName(itemType, itemPic, itemClass);
-                string hintText;
-                if (entryText.Contains('|'))
-                {
-                    hintText = entryText.Split('|')[1].Replace('#', '\n');
-                    entryText = entryText.Split('|')[0];
-                }
-
-                if (itemClass > 0)
-                {
-                    --itemClass;
-                }
-
-                SetContent((int) SF.CntAlbumWeaponEpic + itemOnPage, GetItemId(itemType, itemPic, 0, itemClass));
-
-                // enable popup?
+                item.HintText = item.Text.Split('|')[1].Replace('#', '\n');
+                item.Text = item.Text.Split('|')[0];
             }
-        }
 
-        private void SetContent(int contentId, int imageId)
-        {
-            Load(imageId);
-        }
+            if (itemClass > 0)
+            {
+                --itemClass;
+            }
 
-        private void Load(int actorId)
-        {
-            
-        }
-    }
+            item.ImageUri = _itemProvider.GetImageUri((int)SF.CntAlbumWeaponEpic + itemOnPage, _itemProvider.GetItemId(itemType, itemPic, 0, itemClass));
 
-    internal interface IScrapbookItem
-    {
-        bool HasItem { get; }
-        string Text { get; }
-    }
+            // enable popup?
 
-    internal class ScrapbookItemBase : IScrapbookItem
-    {
-        public ScrapbookItemBase(bool hasItem)
-        {
-            HasItem = hasItem;
-        }
-
-        public bool HasItem { get; private set; }
-        public string Text { get; set; }
-    }
-
-    internal class MonsterItem : ScrapbookItemBase
-    {
-        public MonsterItem(bool hasItem)
-            : base(hasItem)
-        {
-        }
-    }
-
-    internal class ValuableItem : ScrapbookItemBase
-    {
-        public ValuableItem(bool hasItem)
-            : base(hasItem)
-        {
-        }
-    }
-
-    internal class WarriorItem : ScrapbookItemBase
-    {
-        public WarriorItem(bool hasItem)
-            : base(hasItem)
-        {
-        }
-    }
-
-    internal class MageItem : ScrapbookItemBase
-    {
-        public MageItem(bool hasItem)
-            : base(hasItem)
-        {
-        }
-    }
-
-    internal class ScoutItem : ScrapbookItemBase
-    {
-        public ScoutItem(bool hasItem)
-            : base(hasItem)
-        {
+            return item;
         }
     }
 }

@@ -1,19 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Server.cs" company="">
-//   Copyright (c) 2014 ebeeb
-// </copyright>
-// <summary>
-//   Implements the functionality of creating a new .
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using System;
+using Newtonsoft.Json;
+using SfSdk.Contracts;
+
 namespace SfSdk.Data
 {
-    using System;
-
-    using Newtonsoft.Json;
-
-    using SfSdk.Contracts;
-
     /// <summary>
     ///     Implements the functionality of creating a new <see cref="IServer" />.
     /// </summary>
@@ -27,7 +17,7 @@ namespace SfSdk.Data
         public string ServerName { get; private set; }
 
         /// <summary>
-        ///     Gets the server <see cref="Uri"/>.
+        ///     Gets the server <see cref="Uri" />.
         /// </summary>
         [JsonProperty]
         public Uri ServerUri { get; private set; }
