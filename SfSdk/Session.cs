@@ -78,7 +78,7 @@ namespace SfSdk
                 throw new ArgumentException("Password hash must not be null and have a length of 32.", "md5PasswordHash");
             if (serverUri == null)
                 throw new ArgumentNullException("serverUri");
-
+            
             _isLoggedIn = false;
             _username = username;
             _md5PasswordHash = md5PasswordHash;
@@ -196,23 +196,26 @@ namespace SfSdk
             return response.Items;
         }
 
-        private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)
+        private async Task<bool> HasErrors(IReadOnlyCollection<SF> errors)
         {
             var hasErrors = false;
             if (errors.Count == 0) return false;
-            foreach (var err in errors.Select(error => (SF) Enum.Parse(typeof(SF), error)))
+            foreach (var e in errors)
             {
                 hasErrors = true;
-                switch (err)
+                switch (e)
                 {
                     case SF.ErrSessionIdExpired:
                         throw new SessionLoggedOutException("Sessionid expired.");
                     case SF.ErrLoginFailed:
                         break;
+                    case SF.ErrNoAlbum:
+                        throw new NotImplementedException("There is no album.");
+                        break;
                     default:
                         var ex =
                             new NotImplementedException(
-                                string.Format("This error is not handled: {0}.", err));
+                                string.Format("This error is not handled: {0}.", e));
                         Log.Error(ex);
                         throw ex;
                 }

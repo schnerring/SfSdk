@@ -12,7 +12,7 @@ namespace SfSdk.Response
         /// <summary>
         ///     Contains errors as <see cref="string" /> if the request failed.
         /// </summary>
-        List<string> Errors { get; }
+        List<SF> Errors { get; }
 
         /// <summary>
         ///     Contains a response as <see cref="IResponse" />.
@@ -45,14 +45,14 @@ namespace SfSdk.Response
                 throw new ArgumentNullException("serverUri");
 
             _serverUri = serverUri;
-            Errors = new List<string>();
+            Errors = new List<SF>();
             ParseResponseString(responseString);
         }
 
         /// <summary>
         ///     Contains errors as <see cref="string" /> if the request failed.
         /// </summary>
-        public List<string> Errors { get; private set; }
+        public List<SF> Errors { get; private set; }
 
         /// <summary>
         ///     Contains a response as <see cref="IResponse" />.
@@ -141,7 +141,8 @@ namespace SfSdk.Response
                 case SF.ErrLoginFailed:
                 case SF.ErrSessionIdExpired:
                 case SF.ErrServerDown:
-                    Errors.Add(error.ToString());
+                case SF.ErrNoAlbum:
+                    Errors.Add(error);
                     break;
                 default:
                     var e = new ArgumentOutOfRangeException("error");

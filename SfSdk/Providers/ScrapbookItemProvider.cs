@@ -16,9 +16,9 @@ namespace SfSdk.Providers
         private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookItemProvider));
 
         private readonly Uri _imageServerUri;
-        private readonly Dictionary<SF, string> _configurationResourcesDict;
         private readonly Dictionary<SF, string> _languageResourceDict;
-        private readonly Dictionary<int, string> _urlDict = new Dictionary<int, string>();
+        private readonly Dictionary<int, string> _urlDict;
+        private static readonly Dictionary<Uri, Dictionary<int, string>> UrlDicts = new Dictionary<Uri, Dictionary<int, string>>();
 
         /// <summary>
         ///     Creates a new instance of type <see cref="ScrapbookItemProvider" /> and defines its resources.
@@ -30,15 +30,24 @@ namespace SfSdk.Providers
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
             Log.Info("Resource download started.");
-            _configurationResourcesDict = new ConfigurationResourceProvider().GetResources(serverUri);
+            var configurationResourcesDict = new ConfigurationResourceProvider().GetResources(serverUri);
             _languageResourceDict = new LanguageResourceProvider().GetResources(serverUri);
             Log.Info("Resource download finished.");
             
-            _imageServerUri = new Uri(_configurationResourcesDict[SF.CfgImgUrl]);
+            _imageServerUri = new Uri(configurationResourcesDict[SF.CfgImgUrl]);
 
-            bool paramCensored = false;
-            if (_configurationResourcesDict.ContainsKey(SF.CfgCensored))
-                paramCensored = int.Parse(_configurationResourcesDict[SF.CfgCensored]) != 0;
+            if (UrlDicts.ContainsKey(serverUri))
+            {
+                _urlDict = UrlDicts[serverUri];
+                return;
+            }
+
+            _urlDict = new Dictionary<int, string>();
+            UrlDicts.Add(serverUri, _urlDict);
+
+            var paramCensored = false;
+            if (configurationResourcesDict.ContainsKey(SF.CfgCensored))
+                paramCensored = int.Parse(configurationResourcesDict[SF.CfgCensored]) != 0;
 
             DefineMonsters(paramCensored);
             DefineItems();
