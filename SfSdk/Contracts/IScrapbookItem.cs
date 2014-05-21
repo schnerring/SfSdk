@@ -8,6 +8,16 @@ namespace SfSdk.Contracts
     public interface IScrapbookItem
     {
         /// <summary>
+        ///     The item's ID.
+        /// </summary>
+        int ItemId { get; }
+
+        /// <summary>
+        ///     The items Content ID.
+        /// </summary>
+        int ContentId { get; }
+
+        /// <summary>
         ///     The item's text.
         /// </summary>
         string Text { get; }

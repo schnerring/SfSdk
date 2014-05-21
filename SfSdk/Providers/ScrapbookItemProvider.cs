@@ -55,14 +55,19 @@ namespace SfSdk.Providers
 
             for (int page = 0; page <= 62; page++)
                 for (int i = 0; i < 4; ++i)
-                    result.Add(new MonsterItem
+                {
+                    var monsterItem = new MonsterItem
                     {
+                        ItemId = (int) SF.ImgOppimgMonster + page*4 + i,
+                        ContentId = (int) SF.CntAlbumMonster + i,
                         HasItem = scrapbookContent[(page*4) + i] == 1,
-                        ImageUri = GetImageUri((int) SF.CntAlbumMonster + i, (int) SF.ImgOppimgMonster + page*4 + i),
                         Text = page*4 + 1 >= 220
                             ? _languageResourceDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
                             : _languageResourceDict[SF.TxtMonsterName + page*4 + 1]
-                    });
+                    };
+                    monsterItem.ImageUri = GetImageUri(monsterItem.ItemId);
+                    result.Add(monsterItem);
+                }
 
             return result;
         }
@@ -282,7 +287,7 @@ namespace SfSdk.Providers
             return result;
         }
 
-        private static int GetItemId(int itemType, int itemPic, int itemColor, int itemClass = -1)
+        private static int GetItemId(int itemType, int itemPic, int itemColor, int itemClass)
         {
             var itemId = (int) SF.ItmOffs;
             itemId += itemType*(int) SF.CItemsPerType*5*3;
@@ -312,25 +317,14 @@ namespace SfSdk.Providers
             return 0;
         }
 
-        private string GetItemName(int sgIndex, int sg, int scrapbookMode = -1)
+        private string GetItemName(int itemType, int itemPic, int itemClass)
         {
-            int itemPic = 0;
-            int itemTyp = 0;
-            int itemClass = 1;
-
             int txtBase = 0;
             string txtSuffix = string.Empty;
 
-            if (scrapbookMode >= 0)
+            if (itemType >= 8)
             {
-                itemTyp = sgIndex;
-                itemPic = sg;
-                itemClass = scrapbookMode;
-            }
-
-            if (itemTyp >= 8)
-            {
-                switch (itemTyp)
+                switch (itemType)
                 {
                     case 8:
                         txtBase = (int) SF.TxtItmname8;
@@ -359,7 +353,7 @@ namespace SfSdk.Providers
             else
             {
                 int itemOffs = 0;
-                switch (itemTyp)
+                switch (itemType)
                 {
                     case 1:
                         itemOffs = (int) SF.TxtItmname1_1;
@@ -401,7 +395,7 @@ namespace SfSdk.Providers
                 }
             }
 
-            if (itemPic >= 50 && itemTyp != 14)
+            if (itemPic >= 50 && itemType != 14)
             {
                 txtBase = txtBase + SF.TxtItmname1_1Epic - SF.TxtItmname1_1;
                 itemPic -= 49;
@@ -433,11 +427,11 @@ namespace SfSdk.Providers
             return string.Join(_languageResourceDict[(SF) txtBase + itemPic - 1], parts);
         }
 
-        private Uri GetImageUri(int contentId, int imageId)
+        private Uri GetImageUri(int itemId)
         {
-            return !_urlDict.ContainsKey(imageId)
+            return !_urlDict.ContainsKey(itemId)
                 ? null
-                : new Uri(_imageServerUri, _urlDict[imageId]);
+                : new Uri(_imageServerUri, _urlDict[itemId]);
         }
 
         private static string GetItemFile(int itemType, int itemPic, int itemColor, int itemClass)
@@ -608,28 +602,27 @@ namespace SfSdk.Providers
             if (!(results is IEnumerable<ScrapbookItemBase>))
                 throw new ArgumentException("TScrapbookItem must be derived type of ScrapbookItemBase");
 
-            string itemText = GetItemName(itemType, itemPic, itemClass);
-            int i = 0;
-            List<ScrapbookItemBase> items = results.Cast<ScrapbookItemBase>().ToList();
-            while (i < 5)
+            var items = results.Cast<ScrapbookItemBase>().ToList();
+
+            items[0].ContentId = (int)SF.CntAlbumWeapon1 + itemOnPage;
+            items[1].ContentId = (int)SF.CntAlbumWeapon2 + itemOnPage;
+            items[2].ContentId = (int)SF.CntAlbumWeapon3 + itemOnPage;
+            items[3].ContentId = (int)SF.CntAlbumWeapon4 + itemOnPage;
+            items[4].ContentId = (int)SF.CntAlbumWeapon5 + itemOnPage;
+
+            for (var i = 0; i < 5; ++i)
             {
                 items[i].HasItem = scrapbookContent[aOffs + i] == 1;
-                items[i].Text = itemText;
-                ++i;
+                items[i].Text = GetItemName(itemType, itemPic, itemClass);
             }
 
             if (itemClass > 0) --itemClass;
 
-            items[0].ImageUri = GetImageUri((int) SF.CntAlbumWeapon1 + itemOnPage,
-                GetItemId(itemType, itemPic, 0, itemClass));
-            items[1].ImageUri = GetImageUri((int) SF.CntAlbumWeapon2 + itemOnPage,
-                GetItemId(itemType, itemPic, 1, itemClass));
-            items[2].ImageUri = GetImageUri((int) SF.CntAlbumWeapon3 + itemOnPage,
-                GetItemId(itemType, itemPic, 2, itemClass));
-            items[3].ImageUri = GetImageUri((int) SF.CntAlbumWeapon4 + itemOnPage,
-                GetItemId(itemType, itemPic, 3, itemClass));
-            items[4].ImageUri = GetImageUri((int) SF.CntAlbumWeapon5 + itemOnPage,
-                GetItemId(itemType, itemPic, 4, itemClass));
+            for (var i = 0; i < 5; ++i)
+            {
+                items[i].ItemId = GetItemId(itemType, itemPic, i, itemClass);
+                items[i].ImageUri = GetImageUri(items[i].ItemId);
+            }
 
             // enable popup?
 
@@ -647,6 +640,7 @@ namespace SfSdk.Providers
 
             item.HasItem = scrapbookContent[aOffs] == 1;
             item.Text = GetItemName(itemType, itemPic, itemClass);
+            item.ContentId = (int)SF.CntAlbumWeaponEpic + itemOnPage;
 
             if (item.Text.Contains('|'))
             {
@@ -656,8 +650,8 @@ namespace SfSdk.Providers
 
             if (itemClass > 0) --itemClass;
 
-            item.ImageUri = GetImageUri((int) SF.CntAlbumWeaponEpic + itemOnPage,
-                GetItemId(itemType, itemPic, 0, itemClass));
+            item.ItemId = GetItemId(itemType, itemPic, 0, itemClass);
+            item.ImageUri = GetImageUri(item.ItemId);
 
             // enable popup?
 
