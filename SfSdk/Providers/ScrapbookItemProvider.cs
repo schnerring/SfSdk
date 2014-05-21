@@ -6,6 +6,7 @@ using SfSdk.Constants;
 using SfSdk.Contracts;
 using SfSdk.Data;
 using SfSdk.Logging;
+using SfSdk.Response;
 
 namespace SfSdk.Providers
 {
@@ -16,9 +17,12 @@ namespace SfSdk.Providers
         private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookItemProvider));
 
         private readonly Uri _imageServerUri;
-        private readonly Dictionary<SF, string> _languageResourceDict;
+        private readonly Dictionary<SF, string> _languageDict;
         private readonly Dictionary<int, string> _urlDict;
+
         private static readonly Dictionary<Uri, Dictionary<int, string>> UrlDicts = new Dictionary<Uri, Dictionary<int, string>>();
+        private static readonly Dictionary<Uri, Dictionary<SF, string>> ConfigurationDicts = new Dictionary<Uri, Dictionary<SF, string>>();
+        private static readonly Dictionary<Uri, Dictionary<SF, string>> LanguageDicts = new Dictionary<Uri, Dictionary<SF, string>>();
 
         /// <summary>
         ///     Creates a new instance of type <see cref="ScrapbookItemProvider" /> and defines its resources.
@@ -30,11 +34,18 @@ namespace SfSdk.Providers
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
             Log.Info("Resource download started.");
-            var configurationResourcesDict = new ConfigurationResourceProvider().GetResources(serverUri);
-            _languageResourceDict = new LanguageResourceProvider().GetResources(serverUri);
+
+            if (!ConfigurationDicts.ContainsKey(serverUri))
+                ConfigurationDicts.Add(serverUri, new ConfigurationResourceProvider().GetResources(serverUri));
+            var configurationDict = ConfigurationDicts[serverUri];
+
+            if (!LanguageDicts.ContainsKey(serverUri))
+                LanguageDicts.Add(serverUri, new LanguageResourceProvider().GetResources(serverUri));
+            _languageDict = LanguageDicts[serverUri]; 
+
             Log.Info("Resource download finished.");
             
-            _imageServerUri = new Uri(configurationResourcesDict[SF.CfgImgUrl]);
+            _imageServerUri = new Uri(configurationDict[SF.CfgImgUrl]);
 
             if (UrlDicts.ContainsKey(serverUri))
             {
@@ -46,8 +57,8 @@ namespace SfSdk.Providers
             UrlDicts.Add(serverUri, _urlDict);
 
             var paramCensored = false;
-            if (configurationResourcesDict.ContainsKey(SF.CfgCensored))
-                paramCensored = int.Parse(configurationResourcesDict[SF.CfgCensored]) != 0;
+            if (configurationDict.ContainsKey(SF.CfgCensored))
+                paramCensored = int.Parse(configurationDict[SF.CfgCensored]) != 0;
 
             DefineMonsters(paramCensored);
             DefineItems();
@@ -71,8 +82,8 @@ namespace SfSdk.Providers
                         ContentId = (int) SF.CntAlbumMonster + i,
                         HasItem = scrapbookContent[(page*4) + i] == 1,
                         Text = page*4 + 1 >= 220
-                            ? _languageResourceDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
-                            : _languageResourceDict[SF.TxtMonsterName + page*4 + 1]
+                            ? _languageDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
+                            : _languageDict[SF.TxtMonsterName + page*4 + 1]
                     };
                     monsterItem.ImageUri = GetImageUri(monsterItem.ItemId);
                     result.Add(monsterItem);
@@ -411,29 +422,29 @@ namespace SfSdk.Providers
                 txtSuffix = string.Empty;
             }
 
-            if (!_languageResourceDict.ContainsKey((SF) txtBase + itemPic - 1))
+            if (!_languageDict.ContainsKey((SF) txtBase + itemPic - 1))
             {
                 return "Unknown Item (base=" + txtBase + ", entry=" + (txtBase + itemPic - 1) + ")";
             }
 
-            if (_languageResourceDict.ContainsKey(SF.TxtItmnameExt))
+            if (_languageDict.ContainsKey(SF.TxtItmnameExt))
             {
-                if (_languageResourceDict[SF.TxtItmnameExt] == "1")
+                if (_languageDict[SF.TxtItmnameExt] == "1")
                 {
                     return (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : txtSuffix + " ") +
-                           _languageResourceDict[(SF) txtBase + itemPic - 1];
+                           _languageDict[(SF) txtBase + itemPic - 1];
                 }
 
-                if (_languageResourceDict[SF.TxtItmnameExt] != "2")
-                    return _languageResourceDict[(SF) txtBase + itemPic - 1] +
+                if (_languageDict[SF.TxtItmnameExt] != "2")
+                    return _languageDict[(SF) txtBase + itemPic - 1] +
                            (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : " " + txtSuffix);
             }
 
             if (string.IsNullOrWhiteSpace(txtSuffix))
-                return _languageResourceDict[(SF) txtBase + itemPic - 1];
+                return _languageDict[(SF) txtBase + itemPic - 1];
 
             string[] parts = txtSuffix.Split(new[] {"%1"}, StringSplitOptions.None);
-            return string.Join(_languageResourceDict[(SF) txtBase + itemPic - 1], parts);
+            return string.Join(_languageDict[(SF) txtBase + itemPic - 1], parts);
         }
 
         private Uri GetImageUri(int itemId)
@@ -666,5 +677,38 @@ namespace SfSdk.Providers
 
             return item;
         }
+
+//        public List<IScrapbookItem> CreateInventoryItems(ISavegame sg)
+//        {
+//            var result = new List<IScrapbookItem>();
+//
+//            var tmpItemPic = sg.GetValue((int)SF.SgInventoryOffs + (int)SF.SgItmSize * 8 + (int)SF.SgItmPic);
+//            var tmpItemClass = 0;
+//
+//            while (tmpItemPic >= 1000)
+//            {
+//                tmpItemPic -= 1000;
+//                ++tmpItemClass;
+//            }
+//
+//            for (int i = 0; i < 15; ++i)
+//            {
+//                if (i < 10) // || !towerMode
+//                {
+//                    var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
+//                    if (sg.GetValue(index + (int)SF.SgItmTyp) == 0)
+//                        sg.SetValue(index + (int)SF.SgItmPic, 0);
+//                }
+//
+//                if (i == 9 && tmpItemClass >= 1)
+//                {
+//
+//                }
+//                else
+//                {
+//
+//                }
+//            }
+//        }
     }
 }

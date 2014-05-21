@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
+using SfSdk.Providers;
 using SfSdk.Response;
 
 namespace SfSdk.Data
@@ -16,7 +18,7 @@ namespace SfSdk.Data
     internal class Character : ICharacter, INotifyPropertyChanged
     {
         private readonly string _guild;
-        private readonly ISession _session;
+        private readonly Session _session;
         private readonly string _username;
         private int _constitution;
         private double _criticalHit;
@@ -34,7 +36,8 @@ namespace SfSdk.Data
         private int _rank;
         private int _resistance;
         private int _strength;
-
+//        private ScrapbookItemProvider _itemProvider;
+//        private List<IScrapbookItem> _inventoryItems;
 
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
@@ -56,8 +59,9 @@ namespace SfSdk.Data
                 throw new ArgumentNullException("session");
 
             _username = username;
-            _session = session;
+            _session = (Session) session;
             _guild = response.Guild;
+//            _itemProvider = new ScrapbookItemProvider(_session.ServerUri);
             LoadFromSavegame(response.Savegame);
             IsLoaded = true;
         }
@@ -82,7 +86,7 @@ namespace SfSdk.Data
             Rank = rank;
             _username = username;
             _guild = guild;
-            _session = session;
+            _session = (Session) session;
             Level = level;
             Honor = honor;
         }
@@ -275,6 +279,16 @@ namespace SfSdk.Data
             }
         }
 
+//        public List<IScrapbookItem> InventoryItems
+//        {
+//            get { return _inventoryItems; }
+//            set
+//            {
+//                _inventoryItems = value;
+//                NotifyOfPropertyChange();
+//            }
+//        }
+
         public bool IsLoaded
         {
             get { return _isLoaded; }
@@ -347,6 +361,8 @@ namespace SfSdk.Data
                 (int)
                 Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
                            (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
+
+//            InventoryItems = _itemProvider.CreateInventoryItems(sg);
         }
 
         #region INPC

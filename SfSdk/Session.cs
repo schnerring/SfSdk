@@ -22,7 +22,8 @@ namespace SfSdk
 
         private readonly Func<Uri, IRequestSource> _sourceFactory;
 
-        private Uri _serverUri;
+        internal Uri ServerUri { get; private set; }
+
         private string _sessionId;
         private IRequestSource _source;
         private bool _isLoggedIn;
@@ -82,8 +83,8 @@ namespace SfSdk
             _isLoggedIn = false;
             _username = username;
             _md5PasswordHash = md5PasswordHash;
-            _serverUri = serverUri;
-            _source = _sourceFactory(_serverUri);
+            ServerUri = serverUri;
+            _source = _sourceFactory(ServerUri);
             var result =
                 await
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
