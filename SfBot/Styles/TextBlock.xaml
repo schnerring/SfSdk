@@ -8,6 +8,5 @@
     
     <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
         <Setter Property="FontSize" Value="18" />
-        <Setter Property="FontWeight" Value="Bold" />
     </Style>
 </ResourceDictionary>

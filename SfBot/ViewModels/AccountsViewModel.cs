@@ -85,21 +85,20 @@ namespace SfBot.ViewModels
         public async void LoginAsync()
         {
             IsBusy = true;
-            var session = new Session();
-            _selectedAccount.Session = session;
-            _events.Publish(new LogEvent(session, "Login request started"));
+            _selectedAccount.Session = new Session();
+            _events.Publish(new LogEvent(_selectedAccount, "Login request started"));
             BusyMessage = "Logging in...";
-            var loginSuccessful = await session.LoginAsync(_selectedAccount.Username, _selectedAccount.PasswordHash, _selectedAccount.Server.ServerUri);
-            _events.Publish(new LogEvent(session, "Login request finished"));
+            var loginSuccessful = await _selectedAccount.Session.LoginAsync(_selectedAccount.Username, _selectedAccount.PasswordHash, _selectedAccount.Server.ServerUri);
+            _events.Publish(new LogEvent(_selectedAccount, "Login request finished"));
             if (!loginSuccessful)
             {
-                _events.Publish(new LogEvent(session, "Login request failed"));
+                _events.Publish(new LogEvent(_selectedAccount, "Login request failed"));
                 _selectedAccount.Session = null;
                 MessageBox.Show("Login failed. Please check the server status and your account credentials.",
                                 "Login failed");}
             else
             {
-                _events.Publish(new LogEvent(session, "Login request succeeded"));
+                _events.Publish(new LogEvent(_selectedAccount, "Login request succeeded"));
                 NotifyOfPropertyChange(() => CanLoginAsync);
                 NotifyOfPropertyChange(() => CanLogoutAsync);
                 _events.Publish(new LoginStatusChangedEvent(_selectedAccount, true));
@@ -110,19 +109,19 @@ namespace SfBot.ViewModels
         public async void LogoutAsync()
         {
             IsBusy = true;
-            _events.Publish(new LogEvent(_selectedAccount.Session, "Logout request started"));
+            _events.Publish(new LogEvent(_selectedAccount, "Logout request started"));
             BusyMessage = "Logging out...";
             bool isLoggedOut = await _selectedAccount.Session.LogoutAsync();
 
             if (!isLoggedOut)
             {
                 // TODO Retry?
-                _events.Publish(new LogEvent(_selectedAccount.Session, "Logout request failed"));
+                _events.Publish(new LogEvent(_selectedAccount, "Logout request failed"));
                 MessageBox.Show("Logout failed.", "Logout failed");
             }
             else
             {
-                _events.Publish(new LogEvent(_selectedAccount.Session, "Logout request succeeded"));
+                _events.Publish(new LogEvent(_selectedAccount, "Logout request succeeded"));
                 _selectedAccount.Session = null;
                 NotifyOfPropertyChange(() => CanLoginAsync);
                 NotifyOfPropertyChange(() => CanLogoutAsync);

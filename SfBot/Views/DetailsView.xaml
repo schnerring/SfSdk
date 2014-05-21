@@ -5,13 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              xmlns:viewModels="clr-namespace:SFBot.ViewModels"
+             xmlns:converters="clr-namespace:SfBot.Converters"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance viewModels:DetailsViewModel}">
+    <UserControl.Resources>
+        <converters:StringToUpperConverter x:Key="ToUpperConverter" />
+    </UserControl.Resources>
     <TabControl x:Name="Items" SelectedItem="{Binding SelectedItem}">
         <TabControl.ItemTemplate>
             <DataTemplate>
-                <TextBlock Text="{Binding DisplayName}" />
+                <TextBlock Text="{Binding DisplayName, Converter={StaticResource ToUpperConverter}}" />
             </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>

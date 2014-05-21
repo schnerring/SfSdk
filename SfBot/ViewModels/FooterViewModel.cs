@@ -46,7 +46,7 @@ namespace SfBot.ViewModels
 
         public void Handle(LogEvent message)
         {
-            if (message.Session != _selectedAccount.Session) return;
+            if (message.Account != _selectedAccount) return;
             _counter = 0;
             Message = message.Message;
             _timer.Start();

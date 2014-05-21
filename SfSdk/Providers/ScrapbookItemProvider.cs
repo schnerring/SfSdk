@@ -545,7 +545,8 @@ namespace SfSdk.Providers
             }
 
             itemType = 0;
-            while (itemType <= 1)
+//            while (itemType <= 1) // error in original source code?
+            while (itemType < 1)
             {
                 int itemPic = 0;
                 while (itemPic < (int) SF.CItemsPerType)
@@ -589,7 +590,7 @@ namespace SfSdk.Providers
                 _urlDict.Add((int) actorId, url);
                 return;
             }
-            Log.Warn("Image with the same URL already added!");
+            Log.Warn("Image with the same URL already added: {0}", url);
         }
 
         private IEnumerable<IScrapbookItem> CreateMultipleItems<TScrapbookItem>(IReadOnlyList<int> scrapbookContent,
