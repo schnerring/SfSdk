@@ -81,9 +81,9 @@ namespace SfSdk.Providers
                         ItemId = (int) SF.ImgOppimgMonster + page*4 + i,
                         ContentId = (int) SF.CntAlbumMonster + i,
                         HasItem = scrapbookContent[(page*4) + i] == 1,
-                        Text = page*4 + 1 >= 220
-                            ? _languageDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
-                            : _languageDict[SF.TxtMonsterName + page*4 + 1]
+                        Text = page*4 + i >= 220
+                            ? _languageDict[SF.TxtNewMonsterNames + page*4 + i - 220]
+                            : _languageDict[SF.TxtMonsterName + page*4 + i]
                     };
                     monsterItem.ImageUri = GetImageUri(monsterItem.ItemId);
                     result.Add(monsterItem);
