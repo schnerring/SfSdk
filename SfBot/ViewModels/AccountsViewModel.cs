@@ -85,7 +85,7 @@ namespace SfBot.ViewModels
         public async void LoginAsync()
         {
             IsBusy = true;
-            _selectedAccount.Session = new Session();
+            _selectedAccount.Session = SessionCreator.Create();
             _events.Publish(new LogEvent(_selectedAccount, "Login request started"));
             BusyMessage = "Logging in...";
             var loginSuccessful = await _selectedAccount.Session.LoginAsync(_selectedAccount.Username, _selectedAccount.PasswordHash, _selectedAccount.Server.ServerUri);

@@ -14,7 +14,7 @@ namespace SfSdk
     /// <summary>
     ///     A host of actions, which can be performed as you log the session in with valid user credentials. 
     /// </summary>
-    public class Session : ISession
+    internal class Session : ISession
     {
         private static readonly ILog Log = LogManager.GetLog(typeof (Session));
 
@@ -33,9 +33,8 @@ namespace SfSdk
         /// <summary>
         ///     Creates a new instance of type <see cref="Session"/> querying the default <see cref="SnFRequestSource"/>.
         /// </summary>
-        public Session()
+        internal Session() : this(serverUri => new SnFRequestSource(serverUri))
         {
-            _sourceFactory = serverUri => new SnFRequestSource(serverUri);
         }
 
         /// <summary>

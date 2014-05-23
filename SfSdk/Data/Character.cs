@@ -18,7 +18,7 @@ namespace SfSdk.Data
     internal class Character : ICharacter, INotifyPropertyChanged
     {
         private readonly string _guild;
-        private readonly Session _session;
+        private readonly ISession _session;
         private readonly string _username;
         private int _constitution;
         private double _criticalHit;
@@ -59,7 +59,7 @@ namespace SfSdk.Data
                 throw new ArgumentNullException("session");
 
             _username = username;
-            _session = (Session) session;
+            _session = session;
             _guild = response.Guild;
 //            _itemProvider = new ScrapbookItemProvider(_session.ServerUri);
             LoadFromSavegame(response.Savegame);
@@ -86,7 +86,7 @@ namespace SfSdk.Data
             Rank = rank;
             _username = username;
             _guild = guild;
-            _session = (Session) session;
+            _session = session;
             Level = level;
             Honor = honor;
         }

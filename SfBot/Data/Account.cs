@@ -9,7 +9,7 @@ namespace SfBot.Data
     [Serializable]
     public class Account : PropertyChangedBase, ISerializable
     {
-        private Session _session;
+        private ISession _session;
 
         public Account(string username, string passwordHash, ICountry country, IServer server)
         {
@@ -29,7 +29,7 @@ namespace SfBot.Data
         public ICountry Country { get; private set; }
         public IServer Server { get; private set; }
 
-        public Session Session
+        public ISession Session
         {
             get { return _session; }
             set

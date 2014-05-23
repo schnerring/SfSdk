@@ -44,6 +44,20 @@ namespace SfSdk.Tests.Providers
         }
 
         [Fact]
+        public void CreateMonsterItemsShouldReturnNoItemWithTheSameText()
+        {
+            // Arrange
+            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var monsterItems = sut.CreateMonsterItems(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            var monsterItemTexts = monsterItems.Select(i => i.Text).ToList();
+            monsterItemTexts.Count.Should().Be(monsterItemTexts.Distinct().Count());
+        }
+
+        [Fact]
         public void CreateValuableItemsShouldReturn246ValuableItems()
         {
             // Arrange

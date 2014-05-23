@@ -107,6 +107,7 @@
     <Compile Include="Data\ValuableItem.cs" />
     <Compile Include="Data\WarriorItem.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="SessionCreator.cs" />
     <Compile Include="SessionLoggedOutException.cs" />
   </ItemGroup>
   <ItemGroup>
