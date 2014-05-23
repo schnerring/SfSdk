@@ -1,25 +1,19 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using SfSdk.Contracts;
 
 namespace SfSdk.Data
 {
     /// <summary>
-    ///     A scrapbook item containing the base properties of any scrapbook item.
+    ///     An inventory item containing the base properties of any inventory item.
     /// </summary>
     [DebuggerDisplay("{Id} ({ContentId}), {Text}")]
-    internal abstract class ScrapbookItemBase : IScrapbookItem
+    internal class InventoryItem : IInventoryItem
     {
         public int Id { get; set; }
-        
         public int ContentId { get; set; }
-
         public string Text { get; set; }
-
         public string HintText { get; set; }
-
-        public bool HasItem { get; set; }
-
         public Uri ImageUri { get; set; }
     }
 }

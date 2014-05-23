@@ -129,8 +129,8 @@ namespace SfSdk
             var hasErrors = await HasErrors(result.Errors);
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
-                       ? null
-                       : new Character(characterResponse, _username, this);
+                ? null
+                : new Character(characterResponse, _username, this, ServerUri);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SfSdk
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                        ? null
-                       : new Character(characterResponse, username, this);
+                       : new Character(characterResponse, username, this, ServerUri);
         }
 
         /// <summary>

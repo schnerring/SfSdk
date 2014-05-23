@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using SfSdk.Data;
 using SfSdk.Providers;
+using SfSdk.Response;
 using Xunit;
 
 namespace SfSdk.Tests.Providers
@@ -121,6 +122,20 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             scoutItems.Count().Should().Be(348);
+        }
+
+        [Fact]
+        public void CreateInventoryItemsShouldReturn15Items()
+        {
+            // Arrange
+            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sg = new Savegame(TestConstants.ValidSavegameString);
+
+            // Act
+            var inventoryItems = sut.CreateInventoryItems(sg);
+
+            // Assert
+            inventoryItems.Count().Should().Be(15);
         }
     }
 }

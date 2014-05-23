@@ -11,6 +11,7 @@ using SfSdk.Response;
 namespace SfSdk.Providers
 {
     /// <summary>
+    ///     ItemProvider for S&amp;F items.
     /// </summary>
     internal class ScrapbookItemProvider
     {
@@ -78,14 +79,14 @@ namespace SfSdk.Providers
                 {
                     var monsterItem = new MonsterItem
                     {
-                        ItemId = (int) SF.ImgOppimgMonster + page*4 + i,
+                        Id = (int) SF.ImgOppimgMonster + page*4 + i,
                         ContentId = (int) SF.CntAlbumMonster + i,
                         HasItem = scrapbookContent[(page*4) + i] == 1,
                         Text = page*4 + i >= 220
                             ? _languageDict[SF.TxtNewMonsterNames + page*4 + i - 220]
                             : _languageDict[SF.TxtMonsterName + page*4 + i]
                     };
-                    monsterItem.ImageUri = GetImageUri(monsterItem.ItemId);
+                    monsterItem.ImageUri = GetImageUri(monsterItem.Id);
                     result.Add(monsterItem);
                 }
 
@@ -310,6 +311,7 @@ namespace SfSdk.Providers
         private static int GetItemId(int itemType, int itemPic, int itemColor, int itemClass)
         {
             var itemId = (int) SF.ItmOffs;
+
             itemId += itemType*(int) SF.CItemsPerType*5*3;
             itemId += itemPic*5*3;
             itemId += itemColor*3;
@@ -320,6 +322,103 @@ namespace SfSdk.Providers
             Log.Warn("Error: not enough indices for items: {0} >= {1} Type: {2} Pic: {3} Color: {4} Class: {5}",
                 itemId, SF.ItmMax, itemType, itemPic, itemColor, itemClass);
             return 0;
+        }
+
+        /// <summary>
+        ///     Creates inventories based on a <see cref="ISavegame"/>.
+        /// </summary>
+        /// <param name="sg">The savegame.</param>
+        /// <returns>A list of <see cref="IInventoryItem"/>s contained in the savegame.</returns>
+        public List<IInventoryItem> CreateInventoryItems(ISavegame sg)
+        {
+            var result = new List<IInventoryItem>();
+
+            var tmpItemPic = sg.GetValue((int)SF.SgInventoryOffs + (int)SF.SgItmSize * 8 + (int)SF.SgItmPic);
+            var tmpItemClass = 0;
+
+            while (tmpItemPic >= 1000)
+            {
+                tmpItemPic -= 1000;
+                ++tmpItemClass;
+            }
+
+            for (int i = 0; i < 15; ++i)
+            {
+                if (i < 10) // || !towerMode
+                {
+                    var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
+                    if (sg.GetValue(index + (int)SF.SgItmTyp) == 0)
+                        sg.SetValue(index + (int)SF.SgItmPic, 0);
+                }
+
+                var item = new InventoryItem {ContentId = (int) SF.CntCharSlot1 + i};
+
+                if (i == 9 && tmpItemClass >= 1)
+                {
+                    item.Id = GetArrowIdFromSavegame((int) SF.SgInventoryOffs, 8, sg, tmpItemClass == 1 ? 1 : -1);
+                    item.ImageUri = GetImageUri(item.Id);
+                }
+                else
+                {
+                    item.Id = GetItemIdFromSavegame((int) SF.SgInventoryOffs, i, sg);
+                    item.ImageUri = GetImageUri(item.Id);
+                }
+
+                result.Add(item);
+            }
+
+            return result;
+        }
+
+        private static int GetItemIdFromSavegame(int itemType, int itemPic, ISavegame sg)
+        {
+//            var itemClass = -2;
+//            var noShield = false;
+
+            var slotId = itemType + itemPic * (int)SF.SgItmSize;
+            var slotNum = itemPic + 1;
+
+            itemType = sg.GetValue(slotId + SF.SgItmTyp);
+            itemPic = sg.GetValue(slotId + SF.SgItmPic);
+            var ownerClass = sg.GetValue(SF.SgClass);
+
+            var itemColor = 0;
+            for (var i = 0; i < 8; ++i) itemColor += sg.GetValue(slotId + SF.SgItmSchadenMin + i);
+            itemColor %= 5;
+            
+            var itemClass = 0;
+            while (itemPic >= 1000)
+            {
+                itemPic -= 1000;
+                ++itemClass;
+            }
+
+            var itemId = GetItemId(itemType, itemPic, itemColor, itemClass);
+            if (itemId == 0) return 0;
+            if (itemType != 0 || slotNum <= 0 || slotNum > 10) return itemId;
+
+            if (slotNum <= 8)
+            {
+                itemId = (int) SF.ImgEmptySlot1 + slotNum - 1;
+            }
+            else switch ((SfClass)ownerClass)
+            {
+                case SfClass.Warrior:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_1;
+//                    else if (noShield) itemId = (int) SF.ImgNoShield;
+                    else itemId = (int) SF.ImgEmptySlot10;
+                    break;
+                case SfClass.Mage:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_2;
+                    break;
+                case SfClass.Scout:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return itemId;
         }
 
         private static int GetArrowId(int itemClass, int itemPic, int itemColor)
@@ -335,6 +434,26 @@ namespace SfSdk.Providers
             Log.Warn("Error: not enough indices for arrows: {0} >= {1} Pic: {2} Color: {3} Class: {4}",
                 arrowId, SF.ItmMax, itemPic, itemColor, itemClass);
             return 0;
+        }
+
+        private static int GetArrowIdFromSavegame(int itemClass, int itemPic, ISavegame sg, int colorOverride)
+        {
+            var slotId = itemClass + itemPic * (int)SF.SgItmSize;
+            itemPic = sg.GetValue(slotId + SF.SgItmPic);
+            var itemColor = 0;
+            for (var i = 0; i < 8; ++i) itemColor += sg.GetValue(slotId + SF.SgItmSchadenMin + i);
+            itemColor %= 5;
+            itemClass = 0;
+            while (itemPic >= 1000)
+            {
+                itemPic -= 1000;
+                ++itemClass;
+            }
+            --itemClass;
+            if (colorOverride >= 0)
+                itemColor = colorOverride;
+
+            return GetArrowId(itemClass, itemPic, itemColor);
         }
 
         private string GetItemName(int itemType, int itemPic, int itemClass)
@@ -640,8 +759,8 @@ namespace SfSdk.Providers
 
             for (var i = 0; i < 5; ++i)
             {
-                items[i].ItemId = GetItemId(itemType, itemPic, i, itemClass);
-                items[i].ImageUri = GetImageUri(items[i].ItemId);
+                items[i].Id = GetItemId(itemType, itemPic, i, itemClass);
+                items[i].ImageUri = GetImageUri(items[i].Id);
             }
 
             // enable popup?
@@ -670,45 +789,12 @@ namespace SfSdk.Providers
 
             if (itemClass > 0) --itemClass;
 
-            item.ItemId = GetItemId(itemType, itemPic, 0, itemClass);
-            item.ImageUri = GetImageUri(item.ItemId);
+            item.Id = GetItemId(itemType, itemPic, 0, itemClass);
+            item.ImageUri = GetImageUri(item.Id);
 
             // enable popup?
 
             return item;
         }
-
-//        public List<IScrapbookItem> CreateInventoryItems(ISavegame sg)
-//        {
-//            var result = new List<IScrapbookItem>();
-//
-//            var tmpItemPic = sg.GetValue((int)SF.SgInventoryOffs + (int)SF.SgItmSize * 8 + (int)SF.SgItmPic);
-//            var tmpItemClass = 0;
-//
-//            while (tmpItemPic >= 1000)
-//            {
-//                tmpItemPic -= 1000;
-//                ++tmpItemClass;
-//            }
-//
-//            for (int i = 0; i < 15; ++i)
-//            {
-//                if (i < 10) // || !towerMode
-//                {
-//                    var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
-//                    if (sg.GetValue(index + (int)SF.SgItmTyp) == 0)
-//                        sg.SetValue(index + (int)SF.SgItmPic, 0);
-//                }
-//
-//                if (i == 9 && tmpItemClass >= 1)
-//                {
-//
-//                }
-//                else
-//                {
-//
-//                }
-//            }
-//        }
     }
 }

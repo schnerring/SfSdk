@@ -19,7 +19,7 @@ namespace SfSdk.Tests.Data
         {
             // Arrange
             var sessionMock = new Mock<ISession>();
-            Action sut = () => new Character(null, ValidUsername, sessionMock.Object);
+            Action sut = () => new Character(null, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "response");
@@ -31,7 +31,7 @@ namespace SfSdk.Tests.Data
             // Arrange
             var sessionMock = new Mock<ISession>();
             var characterResponseMock = new Mock<ICharacterResponse>();
-            Action sut = () => new Character(characterResponseMock.Object, null, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, null, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -44,7 +44,7 @@ namespace SfSdk.Tests.Data
             // Arrange
             var sessionMock = new Mock<ISession>();
             var characterResponseMock = new Mock<ICharacterResponse>();
-            Action sut = () => new Character(characterResponseMock.Object, string.Empty, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, string.Empty, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -58,7 +58,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             var savegameMock = new Mock<ISavegame>();
             characterResponseMock.Setup(cr => cr.Savegame).Returns(savegameMock.Object);
-            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, null);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, null, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>()
@@ -73,7 +73,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(null as Savegame);
 
-            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -94,7 +94,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>();
@@ -114,7 +114,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentOutOfRangeException>();
@@ -135,7 +135,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            Action sut = () => new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act / Assert
             sut.ShouldNotThrow<Exception>();
@@ -202,7 +202,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act
             await sut.Refresh();
@@ -231,7 +231,7 @@ namespace SfSdk.Tests.Data
             var characterResponseMock = new Mock<ICharacterResponse>();
             characterResponseMock.Setup(c => c.Savegame).Returns(savegameMock.Object);
 
-            var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object);
+            var sut = new Character(characterResponseMock.Object, ValidUsername, sessionMock.Object, TestConstants.ValidServerUri);
 
             // Act
             await sut.Refresh(force: true);
