@@ -91,6 +91,7 @@
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Converters\DamageConverter.cs" />
+    <Compile Include="Converters\NullImageConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Data\Account.cs" />
     <Compile Include="Data\ConfigurationStore.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ViewModels\Details\CharacterViewModel.cs" />
     <Compile Include="ViewModels\Details\ILoadableScreen.cs" />
     <Compile Include="ViewModels\Details\LogEntry.cs" />
+    <Compile Include="ViewModels\Details\ScrapbookItemViewModel.cs" />
     <Compile Include="ViewModels\Details\ScrapbookViewModel.cs" />
     <Compile Include="ViewModels\Details\SessionScreenBase.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
@@ -125,32 +127,11 @@
     <Compile Include="ViewModels\Details\HallOfFameViewModel.cs" />
     <Compile Include="ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="ViewModels\SessionsViewModel.cs" />
-    <Compile Include="Views\AccountsView.xaml.cs">
-      <DependentUpon>AccountsView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Details\CharacterView.xaml.cs">
       <DependentUpon>CharacterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CreateAccountView.xaml.cs">
       <DependentUpon>CreateAccountView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\DetailsView.xaml.cs">
-      <DependentUpon>DetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Details\HallOfFameView.xaml.cs">
-      <DependentUpon>HallOfFameView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Details\ScrapbookView.xaml.cs">
-      <DependentUpon>ScrapbookView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\FooterView.xaml.cs">
-      <DependentUpon>FooterView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\LoggedOutView.xaml.cs">
-      <DependentUpon>LoggedOutView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SessionsView.xaml.cs">
-      <DependentUpon>SessionsView.xaml</DependentUpon>
     </Compile>
     <Page Include="Shell\ShellView.xaml">
       <SubType>Designer</SubType>
@@ -201,6 +182,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Details\HallOfFameView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Details\ScrapbookItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -7,6 +7,8 @@ using Caliburn.Micro;
 using SFBot.ViewModels;
 using SfBot.Data;
 using SfBot.Shell;
+using SFBot.ViewModels.Details;
+using SfSdk.Contracts;
 
 namespace SfBot
 {
@@ -26,11 +28,17 @@ namespace SfBot
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue<Func<Account, DetailsViewModel>>(a =>
-                {
-                    var vm = IoC.Get<DetailsViewModel>();
-                    vm.Init(a);
-                    return vm;
-                });
+            {
+                var vm = IoC.Get<DetailsViewModel>();
+                vm.Init(a);
+                return vm;
+            });
+            batch.AddExportedValue<Func<IEnumerable<IScrapbookItem>, ScrapbookItemViewModel>>(i =>
+            {
+                var vm = IoC.Get<ScrapbookItemViewModel>();
+                vm.Init(i);
+                return vm;
+            });
 
             batch.AddExportedValue(_container);
 

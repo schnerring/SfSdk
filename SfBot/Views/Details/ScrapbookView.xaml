@@ -4,43 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:details="clr-namespace:SFBot.ViewModels.Details"
-             xmlns:contracts="clr-namespace:SfSdk.Contracts;assembly=SfSdk"
-             xmlns:controls="clr-namespace:SFBot.Controls"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              d:DataContext="{d:DesignInstance details:ScrapbookViewModel}">
-    <UserControl.Resources>
-        <DataTemplate DataType="{x:Type contracts:IScrapbookItem}" x:Key="ScrapbookItemDataTemplate">
-            <Grid Margin="5" Width="300">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="0" Margin="5" Background="{StaticResource Dark5Brush}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    
-                    <TextBlock Grid.Row="0" Text="{Binding Text}" TextWrapping="Wrap" FontWeight="Bold" Margin="5 5 0 0" />
-                    <TextBlock Grid.Row="1" Text="{Binding HintText}" Foreground="Yellow" Margin="10 5 0 0" TextWrapping="Wrap" />
-                </Grid>
-                
-                <Image Grid.Column="1" Source="{Binding ImageUri}" Height="100" Width="100" Margin="5" />
-                <CheckBox Grid.Column="2" IsChecked="{Binding HasItem, Mode=TwoWay}" VerticalAlignment="Center" Margin="5 0 5 0" />
-            </Grid>
-        </DataTemplate>
-    </UserControl.Resources>
 
     <Grid Margin="10">
-        <Grid.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}">
-                <Setter Property="Margin" Value="0 15 0 0" />
-            </Style>
-        </Grid.Resources>
-        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
@@ -48,77 +16,24 @@
 
         <Grid Grid.Column="0" Margin="50 0 0 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <TextBlock Text="Monsters" Grid.Row="0" />
-            <Separator Grid.Row="1" />
-            <ListBox x:Name="MonsterItems" Grid.Row="2" ItemTemplate="{StaticResource ScrapbookItemDataTemplate}" Style="{StaticResource ScrapbookListBoxStyle}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:VirtualizingWrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
 
-            <TextBlock Text="Valuable Items" Grid.Row="3" />
-            <Separator Grid.Row="4" />
-            <ListBox x:Name="ValuableItems" Grid.Row="5" ItemTemplate="{StaticResource ScrapbookItemDataTemplate}" Style="{StaticResource ScrapbookListBoxStyle}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:VirtualizingWrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
+            <ContentControl Grid.Row="0" x:Name="MonsterViewModel" />
+            <ContentControl Grid.Row="1" x:Name="ValuableViewModel" />
         </Grid>
 
         <Grid Grid.Column="1" Margin="50 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Warrior Items" Grid.Row="0" />
-            <Separator Grid.Row="1" />
-            <ListBox x:Name="WarriorItems" Grid.Row="2" ItemTemplate="{StaticResource ScrapbookItemDataTemplate}" Style="{StaticResource ScrapbookListBoxStyle}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:VirtualizingWrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-
-            <TextBlock Text="Mage Items" Grid.Row="3" />
-            <Separator Grid.Row="4" />
-            <ListBox x:Name="MageItems" Grid.Row="5" ItemTemplate="{StaticResource ScrapbookItemDataTemplate}" Style="{StaticResource ScrapbookListBoxStyle}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:VirtualizingWrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
-
-            <TextBlock Text="Scout Items" Grid.Row="6" />
-            <Separator Grid.Row="7" />
-            <ListBox x:Name="ScoutItems" Grid.Row="8" ItemTemplate="{StaticResource ScrapbookItemDataTemplate}" Style="{StaticResource ScrapbookListBoxStyle}">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <controls:VirtualizingWrapPanel />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-            </ListBox>
+            <ContentControl Grid.Row="0" x:Name="WarriorViewModel" />
+            <ContentControl Grid.Row="1" x:Name="MageViewModel" />
+            <ContentControl Grid.Row="2" x:Name="ScoutViewModel" />
         </Grid>
     </Grid>
 </UserControl>

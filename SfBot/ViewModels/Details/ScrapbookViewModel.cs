@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
-using System.Drawing;
+﻿using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
@@ -15,37 +13,17 @@ namespace SFBot.ViewModels.Details
     public class ScrapbookViewModel : SessionScreenBase
     {
         private readonly IEventAggregator _events;
-        private readonly BindableCollection<IScrapbookItem> _scrapbookItems = new BindableCollection<IScrapbookItem>();
-        private readonly BindableCollection<IMonsterItem> _monsterItems = new BindableCollection<IMonsterItem>();
-        private readonly BindableCollection<IValuableItem> _valuableItems = new BindableCollection<IValuableItem>();
-        private readonly BindableCollection<IWarriorItem> _warriorItems = new BindableCollection<IWarriorItem>();
-        private readonly BindableCollection<IMageItem> _mageItems = new BindableCollection<IMageItem>();
-        private readonly BindableCollection<IScoutItem> _scoutItems = new BindableCollection<IScoutItem>();
 
-        public BindableCollection<IMonsterItem> MonsterItems
-        {
-            get { return _monsterItems; }
-        }
-
-        public BindableCollection<IValuableItem> ValuableItems
-        {
-            get { return _valuableItems; }
-        }
-
-        public BindableCollection<IWarriorItem> WarriorItems
-        {
-            get { return _warriorItems; }
-        }
-
-        public BindableCollection<IMageItem> MageItems
-        {
-            get { return _mageItems; }
-        }
-
-        public BindableCollection<IScoutItem> ScoutItems
-        {
-            get { return _scoutItems; }
-        }
+        [Import]
+        public ScrapbookItemViewModel MonsterViewModel { get; set; }
+        [Import]
+        public ScrapbookItemViewModel ValuableViewModel { get; set; }
+        [Import]
+        public ScrapbookItemViewModel WarriorViewModel { get; set; }
+        [Import]
+        public ScrapbookItemViewModel MageViewModel { get; set; }
+        [Import]
+        public ScrapbookItemViewModel ScoutViewModel { get; set; }
 
         [ImportingConstructor]
         public ScrapbookViewModel(IEventAggregator events)
@@ -57,17 +35,26 @@ namespace SFBot.ViewModels.Details
         public override async Task LoadAsync()
         {
             IsBusy = true;
-            _events.Publish(new LogEvent(Session, "Scrapbook request started"));
+            
+            _events.Publish(new LogEvent(Account, "Scrapbook request started"));
+            var items = (await Account.Session.ScrapbookAsync()).ToList();
+            _events.Publish(new LogEvent(Account, "Scrapbook request finished"));
 
-            var items = (await Session.ScrapbookAsync()).ToList();
+            MonsterViewModel.DisplayName = "Monster Items";
+            MonsterViewModel.Init(items.OfType<IMonsterItem>());
 
-            foreach (var monsterItem in items.OfType<IMonsterItem>()) _monsterItems.Add(monsterItem);
-            foreach (var valuableItem in items.OfType<IValuableItem>()) _valuableItems.Add(valuableItem);
-            foreach (var warriorItem in items.OfType<IWarriorItem>()) _warriorItems.Add(warriorItem);
-            foreach (var mageItem in items.OfType<IMageItem>()) _mageItems.Add(mageItem);
-            foreach (var scoutItem in items.OfType<IScoutItem>()) _scoutItems.Add(scoutItem);
+            ValuableViewModel.DisplayName = "Valuable Items";
+            ValuableViewModel.Init(items.OfType<IValuableItem>());
 
-            _events.Publish(new LogEvent(Session, "Scrapbook request finished"));
+            WarriorViewModel.DisplayName = "Warrior Items";
+            WarriorViewModel.Init(items.OfType<IWarriorItem>());
+
+            MageViewModel.DisplayName = "Mage Items";
+            MageViewModel.Init(items.OfType<IMageItem>());
+
+            ScoutViewModel.DisplayName = "Scout Items";
+            ScoutViewModel.Init(items.OfType<IScoutItem>());
+
             IsBusy = false;
         }
 

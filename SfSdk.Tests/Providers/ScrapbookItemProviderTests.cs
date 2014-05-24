@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using SfSdk.Data;
 using SfSdk.Providers;
+using SfSdk.Response;
 using Xunit;
 
 namespace SfSdk.Tests.Providers
@@ -41,6 +42,20 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             monsterItems.Count().Should().Be(252);
+        }
+
+        [Fact]
+        public void CreateMonsterItemsShouldReturnNoItemWithTheSameText()
+        {
+            // Arrange
+            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var monsterItems = sut.CreateMonsterItems(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            var monsterItemTexts = monsterItems.Select(i => i.Text).ToList();
+            monsterItemTexts.Count.Should().Be(monsterItemTexts.Distinct().Count());
         }
 
         [Fact]
@@ -107,6 +122,20 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             scoutItems.Count().Should().Be(348);
+        }
+
+        [Fact]
+        public void CreateInventoryShouldReturnInventoryWith15Items()
+        {
+            // Arrange
+            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sg = new Savegame(TestConstants.ValidSavegameString);
+
+            // Act
+            var inventory = sut.CreateInventory(sg);
+
+            // Assert
+            inventory.AllItems.Count().Should().Be(15);
         }
     }
 }

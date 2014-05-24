@@ -6,19 +6,24 @@ using SfSdk.Constants;
 using SfSdk.Contracts;
 using SfSdk.Data;
 using SfSdk.Logging;
+using SfSdk.Response;
 
 namespace SfSdk.Providers
 {
     /// <summary>
+    ///     ItemProvider for S&amp;F items.
     /// </summary>
     internal class ScrapbookItemProvider
     {
         private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookItemProvider));
 
         private readonly Uri _imageServerUri;
-        private readonly Dictionary<SF, string> _configurationResourcesDict;
-        private readonly Dictionary<SF, string> _languageResourceDict;
-        private readonly Dictionary<int, string> _urlDict = new Dictionary<int, string>();
+        private readonly Dictionary<SF, string> _languageDict;
+        private readonly Dictionary<int, string> _urlDict;
+
+        private static readonly Dictionary<Uri, Dictionary<int, string>> UrlDicts = new Dictionary<Uri, Dictionary<int, string>>();
+        private static readonly Dictionary<Uri, Dictionary<SF, string>> ConfigurationDicts = new Dictionary<Uri, Dictionary<SF, string>>();
+        private static readonly Dictionary<Uri, Dictionary<SF, string>> LanguageDicts = new Dictionary<Uri, Dictionary<SF, string>>();
 
         /// <summary>
         ///     Creates a new instance of type <see cref="ScrapbookItemProvider" /> and defines its resources.
@@ -30,15 +35,31 @@ namespace SfSdk.Providers
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 
             Log.Info("Resource download started.");
-            _configurationResourcesDict = new ConfigurationResourceProvider().GetResources(serverUri);
-            _languageResourceDict = new LanguageResourceProvider().GetResources(serverUri);
+
+            if (!ConfigurationDicts.ContainsKey(serverUri))
+                ConfigurationDicts.Add(serverUri, new ConfigurationResourceProvider().GetResources(serverUri));
+            var configurationDict = ConfigurationDicts[serverUri];
+
+            if (!LanguageDicts.ContainsKey(serverUri))
+                LanguageDicts.Add(serverUri, new LanguageResourceProvider().GetResources(serverUri));
+            _languageDict = LanguageDicts[serverUri]; 
+
             Log.Info("Resource download finished.");
             
-            _imageServerUri = new Uri(_configurationResourcesDict[SF.CfgImgUrl]);
+            _imageServerUri = new Uri(configurationDict[SF.CfgImgUrl]);
 
-            bool paramCensored = false;
-            if (_configurationResourcesDict.ContainsKey(SF.CfgCensored))
-                paramCensored = int.Parse(_configurationResourcesDict[SF.CfgCensored]) != 0;
+            if (UrlDicts.ContainsKey(serverUri))
+            {
+                _urlDict = UrlDicts[serverUri];
+                return;
+            }
+
+            _urlDict = new Dictionary<int, string>();
+            UrlDicts.Add(serverUri, _urlDict);
+
+            var paramCensored = false;
+            if (configurationDict.ContainsKey(SF.CfgCensored))
+                paramCensored = int.Parse(configurationDict[SF.CfgCensored]) != 0;
 
             DefineMonsters(paramCensored);
             DefineItems();
@@ -53,16 +74,21 @@ namespace SfSdk.Providers
         {
             var result = new List<IScrapbookItem>();
 
-            for (int page = 0; page <= 62; page++)
+            for (int page = 0; page <= 62; ++page)
                 for (int i = 0; i < 4; ++i)
-                    result.Add(new MonsterItem
+                {
+                    var monsterItem = new MonsterItem
                     {
+                        Id = (int) SF.ImgOppimgMonster + page*4 + i,
+                        ContentId = (int) SF.CntAlbumMonster + i,
                         HasItem = scrapbookContent[(page*4) + i] == 1,
-                        ImageUri = GetImageUri((int) SF.CntAlbumMonster + i, (int) SF.ImgOppimgMonster + page*4 + i),
-                        Text = page*4 + 1 >= 220
-                            ? _languageResourceDict[SF.TxtNewMonsterNames + page*4 + 1 - 220]
-                            : _languageResourceDict[SF.TxtMonsterName + page*4 + 1]
-                    });
+                        Text = page*4 + i >= 220
+                            ? _languageDict[SF.TxtNewMonsterNames + page*4 + i - 220]
+                            : _languageDict[SF.TxtMonsterName + page*4 + i]
+                    };
+                    monsterItem.ImageUri = GetImageUri(monsterItem.Id);
+                    result.Add(monsterItem);
+                }
 
             return result;
         }
@@ -76,7 +102,7 @@ namespace SfSdk.Providers
         {
             var result = new List<IScrapbookItem>();
 
-            for (int page = 0; page <= 25; page++)
+            for (int page = 0; page <= 25; ++page)
             {
                 for (int i = 0; i < 4; ++i)
                 {
@@ -282,9 +308,10 @@ namespace SfSdk.Providers
             return result;
         }
 
-        private static int GetItemId(int itemType, int itemPic, int itemColor, int itemClass = -1)
+        private static int GetItemId(int itemType, int itemPic, int itemColor, int itemClass)
         {
             var itemId = (int) SF.ItmOffs;
+
             itemId += itemType*(int) SF.CItemsPerType*5*3;
             itemId += itemPic*5*3;
             itemId += itemColor*3;
@@ -295,6 +322,103 @@ namespace SfSdk.Providers
             Log.Warn("Error: not enough indices for items: {0} >= {1} Type: {2} Pic: {3} Color: {4} Class: {5}",
                 itemId, SF.ItmMax, itemType, itemPic, itemColor, itemClass);
             return 0;
+        }
+
+        /// <summary>
+        ///     Creates inventories based on a <see cref="ISavegame"/>.
+        /// </summary>
+        /// <param name="sg">The savegame.</param>
+        /// <returns>A list of <see cref="IInventoryItem"/>s contained in the savegame.</returns>
+        public IInventory CreateInventory(ISavegame sg)
+        {
+            var result = new Inventory();
+
+            var tmpItemPic = sg.GetValue((int)SF.SgInventoryOffs + (int)SF.SgItmSize * 8 + (int)SF.SgItmPic);
+            var tmpItemClass = 0;
+
+            while (tmpItemPic >= 1000)
+            {
+                tmpItemPic -= 1000;
+                ++tmpItemClass;
+            }
+
+            for (int i = 0; i < 15; ++i)
+            {
+                if (i < 10) // || !towerMode
+                {
+                    var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
+                    if (sg.GetValue(index + (int)SF.SgItmTyp) == 0)
+                        sg.SetValue(index + (int)SF.SgItmPic, 0);
+                }
+
+                var item = new InventoryItem {ContentId = (int) SF.CntCharSlot1 + i};
+
+                if (i == 9 && tmpItemClass >= 1)
+                {
+                    item.Id = GetArrowIdFromSavegame((int) SF.SgInventoryOffs, 8, sg, tmpItemClass == 1 ? 1 : -1);
+                    item.ImageUri = GetImageUri(item.Id);
+                }
+                else
+                {
+                    item.Id = GetItemIdFromSavegame((int) SF.SgInventoryOffs, i, sg);
+                    item.ImageUri = GetImageUri(item.Id);
+                }
+
+                result.AllItems.Add(item);
+            }
+
+            return result;
+        }
+
+        private static int GetItemIdFromSavegame(int itemType, int itemPic, ISavegame sg)
+        {
+//            var itemClass = -2;
+//            var noShield = false;
+
+            var slotId = itemType + itemPic * (int)SF.SgItmSize;
+            var slotNum = itemPic + 1;
+
+            itemType = sg.GetValue(slotId + SF.SgItmTyp);
+            itemPic = sg.GetValue(slotId + SF.SgItmPic);
+            var ownerClass = sg.GetValue(SF.SgClass);
+
+            var itemColor = 0;
+            for (var i = 0; i < 8; ++i) itemColor += sg.GetValue(slotId + SF.SgItmSchadenMin + i);
+            itemColor %= 5;
+            
+            var itemClass = 0;
+            while (itemPic >= 1000)
+            {
+                itemPic -= 1000;
+                ++itemClass;
+            }
+
+            var itemId = GetItemId(itemType, itemPic, itemColor, itemClass);
+            if (itemId == 0) return 0;
+            if (itemType != 0 || slotNum <= 0 || slotNum > 10) return itemId;
+
+            if (slotNum <= 8)
+            {
+                itemId = (int) SF.ImgEmptySlot1 + slotNum - 1;
+            }
+            else switch ((SfClass)ownerClass)
+            {
+                case SfClass.Warrior:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_1;
+//                    else if (noShield) itemId = (int) SF.ImgNoShield;
+                    else itemId = (int) SF.ImgEmptySlot10;
+                    break;
+                case SfClass.Mage:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_2;
+                    break;
+                case SfClass.Scout:
+                    if (slotNum == 9) itemId = (int) SF.ImgEmptySlot9_3;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return itemId;
         }
 
         private static int GetArrowId(int itemClass, int itemPic, int itemColor)
@@ -312,25 +436,34 @@ namespace SfSdk.Providers
             return 0;
         }
 
-        private string GetItemName(int sgIndex, int sg, int scrapbookMode = -1)
+        private static int GetArrowIdFromSavegame(int itemClass, int itemPic, ISavegame sg, int colorOverride)
         {
-            int itemPic = 0;
-            int itemTyp = 0;
-            int itemClass = 1;
+            var slotId = itemClass + itemPic * (int)SF.SgItmSize;
+            itemPic = sg.GetValue(slotId + SF.SgItmPic);
+            var itemColor = 0;
+            for (var i = 0; i < 8; ++i) itemColor += sg.GetValue(slotId + SF.SgItmSchadenMin + i);
+            itemColor %= 5;
+            itemClass = 0;
+            while (itemPic >= 1000)
+            {
+                itemPic -= 1000;
+                ++itemClass;
+            }
+            --itemClass;
+            if (colorOverride >= 0)
+                itemColor = colorOverride;
 
+            return GetArrowId(itemClass, itemPic, itemColor);
+        }
+
+        private string GetItemName(int itemType, int itemPic, int itemClass)
+        {
             int txtBase = 0;
             string txtSuffix = string.Empty;
 
-            if (scrapbookMode >= 0)
+            if (itemType >= 8)
             {
-                itemTyp = sgIndex;
-                itemPic = sg;
-                itemClass = scrapbookMode;
-            }
-
-            if (itemTyp >= 8)
-            {
-                switch (itemTyp)
+                switch (itemType)
                 {
                     case 8:
                         txtBase = (int) SF.TxtItmname8;
@@ -359,7 +492,7 @@ namespace SfSdk.Providers
             else
             {
                 int itemOffs = 0;
-                switch (itemTyp)
+                switch (itemType)
                 {
                     case 1:
                         itemOffs = (int) SF.TxtItmname1_1;
@@ -401,43 +534,43 @@ namespace SfSdk.Providers
                 }
             }
 
-            if (itemPic >= 50 && itemTyp != 14)
+            if (itemPic >= 50 && itemType != 14)
             {
                 txtBase = txtBase + SF.TxtItmname1_1Epic - SF.TxtItmname1_1;
                 itemPic -= 49;
                 txtSuffix = string.Empty;
             }
 
-            if (!_languageResourceDict.ContainsKey((SF) txtBase + itemPic - 1))
+            if (!_languageDict.ContainsKey((SF) txtBase + itemPic - 1))
             {
                 return "Unknown Item (base=" + txtBase + ", entry=" + (txtBase + itemPic - 1) + ")";
             }
 
-            if (_languageResourceDict.ContainsKey(SF.TxtItmnameExt))
+            if (_languageDict.ContainsKey(SF.TxtItmnameExt))
             {
-                if (_languageResourceDict[SF.TxtItmnameExt] == "1")
+                if (_languageDict[SF.TxtItmnameExt] == "1")
                 {
                     return (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : txtSuffix + " ") +
-                           _languageResourceDict[(SF) txtBase + itemPic - 1];
+                           _languageDict[(SF) txtBase + itemPic - 1];
                 }
 
-                if (_languageResourceDict[SF.TxtItmnameExt] != "2")
-                    return _languageResourceDict[(SF) txtBase + itemPic - 1] +
+                if (_languageDict[SF.TxtItmnameExt] != "2")
+                    return _languageDict[(SF) txtBase + itemPic - 1] +
                            (string.IsNullOrWhiteSpace(txtSuffix) ? string.Empty : " " + txtSuffix);
             }
 
             if (string.IsNullOrWhiteSpace(txtSuffix))
-                return _languageResourceDict[(SF) txtBase + itemPic - 1];
+                return _languageDict[(SF) txtBase + itemPic - 1];
 
             string[] parts = txtSuffix.Split(new[] {"%1"}, StringSplitOptions.None);
-            return string.Join(_languageResourceDict[(SF) txtBase + itemPic - 1], parts);
+            return string.Join(_languageDict[(SF) txtBase + itemPic - 1], parts);
         }
 
-        private Uri GetImageUri(int contentId, int imageId)
+        private Uri GetImageUri(int itemId)
         {
-            return !_urlDict.ContainsKey(imageId)
+            return !_urlDict.ContainsKey(itemId)
                 ? null
-                : new Uri(_imageServerUri, _urlDict[imageId]);
+                : new Uri(_imageServerUri, _urlDict[itemId]);
         }
 
         private static string GetItemFile(int itemType, int itemPic, int itemColor, int itemClass)
@@ -474,10 +607,9 @@ namespace SfSdk.Providers
         {
             DefineImage(SF.ImgUnknownEnemy, "res/gfx/scr/fight/monster/unknown.jpg");
 
-            int k = 0;
-            while (k < 500)
+            for (var k = 0; k < 500; ++k)
             {
-                int i = k;
+                var i = k;
 
                 if (paramCensored)
                 {
@@ -497,23 +629,16 @@ namespace SfSdk.Providers
                     DefineImage(SF.ImgOppimgMonster + k,
                         "res/gfx/scr/fight/monster/monster" + (i + 1).ToString(CultureInfo.InvariantCulture) + ".jpg");
                 }
-
-                ++k;
             }
         }
 
         private void DefineItems()
         {
-            DefineImage(SF.ImgNoShield, "res/gfx/scr/fight/monster/unknown.jpg");
-
-            int itemType = 0;
-            while (itemType <= 14)
+            for (var itemType = 0; itemType <= 14; ++itemType)
             {
-                int itemPic = 0;
-                while (itemPic < (int) SF.CItemsPerType)
+                for (var itemPic = 0; itemPic < (int) SF.CItemsPerType; ++itemPic)
                 {
-                    int itemColor = 0;
-                    while (itemColor < 5)
+                    for (var itemColor = 0; itemColor < 5; ++itemColor)
                     {
                         switch (itemType)
                         {
@@ -524,12 +649,10 @@ namespace SfSdk.Providers
                             case 5:
                             case 6:
                             case 7:
-                                int itemClass = 0;
-                                while (itemClass < 3)
+                                for (var itemClass = 0; itemClass < 3; ++itemClass)
                                 {
                                     DefineImage((SF) GetItemId(itemType, itemPic, itemColor, itemClass),
                                         GetItemFile(itemType, itemPic, itemColor, itemClass));
-                                    ++itemClass;
                                 }
                                 break;
                             default:
@@ -537,30 +660,22 @@ namespace SfSdk.Providers
                                     GetItemFile(itemType, itemPic, itemColor, 0));
                                 break;
                         }
-                        ++itemColor;
                     }
-                    ++itemPic;
                 }
-                ++itemType;
             }
 
-            itemType = 0;
-            while (itemType <= 1)
+            // (itemType <= 1)  error in original source code?
+            for (int itemType = 0; itemType < 1; ++itemType)
             {
-                int itemPic = 0;
-                while (itemPic < (int) SF.CItemsPerType)
+                for (var itemPic = 0; itemPic < (int) SF.CItemsPerType; ++itemPic)
                 {
-                    int itemColor = 0;
-                    while (itemColor < 5)
+                    for (var itemColor = 0; itemColor < 5; ++itemColor)
                     {
                         DefineImage((SF) GetArrowId(itemType, itemPic, itemColor),
                             ("res/gfx/itm/1-" + (itemType + 2) + "/shot" + (itemType == 0 ? 2 : 1) + "-" + itemPic + "-" +
                              ((itemPic >= 50 ? (itemType == 0 ? (itemColor == 3 ? 3 : 0) : 0) : itemColor) + 1) + ".png"));
-                        ++itemColor;
                     }
-                    ++itemPic;
                 }
-                ++itemType;
             }
 
             DefineImage(SF.ImgWeaponFist, "res/gfx/itm/kampf_faust.png");
@@ -580,6 +695,18 @@ namespace SfSdk.Providers
             DefineImage(SF.ImgWeaponFire, "res/gfx/itm/kampf_feuer1.png");
             DefineImage(SF.ImgWeaponFire2, "res/gfx/itm/kampf_feuer2.png");
             DefineImage(SF.ImgWeaponFire3, "res/gfx/itm/kampf_feuer3.png");
+
+            for (var itemType = 0; itemType < 8; ++itemType)
+            {
+                DefineImage(SF.ImgEmptySlot1 + itemType, "res/gfx/scr/char/slot" + (itemType + 1) + ".png");
+            }
+
+            DefineImage(SF.ImgEmptySlot9_1, "res/gfx/scr/char/slot9_1.png");
+            DefineImage(SF.ImgEmptySlot9_2, "res/gfx/scr/char/slot9_2.png");
+            DefineImage(SF.ImgEmptySlot9_3, "res/gfx/scr/char/slot9_3.png");
+            DefineImage(SF.ImgEmptySlot10, "res/gfx/scr/char/slot10.png");
+            DefineImage(SF.ImgNoShield, "res/gfx/itm/no_shield.png");
+
         }
 
         private void DefineImage(SF actorId, string url)
@@ -589,7 +716,7 @@ namespace SfSdk.Providers
                 _urlDict.Add((int) actorId, url);
                 return;
             }
-            Log.Warn("Image with the same URL already added!");
+            Log.Warn("Image with the same URL already added: {0}", url);
         }
 
         private IEnumerable<IScrapbookItem> CreateMultipleItems<TScrapbookItem>(IReadOnlyList<int> scrapbookContent,
@@ -607,28 +734,27 @@ namespace SfSdk.Providers
             if (!(results is IEnumerable<ScrapbookItemBase>))
                 throw new ArgumentException("TScrapbookItem must be derived type of ScrapbookItemBase");
 
-            string itemText = GetItemName(itemType, itemPic, itemClass);
-            int i = 0;
-            List<ScrapbookItemBase> items = results.Cast<ScrapbookItemBase>().ToList();
-            while (i < 5)
+            var items = results.Cast<ScrapbookItemBase>().ToList();
+
+            items[0].ContentId = (int)SF.CntAlbumWeapon1 + itemOnPage;
+            items[1].ContentId = (int)SF.CntAlbumWeapon2 + itemOnPage;
+            items[2].ContentId = (int)SF.CntAlbumWeapon3 + itemOnPage;
+            items[3].ContentId = (int)SF.CntAlbumWeapon4 + itemOnPage;
+            items[4].ContentId = (int)SF.CntAlbumWeapon5 + itemOnPage;
+
+            for (var i = 0; i < 5; ++i)
             {
                 items[i].HasItem = scrapbookContent[aOffs + i] == 1;
-                items[i].Text = itemText;
-                ++i;
+                items[i].Text = GetItemName(itemType, itemPic, itemClass);
             }
 
             if (itemClass > 0) --itemClass;
 
-            items[0].ImageUri = GetImageUri((int) SF.CntAlbumWeapon1 + itemOnPage,
-                GetItemId(itemType, itemPic, 0, itemClass));
-            items[1].ImageUri = GetImageUri((int) SF.CntAlbumWeapon2 + itemOnPage,
-                GetItemId(itemType, itemPic, 1, itemClass));
-            items[2].ImageUri = GetImageUri((int) SF.CntAlbumWeapon3 + itemOnPage,
-                GetItemId(itemType, itemPic, 2, itemClass));
-            items[3].ImageUri = GetImageUri((int) SF.CntAlbumWeapon4 + itemOnPage,
-                GetItemId(itemType, itemPic, 3, itemClass));
-            items[4].ImageUri = GetImageUri((int) SF.CntAlbumWeapon5 + itemOnPage,
-                GetItemId(itemType, itemPic, 4, itemClass));
+            for (var i = 0; i < 5; ++i)
+            {
+                items[i].Id = GetItemId(itemType, itemPic, i, itemClass);
+                items[i].ImageUri = GetImageUri(items[i].Id);
+            }
 
             // enable popup?
 
@@ -646,6 +772,7 @@ namespace SfSdk.Providers
 
             item.HasItem = scrapbookContent[aOffs] == 1;
             item.Text = GetItemName(itemType, itemPic, itemClass);
+            item.ContentId = (int)SF.CntAlbumWeaponEpic + itemOnPage;
 
             if (item.Text.Contains('|'))
             {
@@ -655,8 +782,8 @@ namespace SfSdk.Providers
 
             if (itemClass > 0) --itemClass;
 
-            item.ImageUri = GetImageUri((int) SF.CntAlbumWeaponEpic + itemOnPage,
-                GetItemId(itemType, itemPic, 0, itemClass));
+            item.Id = GetItemId(itemType, itemPic, 0, itemClass);
+            item.ImageUri = GetImageUri(item.Id);
 
             // enable popup?
 

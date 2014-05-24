@@ -59,14 +59,19 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Contracts\ICharacterBase.cs" />
+    <Compile Include="Contracts\IItem.cs" />
     <Compile Include="Contracts\IMageItem.cs" />
     <Compile Include="Contracts\IScoutItem.cs" />
+    <Compile Include="Contracts\IInventoryItem.cs" />
     <Compile Include="Contracts\IValuableItem.cs" />
     <Compile Include="Contracts\IWarriorItem.cs" />
     <Compile Include="Data\Character.cs" />
     <Compile Include="Contracts\IMonsterItem.cs" />
+    <Compile Include="Data\InventoryItem.cs" />
     <Compile Include="PropertiesMapper.cs" />
     <Compile Include="Providers\ConfigurationResourceProvider.cs" />
+    <Compile Include="Data\Inventory.cs" />
+    <Compile Include="Contracts\IInventory.cs" />
     <Compile Include="Providers\ScrapbookItemProvider.cs" />
     <Compile Include="Providers\IResourceProvider.cs" />
     <Compile Include="Providers\LanguageResourceProvider.cs" />
@@ -107,6 +112,7 @@
     <Compile Include="Data\ValuableItem.cs" />
     <Compile Include="Data\WarriorItem.cs" />
     <Compile Include="Session.cs" />
+    <Compile Include="SessionCreator.cs" />
     <Compile Include="SessionLoggedOutException.cs" />
   </ItemGroup>
   <ItemGroup>

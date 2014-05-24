@@ -145,5 +145,65 @@ namespace SfSdk.Tests.Response
             // Assert
             result.Should().Be(456);
         }
+
+        [Fact]
+        public void SetValueThrowsNoExceptionIfKeyDoesNotExist()
+        {
+            // Arrange
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int invalidKey = 1000;
+
+            // Act
+            Action a = () => savegame.SetValue(invalidKey, 0);
+
+            // Assert
+            a.ShouldNotThrow<Exception>();
+        }
+
+        [Fact]
+        public void SetValueSfThrowsNoExceptionIfKeyDoesNotExist()
+        {
+            // Arrange
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF invalidKey = (SF) 1000;
+
+            // Act
+            Action a = () => savegame.SetValue(invalidKey, 0);
+
+            // Assert
+            a.ShouldNotThrow<Exception>();
+        }
+
+        [Fact]
+        public void SetValueChangesValue()
+        {
+            // Arrange
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const int validKey = 2;
+            var oldValue = savegame.GetValue(validKey); // 456
+
+            // Act
+            savegame.SetValue(validKey, 0);
+
+            // Assert
+            var newValue = savegame.GetValue(validKey);
+            newValue.Should().NotBe(oldValue);
+        }
+
+        [Fact]
+        public void SetValueSfChangesValue()
+        {
+            // Arrange
+            var savegame = new Savegame("123/456".ToValidSavegameString());
+            const SF validKey = (SF) 2;
+            var oldValue = savegame.GetValue(validKey); // 456
+
+            // Act
+            savegame.SetValue(validKey, 0);
+
+            // Assert
+            var newValue = savegame.GetValue(validKey);
+            newValue.Should().NotBe(oldValue);
+        }
     }
 }

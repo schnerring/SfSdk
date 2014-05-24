@@ -1,15 +1,16 @@
-﻿using SfSdk;
+﻿using SfBot.Data;
+using SfSdk;
 
 namespace SfBot.Events
 {
     public class LogEvent
     {
-        public Session Session { get; set; }
+        public Account Account { get; set; }
         public string Message { get; set; }
 
-        public LogEvent(Session session, string message)
+        public LogEvent(Account account, string message)
         {
-            Session = session;
+            Account = account;
             Message = message;
         }
     }

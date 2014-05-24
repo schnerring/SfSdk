@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using SfSdk.Constants;
 using SfSdk.Contracts;
+using SfSdk.Providers;
 using SfSdk.Response;
 
 namespace SfSdk.Data
@@ -34,7 +37,8 @@ namespace SfSdk.Data
         private int _rank;
         private int _resistance;
         private int _strength;
-
+        private readonly ScrapbookItemProvider _itemProvider;
+        private IInventory _inventory;
 
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
@@ -42,9 +46,10 @@ namespace SfSdk.Data
         /// <param name="response">The <see cref="CharacterResponse" /> from which arguments the <see cref="Character" /> is going to calculated.</param>
         /// <param name="username">The username of the character.</param>
         /// <param name="session">The session, where the character is going to be attatched to.</param>
+        /// <param name="serverUri">The server <see cref="Uri"/>.</param>
         /// <exception cref="ArgumentNullException">When savegame is empty or username is null or empty.</exception>
         /// <exception cref="ArgumentException">When session or response is null.</exception>
-        public Character(ICharacterResponse response, string username, ISession session)
+        public Character(ICharacterResponse response, string username, ISession session, Uri serverUri)
         {
             if (response == null)
                 throw new ArgumentNullException("response");
@@ -58,6 +63,7 @@ namespace SfSdk.Data
             _username = username;
             _session = session;
             _guild = response.Guild;
+            _itemProvider = new ScrapbookItemProvider(serverUri);
             LoadFromSavegame(response.Savegame);
             IsLoaded = true;
         }
@@ -275,6 +281,16 @@ namespace SfSdk.Data
             }
         }
 
+        public IInventory Inventory
+        {
+            get { return _inventory; }
+            set
+            {
+                _inventory = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         public bool IsLoaded
         {
             get { return _isLoaded; }
@@ -347,6 +363,8 @@ namespace SfSdk.Data
                 (int)
                 Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
                            (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
+
+            Inventory = _itemProvider.CreateInventory(sg);
         }
 
         #region INPC

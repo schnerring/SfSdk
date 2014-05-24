@@ -11,18 +11,26 @@
              d:DataContext="{d:DesignInstance details:CharacterViewModel}">
     <UserControl.Resources>
         <converters:DamageConverter x:Key="DamageConverter" />
+        <converters:NullImageConverter x:Key="NullImageConverter" />
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="60 10">
         <ContentPresenter Content="{Binding Character}">
             <ContentPresenter.ContentTemplate>
                 <DataTemplate DataType="contracts:ICharacter">
                     <Grid>
                         <Grid.Resources>
+                            <Style TargetType="Image">
+                                <Setter Property="Width" Value="100" />
+                                <Setter Property="Height" Value="100" />
+                            </Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Foreground" Value="White" />
                                 <Setter Property="FontSize" Value="18" />
                                 <Setter Property="HorizontalAlignment" Value="Right" />
                                 <Setter Property="Margin" Value="5" />
+                            </Style>
+                            <Style TargetType="TextBlock" x:Key="HeaderTextBlockStyle2" BasedOn="{StaticResource HeaderTextBlockStyle}">
+                                <Setter Property="Margin" Value="10 15 0 0" />
                             </Style>
                             <Style TargetType="StackPanel">
                                 <Setter Property="VerticalAlignment" Value="Top" />
@@ -30,18 +38,35 @@
                             </Style>
                         </Grid.Resources>
                         
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
-                        <Grid Margin="20" Background="{StaticResource Dark1Brush}" VerticalAlignment="Top">
+                        <TextBlock Text="STATS" Style="{StaticResource HeaderTextBlockStyle2}" Grid.Row="0" Grid.Column="0" />
+                        <Separator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" />
+
+                        <Grid Background="{StaticResource Dark1Brush}" VerticalAlignment="Top" Grid.Column="0" Grid.Row="2" Margin="10 10 0 0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <StackPanel>
+                            <StackPanel Grid.Column="0">
                                 <TextBlock Text="Strength" />
                                 <TextBlock Text="Dexterity" />
                                 <TextBlock Text="Intelligence" />
@@ -58,7 +83,7 @@
                             </StackPanel>
                         </Grid>
 
-                        <Grid Grid.Column="1" Margin="20" Background="{StaticResource Dark1Brush}" VerticalAlignment="Top">
+                        <Grid Grid.Column="1" Margin="10 10 0 0" Background="{StaticResource Dark1Brush}" VerticalAlignment="Top" Grid.Row="2">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="Auto" />
@@ -88,6 +113,57 @@
                                 <TextBlock Text="{Binding HitPoints}" />
                                 <TextBlock Text="{Binding CriticalHit}" />
                             </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="EQUIPMENT" Style="{StaticResource HeaderTextBlockStyle2}" Grid.Row="3" Grid.Column="0" />
+                        <Separator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" />
+
+                        <Grid Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" Background="{StaticResource Dark1Brush}" Margin="10 10 0 0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            
+                            <Image Source="{Binding Inventory.Helmet.ImageUri}" Grid.Column="0" Grid.Row="0" />
+                            <Image Source="{Binding Inventory.Armor.ImageUri}" Grid.Column="0" Grid.Row="1" />
+                            <Image Source="{Binding Inventory.Gloves.ImageUri}" Grid.Column="0" Grid.Row="2" />
+                            <Image Source="{Binding Inventory.Boots.ImageUri}" Grid.Column="0" Grid.Row="3" />
+
+                            <Image Source="{Binding Inventory.Weapon.ImageUri}" Grid.Column="1" Grid.Row="3" />
+                            <Image Source="{Binding Inventory.Shield.ImageUri}" Grid.Column="2" Grid.Row="3" />
+
+                            <Image Source="{Binding Inventory.Necklace.ImageUri}" Grid.Column="3" Grid.Row="0" />
+                            <Image Source="{Binding Inventory.Belt.ImageUri}" Grid.Column="3" Grid.Row="1" />
+                            <Image Source="{Binding Inventory.Ring.ImageUri}" Grid.Column="3" Grid.Row="2" />
+                            <Image Source="{Binding Inventory.Mojo.ImageUri}" Grid.Column="3" Grid.Row="3" />
+                        </Grid>
+
+                        <TextBlock Text="INVENTORY" Style="{StaticResource HeaderTextBlockStyle2}" Grid.Row="6" Grid.Column="0" />
+                        <Separator Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7" />
+
+                        <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Background="{StaticResource Dark1Brush}" Margin="10 10 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Image Source="{Binding Inventory.BackpackItems[0].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="0" />
+                            <Image Source="{Binding Inventory.BackpackItems[1].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="1" />
+                            <Image Source="{Binding Inventory.BackpackItems[2].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="2" />
+                            <Image Source="{Binding Inventory.BackpackItems[3].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="3" />
+                            <Image Source="{Binding Inventory.BackpackItems[4].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="4" />
                         </Grid>
                     </Grid>
                 </DataTemplate>

@@ -38,7 +38,7 @@ namespace SfSdk.Response
             if (serverUri == null) throw new ArgumentNullException("serverUri");
             
             Items = new List<IScrapbookItem>();
-            var scrapbookItemProvider = new ScrapbookItemProvider(serverUri);
+            var itemProvider = new ScrapbookItemProvider(serverUri);
 
             var byteArray = Convert.FromBase64String(Args.First());
             var scrapbookContent = new List<int>();
@@ -54,11 +54,11 @@ namespace SfSdk.Response
                 scrapbookContent.Add(b & 1);
             }
 
-            Items.AddRange(scrapbookItemProvider.CreateMonsterItems(scrapbookContent));
-            Items.AddRange(scrapbookItemProvider.CreateValuableItems(scrapbookContent));
-            Items.AddRange(scrapbookItemProvider.CreateWarriorItems(scrapbookContent));
-            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<MageItem>(scrapbookContent));
-            Items.AddRange(scrapbookItemProvider.CreateMageOrScoutItems<ScoutItem>(scrapbookContent));
+            Items.AddRange(itemProvider.CreateMonsterItems(scrapbookContent));
+            Items.AddRange(itemProvider.CreateValuableItems(scrapbookContent));
+            Items.AddRange(itemProvider.CreateWarriorItems(scrapbookContent));
+            Items.AddRange(itemProvider.CreateMageOrScoutItems<MageItem>(scrapbookContent));
+            Items.AddRange(itemProvider.CreateMageOrScoutItems<ScoutItem>(scrapbookContent));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace SfSdk
     /// <summary>
     ///     A host of actions, which can be performed as you log the session in with valid user credentials. 
     /// </summary>
-    public class Session : ISession
+    internal class Session : ISession
     {
         private static readonly ILog Log = LogManager.GetLog(typeof (Session));
 
@@ -22,18 +22,19 @@ namespace SfSdk
 
         private readonly Func<Uri, IRequestSource> _sourceFactory;
 
-        private Uri _serverUri;
+        internal Uri ServerUri { get; private set; }
+
         private string _sessionId;
         private IRequestSource _source;
         private bool _isLoggedIn;
         private string _username;
+        private string _md5PasswordHash;
 
         /// <summary>
         ///     Creates a new instance of type <see cref="Session"/> querying the default <see cref="SnFRequestSource"/>.
         /// </summary>
-        public Session()
+        internal Session() : this(serverUri => new SnFRequestSource(serverUri))
         {
-            _sourceFactory = serverUri => new SnFRequestSource(serverUri);
         }
 
         /// <summary>
@@ -77,15 +78,16 @@ namespace SfSdk
                 throw new ArgumentException("Password hash must not be null and have a length of 32.", "md5PasswordHash");
             if (serverUri == null)
                 throw new ArgumentNullException("serverUri");
-
+            
             _isLoggedIn = false;
             _username = username;
-            _serverUri = serverUri;
-            _source = _sourceFactory(_serverUri);
+            _md5PasswordHash = md5PasswordHash;
+            ServerUri = serverUri;
+            _source = _sourceFactory(ServerUri);
             var result =
                 await
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
-                                             new[] { username, md5PasswordHash, "v1.70&random=%2" });
+                                             new[] { _username, _md5PasswordHash, "v1.70&random=%2" });
 
             var hasErrors = await HasErrors(result.Errors);
             var response = result.Response as LoginResponse;
@@ -127,8 +129,8 @@ namespace SfSdk
             var hasErrors = await HasErrors(result.Errors);
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
-                       ? null
-                       : new Character(characterResponse, _username, this);
+                ? null
+                : new Character(characterResponse, _username, this, ServerUri);
         }
 
         /// <summary>
@@ -147,7 +149,7 @@ namespace SfSdk
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                        ? null
-                       : new Character(characterResponse, username, this);
+                       : new Character(characterResponse, username, this, ServerUri);
         }
 
         /// <summary>
@@ -194,24 +196,26 @@ namespace SfSdk
             return response.Items;
         }
 
-        private async Task<bool> HasErrors(IReadOnlyCollection<string> errors)
+        private async Task<bool> HasErrors(IReadOnlyCollection<SF> errors)
         {
             var hasErrors = false;
             if (errors.Count == 0) return false;
-            foreach (var err in errors.Select(error => (SF) Enum.Parse(typeof(SF), error)))
+            foreach (var e in errors)
             {
                 hasErrors = true;
-                switch (err)
+                switch (e)
                 {
                     case SF.ErrSessionIdExpired:
-                        await LogoutAsync();
-                        break;
+                        throw new SessionLoggedOutException("Sessionid expired.");
                     case SF.ErrLoginFailed:
+                        break;
+                    case SF.ErrNoAlbum:
+                        throw new NotImplementedException("There is no album.");
                         break;
                     default:
                         var ex =
                             new NotImplementedException(
-                                string.Format("This error is not handled: {0}.", err));
+                                string.Format("This error is not handled: {0}.", e));
                         Log.Error(ex);
                         throw ex;
                 }
