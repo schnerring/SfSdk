@@ -74,7 +74,7 @@ namespace SfSdk.Providers
         {
             var result = new List<IScrapbookItem>();
 
-            for (int page = 0; page <= 62; page++)
+            for (int page = 0; page <= 62; ++page)
                 for (int i = 0; i < 4; ++i)
                 {
                     var monsterItem = new MonsterItem
@@ -102,7 +102,7 @@ namespace SfSdk.Providers
         {
             var result = new List<IScrapbookItem>();
 
-            for (int page = 0; page <= 25; page++)
+            for (int page = 0; page <= 25; ++page)
             {
                 for (int i = 0; i < 4; ++i)
                 {
@@ -607,10 +607,9 @@ namespace SfSdk.Providers
         {
             DefineImage(SF.ImgUnknownEnemy, "res/gfx/scr/fight/monster/unknown.jpg");
 
-            int k = 0;
-            while (k < 500)
+            for (var k = 0; k < 500; ++k)
             {
-                int i = k;
+                var i = k;
 
                 if (paramCensored)
                 {
@@ -630,23 +629,16 @@ namespace SfSdk.Providers
                     DefineImage(SF.ImgOppimgMonster + k,
                         "res/gfx/scr/fight/monster/monster" + (i + 1).ToString(CultureInfo.InvariantCulture) + ".jpg");
                 }
-
-                ++k;
             }
         }
 
         private void DefineItems()
         {
-            DefineImage(SF.ImgNoShield, "res/gfx/scr/fight/monster/unknown.jpg");
-
-            int itemType = 0;
-            while (itemType <= 14)
+            for (var itemType = 0; itemType <= 14; ++itemType)
             {
-                int itemPic = 0;
-                while (itemPic < (int) SF.CItemsPerType)
+                for (var itemPic = 0; itemPic < (int) SF.CItemsPerType; ++itemPic)
                 {
-                    int itemColor = 0;
-                    while (itemColor < 5)
+                    for (var itemColor = 0; itemColor < 5; ++itemColor)
                     {
                         switch (itemType)
                         {
@@ -657,12 +649,10 @@ namespace SfSdk.Providers
                             case 5:
                             case 6:
                             case 7:
-                                int itemClass = 0;
-                                while (itemClass < 3)
+                                for (var itemClass = 0; itemClass < 3; ++itemClass)
                                 {
                                     DefineImage((SF) GetItemId(itemType, itemPic, itemColor, itemClass),
                                         GetItemFile(itemType, itemPic, itemColor, itemClass));
-                                    ++itemClass;
                                 }
                                 break;
                             default:
@@ -670,31 +660,22 @@ namespace SfSdk.Providers
                                     GetItemFile(itemType, itemPic, itemColor, 0));
                                 break;
                         }
-                        ++itemColor;
                     }
-                    ++itemPic;
                 }
-                ++itemType;
             }
 
-            itemType = 0;
-//            while (itemType <= 1) // error in original source code?
-            while (itemType < 1)
+            // (itemType <= 1)  error in original source code?
+            for (int itemType = 0; itemType < 1; ++itemType)
             {
-                int itemPic = 0;
-                while (itemPic < (int) SF.CItemsPerType)
+                for (var itemPic = 0; itemPic < (int) SF.CItemsPerType; ++itemPic)
                 {
-                    int itemColor = 0;
-                    while (itemColor < 5)
+                    for (var itemColor = 0; itemColor < 5; ++itemColor)
                     {
                         DefineImage((SF) GetArrowId(itemType, itemPic, itemColor),
                             ("res/gfx/itm/1-" + (itemType + 2) + "/shot" + (itemType == 0 ? 2 : 1) + "-" + itemPic + "-" +
                              ((itemPic >= 50 ? (itemType == 0 ? (itemColor == 3 ? 3 : 0) : 0) : itemColor) + 1) + ".png"));
-                        ++itemColor;
                     }
-                    ++itemPic;
                 }
-                ++itemType;
             }
 
             DefineImage(SF.ImgWeaponFist, "res/gfx/itm/kampf_faust.png");
@@ -714,6 +695,18 @@ namespace SfSdk.Providers
             DefineImage(SF.ImgWeaponFire, "res/gfx/itm/kampf_feuer1.png");
             DefineImage(SF.ImgWeaponFire2, "res/gfx/itm/kampf_feuer2.png");
             DefineImage(SF.ImgWeaponFire3, "res/gfx/itm/kampf_feuer3.png");
+
+            for (var itemType = 0; itemType < 8; ++itemType)
+            {
+                DefineImage(SF.ImgEmptySlot1 + itemType, "res/gfx/scr/char/slot" + (itemType + 1) + ".png");
+            }
+
+            DefineImage(SF.ImgEmptySlot9_1, "res/gfx/scr/char/slot9_1.png");
+            DefineImage(SF.ImgEmptySlot9_2, "res/gfx/scr/char/slot9_2.png");
+            DefineImage(SF.ImgEmptySlot9_3, "res/gfx/scr/char/slot9_3.png");
+            DefineImage(SF.ImgEmptySlot10, "res/gfx/scr/char/slot10.png");
+            DefineImage(SF.ImgNoShield, "res/gfx/itm/no_shield.png");
+
         }
 
         private void DefineImage(SF actorId, string url)

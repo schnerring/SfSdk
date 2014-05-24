@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SfSdk.Contracts
 {
     /// <summary>
@@ -64,5 +66,10 @@ namespace SfSdk.Contracts
         ///     The character's critical hit chance.
         /// </summary>
         double CriticalHit { get; }
+
+        /// <summary>
+        ///     The character's inventory items.
+        /// </summary>
+        List<IInventoryItem> InventoryItems { get; set; }
     }
 }
