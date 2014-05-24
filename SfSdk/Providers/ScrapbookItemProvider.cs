@@ -329,9 +329,9 @@ namespace SfSdk.Providers
         /// </summary>
         /// <param name="sg">The savegame.</param>
         /// <returns>A list of <see cref="IInventoryItem"/>s contained in the savegame.</returns>
-        public List<IInventoryItem> CreateInventoryItems(ISavegame sg)
+        public IInventory CreateInventory(ISavegame sg)
         {
-            var result = new List<IInventoryItem>();
+            var result = new Inventory();
 
             var tmpItemPic = sg.GetValue((int)SF.SgInventoryOffs + (int)SF.SgItmSize * 8 + (int)SF.SgItmPic);
             var tmpItemClass = 0;
@@ -364,7 +364,7 @@ namespace SfSdk.Providers
                     item.ImageUri = GetImageUri(item.Id);
                 }
 
-                result.Add(item);
+                result.AllItems.Add(item);
             }
 
             return result;

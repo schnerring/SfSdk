@@ -68,8 +68,8 @@ namespace SfSdk.Contracts
         double CriticalHit { get; }
 
         /// <summary>
-        ///     The character's inventory items.
+        ///     The character's inventory.
         /// </summary>
-        List<IInventoryItem> InventoryItems { get; set; }
+        IInventory Inventory { get; set; }
     }
 }

@@ -70,6 +70,8 @@
     <Compile Include="Data\InventoryItem.cs" />
     <Compile Include="PropertiesMapper.cs" />
     <Compile Include="Providers\ConfigurationResourceProvider.cs" />
+    <Compile Include="Data\Inventory.cs" />
+    <Compile Include="Contracts\IInventory.cs" />
     <Compile Include="Providers\ScrapbookItemProvider.cs" />
     <Compile Include="Providers\IResourceProvider.cs" />
     <Compile Include="Providers\LanguageResourceProvider.cs" />

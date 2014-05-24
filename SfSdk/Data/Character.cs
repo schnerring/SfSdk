@@ -38,7 +38,7 @@ namespace SfSdk.Data
         private int _resistance;
         private int _strength;
         private readonly ScrapbookItemProvider _itemProvider;
-        private List<IInventoryItem> _inventoryItems;
+        private IInventory _inventory;
 
         /// <summary>
         ///     Creates a new <see cref="Character" /> instance, calculated from a <see cref="CharacterResponse" />. The character's loaded status is initially set to true.
@@ -281,12 +281,12 @@ namespace SfSdk.Data
             }
         }
 
-        public List<IInventoryItem> InventoryItems
+        public IInventory Inventory
         {
-            get { return _inventoryItems; }
+            get { return _inventory; }
             set
             {
-                _inventoryItems = value;
+                _inventory = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -364,7 +364,7 @@ namespace SfSdk.Data
                 Math.Round((double) tmpLifeFactor*Constitution*(1 + level)*
                            (tmpHealth > 0 ? 1 + tmpHealth*0.01 : 1));
 
-            InventoryItems = _itemProvider.CreateInventoryItems(sg);
+            Inventory = _itemProvider.CreateInventory(sg);
         }
 
         #region INPC

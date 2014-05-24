@@ -55,7 +55,7 @@
         </DataTemplate>
         
         <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}">
-            <Setter Property="Margin" Value="0 15 0 0" />
+            <Setter Property="Margin" Value="10 15 0 0" />
         </Style>
 
         <converters:StringToUpperConverter x:Key="ToUpperConverter" />

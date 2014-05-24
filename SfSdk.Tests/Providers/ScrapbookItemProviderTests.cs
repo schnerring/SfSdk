@@ -125,17 +125,17 @@ namespace SfSdk.Tests.Providers
         }
 
         [Fact]
-        public void CreateInventoryItemsShouldReturn15Items()
+        public void CreateInventoryShouldReturnInventoryWith15Items()
         {
             // Arrange
             var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
             var sg = new Savegame(TestConstants.ValidSavegameString);
 
             // Act
-            var inventoryItems = sut.CreateInventoryItems(sg);
+            var inventory = sut.CreateInventory(sg);
 
             // Assert
-            inventoryItems.Count().Should().Be(15);
+            inventory.AllItems.Count().Should().Be(15);
         }
     }
 }
