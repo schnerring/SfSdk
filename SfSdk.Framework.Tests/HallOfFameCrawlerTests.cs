@@ -27,7 +27,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(null);
+            Func<Task> sut = async () => await crawler.SearchAsync(null);
 
             // Act / Assert
             sut.ShouldThrow<ArgumentNullException>()
@@ -40,7 +40,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MinRank = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MinRank = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -54,7 +54,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MinHonor = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MinHonor = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -68,7 +68,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MinLevel = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MinLevel = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -82,7 +82,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MaxRank = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MaxRank = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -97,7 +97,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MaxHonor = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MaxHonor = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -112,7 +112,7 @@ namespace SfSdk.Framework.Tests
             // Arrange
             var sessionMock = new Mock<ISession>();
             var crawler = new HallOfFameCrawler(sessionMock.Object);
-            Func<Task> sut = async () => await crawler.Search(new HallOfFameSearchPredicate { MaxLevel = 0 });
+            Func<Task> sut = async () => await crawler.SearchAsync(new HallOfFameSearchPredicate { MaxLevel = 0 });
 
             // Act / Assert
             sut.ShouldThrow<ArgumentException>()
@@ -141,7 +141,7 @@ namespace SfSdk.Framework.Tests
             var crawler = new HallOfFameCrawler(sessionMock.Object);
             
             // Act
-            var results = await crawler.Search(new HallOfFameSearchPredicate());
+            var results = await crawler.SearchAsync(new HallOfFameSearchPredicate());
 
             // Assert
             results.Should().HaveCount(c => c > 0);

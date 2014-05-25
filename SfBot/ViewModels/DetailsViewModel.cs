@@ -20,13 +20,13 @@ namespace SFBot.ViewModels
         [ImportingConstructor]
         public DetailsViewModel(IEventAggregator events,
                                 CharacterViewModel characterViewModel,
-                                HallOfFameViewModel hallOfFameViewModel,
+                                HallOfFameCrawlerViewModel hallOfFameCrawlerViewModel,
                                 ScrapbookViewModel scrapbookViewModel)
         {
             _items = new BindableCollection<ISessionScreen>
                 {
                     characterViewModel,
-                    hallOfFameViewModel,
+                    hallOfFameCrawlerViewModel,
                     scrapbookViewModel
                 };
             events.Subscribe(this);

@@ -26,7 +26,7 @@ namespace SfSdk.Framework
         ///     Searches the hall of fame given on a specific search predicate.
         /// </summary>
         /// <param name="searchPredicate">The search predicate used for the search.</param>
-        public async Task<IEnumerable<ICharacter>> Search(HallOfFameSearchPredicate searchPredicate)
+        public async Task<IEnumerable<ICharacter>> SearchAsync(HallOfFameSearchPredicate searchPredicate)
         {
             if (searchPredicate == null) throw new ArgumentNullException("searchPredicate");
             if (searchPredicate.MinRank < 1)

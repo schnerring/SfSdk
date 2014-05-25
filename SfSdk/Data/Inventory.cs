@@ -7,7 +7,7 @@ namespace SfSdk.Data
     /// <summary>
     /// An inventory containing <see cref="IInventoryItem"/>s.
     /// </summary>
-    public class Inventory : IInventory
+    internal class Inventory : IInventory
     {
         private List<IInventoryItem> _inventoryItems; 
 

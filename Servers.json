@@ -9,6 +9,10 @@
       {
         "ServerName": "Welt 25",
         "ServerUri": "http://s25.sfgame.de/"
+      },
+      {
+        "ServerName": "Welt 32",
+        "ServerUri": "http://s32.sfgame.de/"
       }
     ]
   }

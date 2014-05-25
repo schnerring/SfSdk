@@ -89,7 +89,7 @@ namespace SfSdk
                 new SfRequest().ExecuteAsync(_source, EmptySessionId, SF.ActLogin,
                                              new[] { _username, _md5PasswordHash, "v1.70&random=%2" });
 
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             var response = result.Response as LoginResponse;
             if (response == null || hasErrors) return _isLoggedIn;
 
@@ -112,7 +112,7 @@ namespace SfSdk
             if (!_isLoggedIn) throw new SessionLoggedOutException("LogoutAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActLogout);
             var response = result.Response as LogoutResponse;
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             _isLoggedIn = response == null || hasErrors;
             return !_isLoggedIn;
         }
@@ -126,7 +126,7 @@ namespace SfSdk
         {
             if (!_isLoggedIn) throw new SessionLoggedOutException("MyCharacterAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenChar);
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                 ? null
@@ -145,7 +145,7 @@ namespace SfSdk
             if (username == null) throw new ArgumentNullException("username");
             if (!_isLoggedIn) throw new SessionLoggedOutException("RequestCharacterAsync requires to be logged in.");
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActRequestChar, new[] { username });
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             var characterResponse = result.Response as ICharacterResponse;
             return hasErrors || characterResponse == null
                        ? null
@@ -168,7 +168,7 @@ namespace SfSdk
 
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle, args);
             
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             var response = result.Response as IHallOfFameResponse;
             if (hasErrors || response == null) return null;
             return
@@ -189,14 +189,14 @@ namespace SfSdk
             if (!_isLoggedIn) throw new SessionLoggedOutException("ScrapbookAsync requires to be logged in.");
 
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActAlbum);
-            var hasErrors = await HasErrors(result.Errors);
+            var hasErrors = HasErrors(result.Errors);
             var response = result.Response as IScrapbookResponse;
             
             if (hasErrors || response == null) return null;
             return response.Items;
         }
 
-        private async Task<bool> HasErrors(IReadOnlyCollection<SF> errors)
+        private bool HasErrors(IReadOnlyCollection<SF> errors)
         {
             var hasErrors = false;
             if (errors.Count == 0) return false;
@@ -211,7 +211,6 @@ namespace SfSdk
                         break;
                     case SF.ErrNoAlbum:
                         throw new NotImplementedException("There is no album.");
-                        break;
                     default:
                         var ex =
                             new NotImplementedException(

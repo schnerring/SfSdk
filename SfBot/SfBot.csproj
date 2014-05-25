@@ -114,6 +114,7 @@
     </Compile>
     <Compile Include="SfBootstrapper.cs" />
     <Compile Include="ViewModels\Details\CharacterViewModel.cs" />
+    <Compile Include="ViewModels\Details\HallOfFameCrawlerViewModel.cs" />
     <Compile Include="ViewModels\Details\ILoadableScreen.cs" />
     <Compile Include="ViewModels\Details\LogEntry.cs" />
     <Compile Include="ViewModels\Details\ScrapbookItemViewModel.cs" />
@@ -124,7 +125,6 @@
     <Compile Include="ViewModels\Details\ISessionScreen.cs" />
     <Compile Include="ViewModels\FooterViewModel.cs" />
     <Compile Include="Events\LoginStatusChangedEvent.cs" />
-    <Compile Include="ViewModels\Details\HallOfFameViewModel.cs" />
     <Compile Include="ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="ViewModels\SessionsViewModel.cs" />
     <Compile Include="Views\Details\CharacterView.xaml.cs">
@@ -132,6 +132,9 @@
     </Compile>
     <Compile Include="Views\CreateAccountView.xaml.cs">
       <DependentUpon>CreateAccountView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Details\HallOfFameCrawlerView.xaml.cs">
+      <DependentUpon>HallOfFameCrawlerView.xaml</DependentUpon>
     </Compile>
     <Page Include="Shell\ShellView.xaml">
       <SubType>Designer</SubType>
@@ -181,7 +184,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Details\HallOfFameView.xaml">
+    <Page Include="Views\Details\HallOfFameCrawlerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -252,6 +255,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SfSdk.Framework\SfSdk.Framework.csproj">
+      <Project>{AE961370-F3F9-4F83-BCB9-6D4959272CB0}</Project>
+      <Name>SfSdk.Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SfSdk\SfSdk.csproj">
       <Project>{022914ba-eb8b-4be2-be84-c585b7cc6a42}</Project>
       <Name>SfSdk</Name>
