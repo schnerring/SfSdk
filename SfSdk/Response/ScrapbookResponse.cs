@@ -38,7 +38,7 @@ namespace SfSdk.Response
             if (serverUri == null) throw new ArgumentNullException("serverUri");
             
             Items = new List<IScrapbookItem>();
-            var itemProvider = new ScrapbookItemProvider(serverUri);
+            var itemProvider = new ItemProvider(serverUri);
 
             var byteArray = Convert.FromBase64String(Args.First());
             var scrapbookContent = new List<int>();

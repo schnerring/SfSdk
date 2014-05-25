@@ -37,7 +37,7 @@ namespace SfSdk.Data
         private int _rank;
         private int _resistance;
         private int _strength;
-        private readonly ScrapbookItemProvider _itemProvider;
+        private readonly ItemProvider _itemProvider;
         private IInventory _inventory;
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SfSdk.Data
             _username = username;
             _session = session;
             _guild = response.Guild;
-            _itemProvider = new ScrapbookItemProvider(serverUri);
+            _itemProvider = new ItemProvider(serverUri);
             LoadFromSavegame(response.Savegame);
             IsLoaded = true;
         }

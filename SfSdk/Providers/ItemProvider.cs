@@ -13,9 +13,9 @@ namespace SfSdk.Providers
     /// <summary>
     ///     ItemProvider for S&amp;F items.
     /// </summary>
-    internal class ScrapbookItemProvider
+    internal class ItemProvider
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof (ScrapbookItemProvider));
+        private static readonly ILog Log = LogManager.GetLog(typeof (ItemProvider));
 
         private readonly Uri _imageServerUri;
         private readonly Dictionary<SF, string> _languageDict;
@@ -26,11 +26,11 @@ namespace SfSdk.Providers
         private static readonly Dictionary<Uri, Dictionary<SF, string>> LanguageDicts = new Dictionary<Uri, Dictionary<SF, string>>();
 
         /// <summary>
-        ///     Creates a new instance of type <see cref="ScrapbookItemProvider" /> and defines its resources.
+        ///     Creates a new instance of type <see cref="ItemProvider" /> and defines its resources.
         /// </summary>
         /// <param name="serverUri">The server <see cref="Uri" />.</param>
         /// <exception cref="ArgumentNullException">When serverUri is null.</exception>
-        public ScrapbookItemProvider(Uri serverUri)
+        public ItemProvider(Uri serverUri)
         {
             if (serverUri == null) throw new ArgumentNullException("serverUri");
 

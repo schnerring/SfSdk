@@ -15,7 +15,7 @@ namespace SfSdk.Tests.Providers
         public void ConstructorThrowsExceptionIfServerUriIsNull()
         {
             // Arrange / Act
-            Action sut = () => new ScrapbookItemProvider(null);
+            Action sut = () => new ItemProvider(null);
 
             // Assert
             sut.ShouldThrow<ArgumentNullException>().Where(e => e.ParamName == "serverUri");
@@ -25,7 +25,7 @@ namespace SfSdk.Tests.Providers
         public void ConstructorThrowsNoExceptionWithValidArguments()
         {
             // Arrange / Act
-            Action sut = () => new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            Action sut = () => new ItemProvider(TestConstants.ValidServerUri);
 
             // Assert
             sut.ShouldNotThrow<Exception>();
@@ -35,7 +35,7 @@ namespace SfSdk.Tests.Providers
         public void CreateMonsterItemsShouldReturn252MonsterItems()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var monsterItems = sut.CreateMonsterItems(TestConstants.ValidAlbumContent.ToList());
@@ -48,7 +48,7 @@ namespace SfSdk.Tests.Providers
         public void CreateMonsterItemsShouldReturnNoItemWithTheSameText()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var monsterItems = sut.CreateMonsterItems(TestConstants.ValidAlbumContent.ToList());
@@ -62,7 +62,7 @@ namespace SfSdk.Tests.Providers
         public void CreateValuableItemsShouldReturn246ValuableItems()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var valuableItems = sut.CreateValuableItems(TestConstants.ValidAlbumContent.ToList());
@@ -75,7 +75,7 @@ namespace SfSdk.Tests.Providers
         public void CreateWarriorItemsShouldReturn506WarriorItems()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var warriorItems = sut.CreateWarriorItems(TestConstants.ValidAlbumContent.ToList());
@@ -88,7 +88,7 @@ namespace SfSdk.Tests.Providers
         public void CreateMageOrScoutItemsThrowsExceptionWithInvalidTypeParameter()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             Action createInvalidItems = () => sut.CreateMageOrScoutItems<MonsterItem>(TestConstants.ValidAlbumContent.ToList());
@@ -102,7 +102,7 @@ namespace SfSdk.Tests.Providers
         public void CreateMageOrScoutItemsShouldReturn348MageItems()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var mageItems = sut.CreateMageOrScoutItems<MageItem>(TestConstants.ValidAlbumContent.ToList());
@@ -115,7 +115,7 @@ namespace SfSdk.Tests.Providers
         public void CreateMageOrScoutItemsShouldReturn348ScoutItems()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
 
             // Act
             var scoutItems = sut.CreateMageOrScoutItems<ScoutItem>(TestConstants.ValidAlbumContent.ToList());
@@ -128,7 +128,7 @@ namespace SfSdk.Tests.Providers
         public void CreateInventoryShouldReturnInventoryWith15Items()
         {
             // Arrange
-            var sut = new ScrapbookItemProvider(TestConstants.ValidServerUri);
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
             var sg = new Savegame(TestConstants.ValidSavegameString);
 
             // Act
