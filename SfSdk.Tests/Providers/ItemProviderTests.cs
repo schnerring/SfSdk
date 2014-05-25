@@ -8,7 +8,7 @@ using Xunit;
 
 namespace SfSdk.Tests.Providers
 {
-    public class ScrapbookItemProviderTests
+    public class ItemProviderTests
     {
 
         [Fact]
