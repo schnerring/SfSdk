@@ -127,14 +127,8 @@
     <Compile Include="Events\LoginStatusChangedEvent.cs" />
     <Compile Include="ViewModels\LoggedOutViewModel.cs" />
     <Compile Include="ViewModels\SessionsViewModel.cs" />
-    <Compile Include="Views\Details\CharacterView.xaml.cs">
-      <DependentUpon>CharacterView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\CreateAccountView.xaml.cs">
       <DependentUpon>CreateAccountView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Details\HallOfFameCrawlerView.xaml.cs">
-      <DependentUpon>HallOfFameCrawlerView.xaml</DependentUpon>
     </Compile>
     <Page Include="Shell\ShellView.xaml">
       <SubType>Designer</SubType>
