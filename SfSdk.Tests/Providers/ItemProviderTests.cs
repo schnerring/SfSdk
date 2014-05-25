@@ -59,6 +59,19 @@ namespace SfSdk.Tests.Providers
         }
 
         [Fact]
+        public void CreateMonsterItemsShouldNotContainItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var monsterItems = sut.CreateMonsterItems(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            monsterItems.Should().NotContain(i => i.ImageUri == null);
+        }
+
+        [Fact]
         public void CreateValuableItemsShouldReturn246ValuableItems()
         {
             // Arrange
@@ -72,6 +85,19 @@ namespace SfSdk.Tests.Providers
         }
 
         [Fact]
+        public void CreateValuableItemsShouldNotContainItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var valuableItems = sut.CreateValuableItems(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            valuableItems.Should().NotContain(i => i.ImageUri == null);
+        }
+
+        [Fact]
         public void CreateWarriorItemsShouldReturn506WarriorItems()
         {
             // Arrange
@@ -82,6 +108,19 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             warriorItems.Count().Should().Be(506);
+        }
+
+        [Fact]
+        public void CreateWarriorItemsShouldNotContainItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var warriorItems = sut.CreateWarriorItems(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            warriorItems.Should().NotContain(i => i.ImageUri == null);
         }
 
         [Fact]
@@ -112,6 +151,19 @@ namespace SfSdk.Tests.Providers
         }
 
         [Fact]
+        public void CreateMageOrScoutItemsShouldNotContainMageItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var mageItems = sut.CreateMageOrScoutItems<MageItem>(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            mageItems.Should().NotContain(i => i.ImageUri == null);
+        }
+
+        [Fact]
         public void CreateMageOrScoutItemsShouldReturn348ScoutItems()
         {
             // Arrange
@@ -122,6 +174,19 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             scoutItems.Count().Should().Be(348);
+        }
+
+        [Fact]
+        public void CreateMageOrScoutItemsShouldNotContainScoutItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+
+            // Act
+            var scoutItems = sut.CreateMageOrScoutItems<ScoutItem>(TestConstants.ValidAlbumContent.ToList());
+
+            // Assert
+            scoutItems.Should().NotContain(i => i.ImageUri == null);
         }
 
         [Fact]
@@ -136,6 +201,20 @@ namespace SfSdk.Tests.Providers
 
             // Assert
             inventory.AllItems.Count().Should().Be(15);
+        }
+
+        [Fact]
+        public void CreateInventoryShouldNotContainAnyItemsWithEmptyUri()
+        {
+            // Arrange
+            var sut = new ItemProvider(TestConstants.ValidServerUri);
+            var sg = new Savegame(TestConstants.ValidSavegameString);
+
+            // Act
+            var inventory = sut.CreateInventory(sg);
+
+            // Assert
+            inventory.AllItems.Should().NotContain(i => i.ImageUri == null);
         }
     }
 }

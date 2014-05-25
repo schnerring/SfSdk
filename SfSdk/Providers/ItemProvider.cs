@@ -344,12 +344,9 @@ namespace SfSdk.Providers
 
             for (int i = 0; i < 15; ++i)
             {
-                if (i < 10) // || !towerMode
-                {
-                    var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
+                var index = (int)SF.SgInventoryOffs + (int)SF.SgItmSize * i;
                     if (sg.GetValue(index + (int)SF.SgItmTyp) == 0)
                         sg.SetValue(index + (int)SF.SgItmPic, 0);
-                }
 
                 var item = new InventoryItem {ContentId = (int) SF.CntCharSlot1 + i};
 
@@ -664,8 +661,7 @@ namespace SfSdk.Providers
                 }
             }
 
-            // (itemType <= 1)  error in original source code?
-            for (int itemType = 0; itemType < 1; ++itemType)
+            for (int itemType = 0; itemType <= 1; ++itemType)
             {
                 for (var itemPic = 0; itemPic < (int) SF.CItemsPerType; ++itemPic)
                 {
@@ -715,6 +711,10 @@ namespace SfSdk.Providers
             {
                 _urlDict.Add((int) actorId, url);
                 return;
+            }
+            else if (_urlDict[(int) actorId] != url)
+            {
+                
             }
             Log.Warn("Image with the same URL already added: {0}", url);
         }

@@ -91,7 +91,6 @@
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Converters\DamageConverter.cs" />
-    <Compile Include="Converters\NullImageConverter.cs" />
     <Compile Include="Converters\StringToUpperConverter.cs" />
     <Compile Include="Data\Account.cs" />
     <Compile Include="Data\ConfigurationStore.cs" />

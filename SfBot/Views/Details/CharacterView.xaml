@@ -11,7 +11,6 @@
              d:DataContext="{d:DesignInstance details:CharacterViewModel}">
     <UserControl.Resources>
         <converters:DamageConverter x:Key="DamageConverter" />
-        <converters:NullImageConverter x:Key="NullImageConverter" />
     </UserControl.Resources>
     <Grid Margin="60 10">
         <ContentPresenter Content="{Binding Character}">
@@ -159,11 +158,11 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Image Source="{Binding Inventory.BackpackItems[0].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="0" />
-                            <Image Source="{Binding Inventory.BackpackItems[1].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="1" />
-                            <Image Source="{Binding Inventory.BackpackItems[2].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="2" />
-                            <Image Source="{Binding Inventory.BackpackItems[3].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="3" />
-                            <Image Source="{Binding Inventory.BackpackItems[4].ImageUri, Converter={StaticResource NullImageConverter}}" Grid.Column="4" />
+                            <Image Source="{Binding Inventory.BackpackItems[0].ImageUri}" Grid.Column="0" />
+                            <Image Source="{Binding Inventory.BackpackItems[1].ImageUri}" Grid.Column="1" />
+                            <Image Source="{Binding Inventory.BackpackItems[2].ImageUri}" Grid.Column="2" />
+                            <Image Source="{Binding Inventory.BackpackItems[3].ImageUri}" Grid.Column="3" />
+                            <Image Source="{Binding Inventory.BackpackItems[4].ImageUri}" Grid.Column="4" />
                         </Grid>
                     </Grid>
                 </DataTemplate>
