@@ -106,7 +106,7 @@
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Background" Value="{StaticResource Dark2Brush}" />
         <Setter Property="BorderBrush" Value="Transparent" />
-        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -151,14 +151,7 @@
                         <Border x:Name="border" Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="0 0 0 1" SnapsToDevicePixels="True">
-                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" Margin="10 5">
-                                <ContentPresenter.Resources>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="FontSize" Value="18" />
-                                        <Setter Property="Foreground" Value="White" />
-                                    </Style>
-                                </ContentPresenter.Resources>
-                            </ContentPresenter>
+                            <ContentPresenter ContentSource="Header" RecognizesAccessKey="True" Margin="10 5" />
                         </Border></Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
@@ -180,15 +173,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <!--<Setter Property="ContentTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <AdornerDecorator>
-                        <ContentPresenter Content="{Binding}"/>
-                    </AdornerDecorator>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>-->
     </Style>
 
 </ResourceDictionary>

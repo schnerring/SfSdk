@@ -4,8 +4,8 @@
         <ResourceDictionary Source="Colors.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <Style x:Key="DarkButtonStyle" TargetType="Button">
-        <Setter Property="MinWidth" Value="50" />
-        <Setter Property="Padding" Value="5" />
+        <Setter Property="MinWidth" Value="20" />
+        <Setter Property="Padding" Value="3" />
         <Setter Property="Background" Value="{StaticResource Dark3Brush}" />
         <Setter Property="BorderBrush" Value="{StaticResource Dark5Brush}" />
         <Setter Property="Template">

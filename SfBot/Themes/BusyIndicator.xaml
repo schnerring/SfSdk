@@ -15,7 +15,7 @@
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
                                     Visibility="{TemplateBinding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <mahApps:ProgressRing IsActive="True" Foreground="{DynamicResource Blue1Brush}" />
-                            <TextBlock Text="{TemplateBinding Message}" Foreground="{DynamicResource Blue1Brush}" />
+                            <TextBlock Text="{TemplateBinding Message}" Foreground="{DynamicResource Blue1Brush}" HorizontalAlignment="Center" />
                         </StackPanel>
 
                         <Border Background="Transparent" Visibility="{TemplateBinding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}" />
