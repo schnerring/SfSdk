@@ -5,21 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:SfBot.ViewModels" xmlns:converters="clr-namespace:SfBot.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="30" d:DesignWidth="200"
              d:DataContext="{d:DesignInstance viewModels:FooterViewModel}">
     <UserControl.Resources>
         <converters:StringToUpperConverter x:Key="StringToUpperConverter" />
     </UserControl.Resources>
     <Grid>
-        <TextBlock Text="{Binding Message, Converter={StaticResource StringToUpperConverter}}" Foreground="#FEFCC8" />
+        <TextBlock Text="{Binding Message, Converter={StaticResource StringToUpperConverter}}" Foreground="#FEFCC8" VerticalAlignment="Center" />
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <TextBlock Text="COPYRIGHT © 2013 " />
+            <TextBlock Text="COPYRIGHT © 2013 " VerticalAlignment="Center" />
             <Button x:Name="GotoGithub" Content="EBEEB">
                 <Button.Style>
                     <Style TargetType="Button">
                         <Setter Property="Cursor" Value="Hand" />
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Center"></Setter>
                         <Setter Property="Foreground" Value="{StaticResource Blue1Brush}" />
                         <Setter Property="Template">
                             <Setter.Value>

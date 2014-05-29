@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:SfBot.ViewModels" xmlns:converters="clr-namespace:SfBot.Converters"
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="704" d:DesignWidth="780"
              d:DataContext="{d:DesignInstance viewModels:SessionsViewModel}"
              Background="{StaticResource Dark1Brush}">
     <UserControl.Resources>
@@ -16,7 +16,9 @@
 
     <controls:MetroContentControl x:Name="AnimatedContent">
         <Grid Margin="10">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top"
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
                         Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Image Source="..\Images\Mushroom.png" Stretch="Uniform" Height="19" />
                 <TextBlock

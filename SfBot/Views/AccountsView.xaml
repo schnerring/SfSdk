@@ -6,15 +6,16 @@
              xmlns:converters="clr-namespace:SfBot.Converters"
              xmlns:viewModels="clr-namespace:SfBot.ViewModels" xmlns:controls="clr-namespace:SfBot.Controls"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="704" d:DesignWidth="214"
              d:DataContext="{d:DesignInstance viewModels:AccountsViewModel}"
              UseLayoutRounding="True">
     <UserControl.Resources>
+        
         <converters:StringToUpperConverter x:Key="ToUpperConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
-    <Grid Width="300">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -47,11 +48,10 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock Text="{Binding Username}" FontSize="18" />
+                                    <TextBlock Text="{Binding Username}" FontSize="15" />
                                     <StackPanel Orientation="Horizontal" Grid.Row="1">
-                                        <TextBlock Text="{Binding Country.CountryName, Converter={StaticResource ToUpperConverter}, StringFormat='{}{0} - '}" />
-                                        <TextBlock Text="{Binding Server.ServerName, Converter={StaticResource ToUpperConverter}}"
-                                                   FontSize="11" />
+                                        <TextBlock Text="{Binding Country.CountryName, Converter={StaticResource ToUpperConverter}, StringFormat='{}{0} - '}"  FontSize="10"/>
+                                        <TextBlock Text="{Binding Server.ServerName, Converter={StaticResource ToUpperConverter}}" FontSize="10" />
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -63,8 +63,8 @@
                     <StackPanel.Resources>
                         <Style TargetType="Button" BasedOn="{StaticResource DarkButtonStyle}" />
                     </StackPanel.Resources>
-                    <Button x:Name="AddAccount" Content="ADD" />
-                    <Button x:Name="DeleteAccount" Content="DELETE" Margin="2 0 0 0" />
+                    <Button x:Name="AddAccount" Content="+" />
+                    <Button x:Name="DeleteAccount" Content="-" Margin="2 0 0 0" />
                     <Button x:Name="LoginAsync" Content="LOGIN" Margin="2 0 0 0" />
                     <Button x:Name="LogoutAsync" Content="LOGOUT" Margin="2 0 0 0" />
                 </StackPanel>
