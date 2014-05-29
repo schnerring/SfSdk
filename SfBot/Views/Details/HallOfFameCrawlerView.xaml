@@ -4,25 +4,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:details="clr-namespace:SFBot.ViewModels.Details"
+             xmlns:controls="clr-namespace:SfBot.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="1100"
+             d:DesignHeight="664" d:DesignWidth="740"
              d:DataContext="{d:DesignInstance details:HallOfFameCrawlerViewModel}">
-    <Grid Margin="60 10">
+    <Grid>
         <Grid.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}" x:Key="HeaderTextBlockStyle2">
-                <Setter Property="Margin" Value="10 15 0 0" />
-            </Style>
             <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
                 <Setter Property="Margin" Value="10 5 10 0" />
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
             <Style TargetType="TextBox">
                 <Setter Property="Margin" Value="0 5 0 0" />
-<!--                <Setter Property="VerticalAlignment" Value="Center" />-->
+                <Setter Property="HorizontalContentAlignment" Value="Right" />
             </Style>
         </Grid.Resources>
         
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -31,69 +31,147 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0">
+            <TextBlock Text="SEARCH PREDICATE" Style="{StaticResource HeaderTextBlockStyle}" />
+            <Separator />
+        </StackPanel>
         
-        <Grid Grid.Row="0" Grid.Column="0">
+        <Grid Margin="0 5 5 0" Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            
-            <Grid Margin="0 10 0 0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
                 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="30" />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="150" />
-                </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="15" />
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="150" />
+            </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="SEARCH PREDICATE" Style="{StaticResource HeaderTextBlockStyle2}" Grid.ColumnSpan="5" />
-                <Separator Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" />
+            <TextBlock Text="Level" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" />
+            <TextBox Text="{Binding SearchPredicate.MinLevel}" Grid.Row="0" Grid.Column="1" />
+            <TextBlock Text="-" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="0 5 0 0" />
+            <TextBox Text="{Binding MaxLevel}" Grid.Row="0" Grid.Column="3" />
 
-                <TextBlock Text="Level" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" />
-                <TextBox Text="{Binding SearchPredicate.MinLevel}" Grid.Row="2" Grid.Column="1" />
-                <TextBlock Text="-" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" />
-                <TextBox Text="{Binding MaxLevel}" Grid.Row="2" Grid.Column="3" />
+            <TextBlock Text="Rank" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" />
+            <TextBox Text="{Binding MinRank}" Grid.Row="1" Grid.Column="1" />
+            <TextBlock Text="-" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" Margin="0 5 0 0" />
+            <TextBox Text="{Binding MaxRank}" Grid.Row="1" Grid.Column="3" />
 
-                <TextBlock Text="Rank" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" />
-                <TextBox Text="{Binding MinRank}" Grid.Row="3" Grid.Column="1" />
-                <TextBlock Text="-" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Center" />
-                <TextBox Text="{Binding MaxRank}" Grid.Row="3" Grid.Column="3" />
+            <TextBlock Text="Honor" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" />
+            <TextBox Text="{Binding MinHonor}" Grid.Row="2" Grid.Column="1" />
+            <TextBlock Text="-" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center" Margin="0 5 0 0" />
+            <TextBox Text="{Binding MaxHonor}" Grid.Row="2" Grid.Column="3" />
 
-                <TextBlock Text="Honor" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" />
-                <TextBox Text="{Binding MinHonor}" Grid.Row="4" Grid.Column="1" />
-                <TextBlock Text="-" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" />
-                <TextBox Text="{Binding MaxHonor}" Grid.Row="4" Grid.Column="3" />
+            <TextBlock Text="Excluded guilds" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" />
+            <TextBox Text="{Binding ExcludedGuilds}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3" />
+            <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="4">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
+                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="Foreground" Value="{StaticResource Dark6Brush}" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="( seperate with " Margin="10 5 0 0" />
+                <TextBlock Text=";" Margin="0 5 0 0" FontSize="12" />
+                <TextBlock Text=" )" Margin="0 5 10 0" />
+            </StackPanel>
 
-                <TextBlock Text="Excluded guilds" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" />
-                <TextBox Text="{Binding ExcludedGuilds}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3" />
-                <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="4">
-                    <TextBlock Text="( seperate with " Margin="10 5 0 0" />
-                    <TextBlock Text=";" Margin="0 5 0 0" FontWeight="Bold" />
-                    <TextBlock Text=" )" Margin="0 5 10 0" />
-                </StackPanel>
-
-                <TextBlock Text="Excluded usernames" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" />
-                <TextBox Text="{Binding .ExcludedUsernames}" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" />
-                <StackPanel Orientation="Horizontal" Grid.Row="6" Grid.Column="4">
-                    <TextBlock Text="( seperate with " Margin="10 5 0 0" />
-                    <TextBlock Text=";" Margin="0 5 0 0" FontWeight="Bold" />
-                    <TextBlock Text=" )" Margin="0 5 10 0" />
-                </StackPanel>
+            <TextBlock Text="Excluded names" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" />
+            <TextBox Text="{Binding .ExcludedUsernames}" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="3" />
+            <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.Column="4">
+                <StackPanel.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
+                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="Foreground" Value="{StaticResource Dark6Brush}" />
+                    </Style>
+                </StackPanel.Resources>
+                <TextBlock Text="( seperate with " Margin="10 5 0 0" />
+                <TextBlock Text=";" Margin="0 5 0 0"  FontSize="12" />
+                <TextBlock Text=" )" Margin="0 5 10 0" />
+            </StackPanel>
                 
-                <Button x:Name="SearchAsync" Content="SEARCH" Grid.Row="7" Grid.Column="3" Margin="0 5 0 0" />
-            </Grid>
+            <Button x:Name="SearchAsync" Content="SEARCH" Grid.Row="5" Grid.Column="3" Margin="0 5 0 0" />
         </Grid>
+
+        <StackPanel Grid.Row="2" Grid.Column="0">
+            <TextBlock Text="SEARCH RESULTS" Style="{StaticResource HeaderTextBlockStyle}" />
+            <Separator />
+        </StackPanel>
+
+        <controls:BusyIndicator IsBusy="{Binding IsBusy}" Message="{Binding BusyMessage}" Grid.Row="3" Grid.Column="0">
+            <Grid Margin="0 5 0 0">
+                <Grid.Resources>
+                    <Style TargetType="DataGrid">
+                        <Setter Property="AutoGenerateColumns" Value="False" />
+                        <Setter Property="Margin" Value="20 5 20 0" />
+                        <Setter Property="Background" Value="{StaticResource Dark1Brush}" />
+                        <Setter Property="RowHeaderWidth" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="GridLinesVisibility" Value="Horizontal" />
+                        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource Dark2Brush}" />
+                        <Setter Property="RowHeight" Value="30" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="SelectionUnit" Value="FullRow" />
+                        <Setter Property="SelectionMode" Value="Single" />
+                    </Style>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Dark4Brush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Background" Value="{StaticResource Dark3Brush}" />
+                        <Setter Property="BorderThickness" Value="0 0 1 0" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Dark2Brush}" />
+                        <Setter Property="Padding" Value="5" />
+                    </Style>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Blue1Brush}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Dark5Brush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center" />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                    </Style>
+                </Grid.Resources>
             
+                <DataGrid x:Name="SearchResults" ItemsSource="{Binding SearchResults}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Rank}" Header="RANK" MinWidth="75" />
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Username}" Header="NAME" MinWidth="175" />
+                        <DataGridTextColumn IsReadOnly="True" Binding="{Binding Honor}" Header="HONOR" MinWidth="75" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </controls:BusyIndicator>
     </Grid>
 </UserControl>

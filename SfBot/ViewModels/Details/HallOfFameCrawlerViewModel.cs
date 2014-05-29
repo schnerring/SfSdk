@@ -1,8 +1,11 @@
-﻿using System.ComponentModel.Composition;
+﻿using System;
+using System.ComponentModel.Composition;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfBot.Data;
+using SfBot.Events;
 using SfBot.ViewModels.Details;
 using SfSdk.Contracts;
 using SfSdk.Framework;
@@ -15,6 +18,7 @@ namespace SFBot.ViewModels.Details
     {
         private readonly HallOfFameSearchPredicate _searchPredicate = new HallOfFameSearchPredicate();
         private HallOfFameCrawler _crawler;
+        [Import] private IEventAggregator _events;
         private bool _canSearchAsync = true;
         private string _excludedUsernames = string.Empty;
         private string _excludedGuilds = string.Empty;
@@ -22,7 +26,7 @@ namespace SFBot.ViewModels.Details
         private int _minLevel = 1;
         private int _maxHonor = 100000;
         private int _minHonor = 1;
-        private int _maxRank = 30000;
+        private int _maxRank = 67;
         private int _minRank = 1;
         private readonly BindableCollection<ICharacter> _searchResults = new BindableCollection<ICharacter>();
 
@@ -34,7 +38,7 @@ namespace SFBot.ViewModels.Details
         public override void Init(Account account)
         {
             base.Init(account);
-
+            
             _crawler = new HallOfFameCrawler(account.Session);
         }
 
@@ -46,6 +50,7 @@ namespace SFBot.ViewModels.Details
 
         public async void SearchAsync()
         {
+            IsBusy = true;
             CanSearchAsync = false;
 
             _searchPredicate.MinRank = MinRank;
@@ -59,17 +64,27 @@ namespace SFBot.ViewModels.Details
 
             _searchPredicate.ExcludedUsernames = ExcludedUsernames.Split(';').ToList();
             _searchPredicate.ExcludedGuilds = ExcludedGuilds.Split(';').ToList();
+            
+            ChunkCompletedEventHandler chunkCompleted = (s, e) =>
+            {
+                var percentage = e.FinishedChunks*100/e.TotalChunks;;
+                var message = string.Format("processing chunks... {0} / {1} completed.", e.FinishedChunks, e.TotalChunks);
+                BusyMessage = percentage + "%";
+                _events.Publish(new LogEvent(Account, message));
+            };
 
+            _crawler.ChunkCompleted += chunkCompleted;
             var searchResults = await _crawler.SearchAsync(_searchPredicate);
+            _crawler.ChunkCompleted -= chunkCompleted;
 
+            _searchResults.Clear();
             foreach (var searchResult in searchResults)
             {
-                var duplicate = _searchResults.FirstOrDefault(r => r.Username == searchResult.Username);
-                if (duplicate != null) _searchResults.Remove(duplicate);
                 _searchResults.Add(searchResult);
             }
 
             CanSearchAsync = true;
+            IsBusy = false;
         }
 
         public HallOfFameSearchPredicate SearchPredicate
