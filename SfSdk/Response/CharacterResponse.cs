@@ -29,7 +29,6 @@ namespace SfSdk.Response
         private readonly string _comment;
         private readonly string _guild;
 
-
         /// <summary>
         ///     Creates a new character response.
         /// </summary>
