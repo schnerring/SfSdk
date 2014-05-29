@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Linq;
@@ -11,15 +10,12 @@ using SfBot.Events;
 
 namespace SfBot.Data
 {
-    [Export(typeof (ConfigurationStore))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class ConfigurationStore
     {
         private readonly IEventAggregator _events;
         private readonly BinaryFormatter _formatter = new BinaryFormatter();
         private readonly IsolatedStorageFile _store = IsolatedStorageFile.GetUserStoreForAssembly();
 
-        [ImportingConstructor]
         public ConfigurationStore(IEventAggregator events)
         {
             _events = events;
@@ -49,7 +45,7 @@ namespace SfBot.Data
             if (!Accounts.Any(a => a.Username == account.Username && a.Server.ServerUri == account.Server.ServerUri))
             {
                 Accounts.Add(account);
-                _events.Publish(new AccountAddedEvent(account));
+                _events.PublishOnCurrentThread(new AccountAddedEvent(account));
                 Save();
                 return true;
             }
@@ -63,7 +59,7 @@ namespace SfBot.Data
             if (Accounts.Any(a => a == account))
             {
                 Accounts.Remove(account);
-                _events.Publish(new AccountDeletedEvent(account));
+                _events.PublishOnCurrentThread(new AccountDeletedEvent(account));
                 Save();
                 return true;
             }

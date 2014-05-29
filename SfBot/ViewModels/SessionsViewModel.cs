@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using Caliburn.Micro;
 using SFBot.ViewModels;
 using SfBot.Data;
@@ -9,8 +8,6 @@ using SfBot.Views;
 
 namespace SfBot.ViewModels
 {
-    [Export(typeof (SessionsViewModel))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class SessionsViewModel : Conductor<Screen>,
                                      IHandle<AccountChangedEvent>,
                                      IHandle<AccountDeletedEvent>,
@@ -22,10 +19,14 @@ namespace SfBot.ViewModels
         private readonly Func<Account, DetailsViewModel> _detailsVmFactory;
         private Account _selectedAccount;
 
-        [ImportingConstructor]
-        public SessionsViewModel(IEventAggregator events, Func<Account, DetailsViewModel> detailsVmFactory)
+        public SessionsViewModel(IEventAggregator events)
         {
-            _detailsVmFactory = detailsVmFactory;
+            _detailsVmFactory = a =>
+            {
+                var vm = IoC.Get<DetailsViewModel>();
+                vm.Init(a);
+                return vm;
+            };
             events.Subscribe(this);
         }
 

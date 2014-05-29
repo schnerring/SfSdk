@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfBot.Data;
@@ -12,13 +9,11 @@ using SfSdk.Framework;
 
 namespace SFBot.ViewModels.Details
 {
-    [Export(typeof(HallOfFameCrawlerViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class HallOfFameCrawlerViewModel : SessionScreenBase
     {
         private readonly HallOfFameSearchPredicate _searchPredicate = new HallOfFameSearchPredicate();
         private HallOfFameCrawler _crawler;
-        [Import] private IEventAggregator _events;
+        private readonly IEventAggregator _events;
         private bool _canSearchAsync = true;
         private string _excludedUsernames = string.Empty;
         private string _excludedGuilds = string.Empty;
@@ -30,9 +25,10 @@ namespace SFBot.ViewModels.Details
         private int _minRank = 1;
         private readonly BindableCollection<ICharacter> _searchResults = new BindableCollection<ICharacter>();
 
-        public HallOfFameCrawlerViewModel()
+        public HallOfFameCrawlerViewModel(IEventAggregator events)
         {
             base.DisplayName = "Hall Of Fame Crawler";
+            _events = events;
         }
 
         public override void Init(Account account)
@@ -70,7 +66,7 @@ namespace SFBot.ViewModels.Details
                 var percentage = e.FinishedChunks*100/e.TotalChunks;;
                 var message = string.Format("processing chunks... {0} / {1} completed.", e.FinishedChunks, e.TotalChunks);
                 BusyMessage = percentage + "%";
-                _events.Publish(new LogEvent(Account, message));
+                _events.PublishOnCurrentThread(new LogEvent(Account, message));
             };
 
             _crawler.ChunkCompleted += chunkCompleted;

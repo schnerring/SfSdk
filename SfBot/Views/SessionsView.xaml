@@ -6,7 +6,7 @@
              xmlns:viewModels="clr-namespace:SfBot.ViewModels" xmlns:converters="clr-namespace:SfBot.Converters"
              xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              mc:Ignorable="d"
-             d:DesignHeight="704" d:DesignWidth="780"
+             d:DesignHeight="708" d:DesignWidth="780"
              d:DataContext="{d:DesignInstance viewModels:SessionsViewModel}"
              Background="{StaticResource Dark1Brush}">
     <UserControl.Resources>

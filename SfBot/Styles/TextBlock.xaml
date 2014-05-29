@@ -8,6 +8,6 @@
     
     <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle}">
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Margin" Value="10 10 0 0" />
+        <Setter Property="Margin" Value="10 10 5 0" />
     </Style>
 </ResourceDictionary>

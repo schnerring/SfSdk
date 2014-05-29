@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
@@ -11,8 +10,6 @@ using SfSdk.Providers;
 
 namespace SfBot.ViewModels
 {
-    [Export(typeof (CreateAccountViewModel))]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class CreateAccountViewModel : BusyScreen
     {
         private readonly ObservableCollection<ICountry> _countries = new ObservableCollection<ICountry>();

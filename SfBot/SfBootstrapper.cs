@@ -1,69 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Linq;
+using System.Windows;
 using Caliburn.Micro;
-using SFBot.ViewModels;
 using SfBot.Data;
 using SfBot.Shell;
+using SfBot.ViewModels;
+using SFBot.ViewModels;
+using SfBot.ViewModels.Details;
 using SFBot.ViewModels.Details;
-using SfSdk.Contracts;
 
 namespace SfBot
 {
-    public class SfBootstrapper : Bootstrapper<IShell>
+    public class SfBootstrapper : BootstrapperBase
     {
-        private CompositionContainer _container;
+        private SimpleContainer _container;
+
+        public SfBootstrapper()
+        {
+            base.StartRuntime();
+        }
 
         protected override void Configure()
         {
-            _container =
-                new CompositionContainer(
-                    new AggregateCatalog(
-                        AssemblySource.Instance.Select(x => new AssemblyCatalog(x))));
+            _container = new SimpleContainer();
 
-            var batch = new CompositionBatch();
+            _container.Singleton<IWindowManager, WindowManager>();
+            _container.Singleton<IEventAggregator, EventAggregator>();
+            
+            _container.Singleton<IShell, ShellViewModel>();
 
-            batch.AddExportedValue<IWindowManager>(new WindowManager());
-            batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue<Func<Account, DetailsViewModel>>(a =>
-            {
-                var vm = IoC.Get<DetailsViewModel>();
-                vm.Init(a);
-                return vm;
-            });
-            batch.AddExportedValue<Func<IEnumerable<IScrapbookItem>, ScrapbookItemViewModel>>(i =>
-            {
-                var vm = IoC.Get<ScrapbookItemViewModel>();
-                vm.Init(i);
-                return vm;
-            });
+            _container.Singleton<ConfigurationStore>();
 
-            batch.AddExportedValue(_container);
+            _container.Singleton<CreateAccountViewModel>();
+            _container.Singleton<AccountsViewModel>();
+            _container.Singleton<SessionsViewModel>();
+            _container.Singleton<FooterViewModel>();
+            _container.Singleton<LoggedOutViewModel>();
 
-            _container.Compose(batch);
+            _container.PerRequest<DetailsViewModel>();
+            _container.PerRequest<CharacterViewModel>();
+            _container.PerRequest<HallOfFameCrawlerViewModel>();
+            _container.PerRequest<ScrapbookViewModel>();
+            _container.PerRequest<ScrapbookItemViewModel>();
         }
 
         protected override object GetInstance(Type serviceType, string key)
         {
-            string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-            var result = _container.GetExportedValues<object>(contract).FirstOrDefault();
+            var result = _container.GetInstance(serviceType, key);
 
             if (result != null)
                 return result;
 
-            throw new Exception(string.Format("Could not locate any instances of contract {0}.", contract));
+            throw new Exception(string.Format("Could not locate any instances of contract {0}.", serviceType));
         }
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
-            return _container.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
+            return _container.GetAllInstances(serviceType);
         }
 
         protected override void BuildUp(object instance)
         {
-            _container.SatisfyImportsOnce(instance);
+            _container.BuildUp(instance);
+        }
+
+        protected override void OnStartup(object sender, StartupEventArgs e)
+        {
+            DisplayRootViewFor<IShell>();
         }
     }
 }

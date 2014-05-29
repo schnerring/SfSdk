@@ -6,7 +6,7 @@
              xmlns:details="clr-namespace:SFBot.ViewModels.Details"
              xmlns:controls="clr-namespace:SfBot.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="664" d:DesignWidth="740"
+             d:DesignHeight="650" d:DesignWidth="740"
              d:DataContext="{d:DesignInstance details:HallOfFameCrawlerViewModel}">
     <Grid>
         <Grid.Resources>
@@ -17,6 +17,9 @@
             <Style TargetType="TextBox">
                 <Setter Property="Margin" Value="0 5 0 0" />
                 <Setter Property="HorizontalContentAlignment" Value="Right" />
+            </Style>
+            <Style TargetType="Separator">
+                <Setter Property="Margin" Value="0 0 5 0" />
             </Style>
         </Grid.Resources>
         
@@ -37,7 +40,7 @@
             <Separator />
         </StackPanel>
         
-        <Grid Margin="0 5 5 0" Grid.Row="1" Grid.Column="0">
+        <Grid Margin="0 5 10 0" Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -111,7 +114,7 @@
                 <Grid.Resources>
                     <Style TargetType="DataGrid">
                         <Setter Property="AutoGenerateColumns" Value="False" />
-                        <Setter Property="Margin" Value="20 5 20 0" />
+                        <Setter Property="Margin" Value="5 5 10 0" />
                         <Setter Property="Background" Value="{StaticResource Dark1Brush}" />
                         <Setter Property="RowHeaderWidth" Value="0" />
                         <Setter Property="BorderThickness" Value="0" />

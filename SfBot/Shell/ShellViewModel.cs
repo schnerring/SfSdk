@@ -1,22 +1,25 @@
-﻿using System.ComponentModel.Composition;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using SfBot.ViewModels;
 
 namespace SfBot.Shell
 {
-    [Export(typeof (IShell))]
     public class ShellViewModel : Conductor<Screen>, IShell
     {
-        [Import]
+        
         public AccountsViewModel AccountsViewModel { get; set; }
-        [Import]
+        
         public SessionsViewModel SessionsViewModel { get; set; }
-        [Import]
+        
         public FooterViewModel FooterViewModel { get; set; }
 
-        public ShellViewModel()
+        public ShellViewModel(AccountsViewModel accountsViewModel,
+                              SessionsViewModel sessionViewModel,
+                              FooterViewModel footerViewModel)
         {
             base.DisplayName = "SF Bot";
+            AccountsViewModel = accountsViewModel;
+            SessionsViewModel = sessionViewModel;
+            FooterViewModel = footerViewModel;
         }
 
         protected override void OnActivate()

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using Caliburn.Micro;
 using SfBot.Data;
 using SfBot.Events;
@@ -8,8 +7,6 @@ using SFBot.ViewModels.Details;
 
 namespace SFBot.ViewModels
 {
-    [Export(typeof (DetailsViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class DetailsViewModel : Conductor<Screen>, IHandle<LoginStatusChangedEvent>
     {
         private readonly BindableCollection<ISessionScreen> _items;
@@ -17,7 +14,6 @@ namespace SFBot.ViewModels
         private bool _isLoggedIn;
         private Account _account;
 
-        [ImportingConstructor]
         public DetailsViewModel(IEventAggregator events,
                                 CharacterViewModel characterViewModel,
                                 HallOfFameCrawlerViewModel hallOfFameCrawlerViewModel,

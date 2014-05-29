@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:cal="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro"
              xmlns:viewModels="clr-namespace:SFBot.ViewModels"
              xmlns:converters="clr-namespace:SfBot.Converters"
+             xmlns:cal="http://www.caliburnproject.org"
              mc:Ignorable="d"
-             d:DesignHeight="760" d:DesignWidth="684"
+             d:DesignHeight="688" d:DesignWidth="760"
              d:DataContext="{d:DesignInstance viewModels:DetailsViewModel}">
     <UserControl.Resources>
         <converters:StringToUpperConverter x:Key="ToUpperConverter" />

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfBot.Events;
@@ -8,37 +7,43 @@ using SfSdk.Contracts;
 
 namespace SFBot.ViewModels.Details
 {
-    [Export(typeof(ScrapbookViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class ScrapbookViewModel : SessionScreenBase
     {
         private readonly IEventAggregator _events;
 
-        [Import]
         public ScrapbookItemViewModel MonsterViewModel { get; set; }
-        [Import]
+
         public ScrapbookItemViewModel ValuableViewModel { get; set; }
-        [Import]
+
         public ScrapbookItemViewModel WarriorViewModel { get; set; }
-        [Import]
+
         public ScrapbookItemViewModel MageViewModel { get; set; }
-        [Import]
+
         public ScrapbookItemViewModel ScoutViewModel { get; set; }
 
-        [ImportingConstructor]
-        public ScrapbookViewModel(IEventAggregator events)
+        public ScrapbookViewModel(IEventAggregator events,
+                                  ScrapbookItemViewModel monsterViewModel,
+                                  ScrapbookItemViewModel valuableViewModel,
+                                  ScrapbookItemViewModel warriorViewModel,
+                                  ScrapbookItemViewModel mageViewModel,
+                                  ScrapbookItemViewModel scoutViewModel)
         {
-            _events = events;
             base.DisplayName = "Scrapbook";
+            _events = events;
+            MonsterViewModel = monsterViewModel;
+            ValuableViewModel = valuableViewModel;
+            WarriorViewModel = warriorViewModel;
+            MageViewModel = mageViewModel;
+            ScoutViewModel = scoutViewModel;
         }
 
         public override async Task LoadAsync()
         {
             IsBusy = true;
             
-            _events.Publish(new LogEvent(Account, "Scrapbook request started"));
+            _events.PublishOnCurrentThread(new LogEvent(Account, "Scrapbook request started"));
             var items = (await Account.Session.ScrapbookAsync()).ToList();
-            _events.Publish(new LogEvent(Account, "Scrapbook request finished"));
+            _events.PublishOnCurrentThread(new LogEvent(Account, "Scrapbook request finished"));
 
             MonsterViewModel.DisplayName = "Monster Items";
             MonsterViewModel.Init(items.OfType<IMonsterItem>());

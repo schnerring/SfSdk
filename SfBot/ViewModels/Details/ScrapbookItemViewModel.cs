@@ -1,12 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using Caliburn.Micro;
 using SfSdk.Contracts;
 
 namespace SFBot.ViewModels.Details
 {
-    [Export(typeof(ScrapbookItemViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class ScrapbookItemViewModel : Screen
     {
         public BindableCollection<IScrapbookItem> Items { get; private set; }

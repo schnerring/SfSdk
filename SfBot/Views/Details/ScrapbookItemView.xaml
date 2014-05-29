@@ -7,7 +7,7 @@
              xmlns:details="clr-namespace:SFBot.ViewModels.Details"
              xmlns:converters="clr-namespace:SfBot.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="215" d:DesignWidth="370"
              d:DataContext="{d:DesignInstance details:ScrapbookItemViewModel}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type contracts:IScrapbookItem}" x:Key="ScrapbookItemDataTemplate">
@@ -40,7 +40,7 @@
                 <Image Source="{Binding ImageUri}"
                        IsEnabled="{Binding HasItem}"
                        Grid.Column="1" Margin="5"
-                       Height="75" Width="75">
+                       Height="60" Width="60">
                     <Image.Style>
                         <Style TargetType="Image">
                             <Style.Triggers>
@@ -54,8 +54,8 @@
             </Grid>
         </DataTemplate>
         
-        <Style TargetType="TextBlock" BasedOn="{StaticResource HeaderTextBlockStyle}">
-            <Setter Property="Margin" Value="10 15 0 0" />
+        <Style TargetType="Separator">
+            <Setter Property="Margin" Value="0 0 5 0" />
         </Style>
 
         <converters:StringToUpperConverter x:Key="ToUpperConverter" />
@@ -73,7 +73,8 @@
         
         <ListBox x:Name="Items" Grid.Row="2"
                  ItemTemplate="{StaticResource ScrapbookItemDataTemplate}"
-                 Style="{StaticResource ScrapbookListBoxStyle}">
+                 Style="{StaticResource ScrapbookListBoxStyle}"
+                 Margin="5 5 10 0">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />

@@ -1,13 +1,10 @@
-﻿using System.ComponentModel.Composition;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfBot.Events;
 using SfSdk.Contracts;
 
 namespace SfBot.ViewModels.Details
 {
-    [Export(typeof(CharacterViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class CharacterViewModel : SessionScreenBase
     {
         private ICharacter _character;
@@ -23,7 +20,6 @@ namespace SfBot.ViewModels.Details
             }
         }
 
-        [ImportingConstructor]
         public CharacterViewModel(IEventAggregator events)
         {
             _events = events;
@@ -33,9 +29,9 @@ namespace SfBot.ViewModels.Details
         public override async Task LoadAsync()
         {
             IsBusy = true;
-            _events.Publish(new LogEvent(Account, "Character request started"));
+            _events.PublishOnCurrentThread(new LogEvent(Account, "Character request started"));
             Character = await Account.Session.MyCharacterAsync();
-            _events.Publish(new LogEvent(Account, "Character request finished"));
+            _events.PublishOnCurrentThread(new LogEvent(Account, "Character request finished"));
             IsBusy = false;
         }
 

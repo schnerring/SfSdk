@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Windows.Threading;
 using Caliburn.Micro;
@@ -8,8 +7,6 @@ using SfBot.Events;
 
 namespace SfBot.ViewModels
 {
-    [Export(typeof (FooterViewModel))]
-    [PartCreationPolicy(CreationPolicy.NonShared)]
     public class FooterViewModel : Screen, IHandle<AccountChangedEvent>, IHandle<LogEvent>
     {
         private readonly DispatcherTimer _timer = new DispatcherTimer {Interval = new TimeSpan(0, 0, 1)};
@@ -18,7 +15,6 @@ namespace SfBot.ViewModels
         private string _message;
         private Account _selectedAccount;
 
-        [ImportingConstructor]
         public FooterViewModel(IEventAggregator events)
         {
             events.Subscribe(this);
