@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using SfBot.Data;
 using SfBot.Events;
 using SfBot.ViewModels.Details;
 using SfSdk.Contracts;
@@ -10,7 +11,7 @@ namespace SFBot.ViewModels.Details
     public class CharacterDetailsViewModel : SessionScreenBase
     {
         private readonly IEventAggregator _events;
-        private Func<Task<ICharacter>> _getCharacterAsync;
+        private Func<Account, Task<ICharacter>> _getCharacterAsync;
         private ICharacter _character;
 
         public CharacterDetailsViewModel(IEventAggregator events)
@@ -29,7 +30,7 @@ namespace SFBot.ViewModels.Details
             }
         }
 
-        public void InitCharacterFunc(Func<Task<ICharacter>> getCharacterAsync)
+        public void InitCharacterFunc(Func<Account, Task<ICharacter>> getCharacterAsync)
         {
             if (getCharacterAsync == null) throw new ArgumentNullException("getCharacterAsync");
             _getCharacterAsync = getCharacterAsync;
@@ -39,9 +40,15 @@ namespace SFBot.ViewModels.Details
         {
             IsBusy = true;
             _events.PublishOnCurrentThread(new LogEvent(Account, "Character request started"));
-            Character = await _getCharacterAsync();
+            Character = await _getCharacterAsync(Account);
             _events.PublishOnCurrentThread(new LogEvent(Account, "Character request finished"));
             IsBusy = false;
+        }
+
+        protected override void OnActivate()
+        {
+            base.OnActivate();
+            Load();
         }
     }
 }

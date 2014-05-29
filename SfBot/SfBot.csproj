@@ -92,6 +92,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BusyConductor.cs" />
     <Compile Include="Controls\BusyIndicator.cs" />
     <Compile Include="Controls\VirtualizingWrapPanel.cs" />
     <Compile Include="Converters\DamageConverter.cs" />
@@ -121,8 +122,10 @@
     <Compile Include="ViewModels\Details\HallOfFameCrawlerViewModel.cs" />
     <Compile Include="ViewModels\Details\ILoadableScreen.cs" />
     <Compile Include="ViewModels\Details\LogEntry.cs" />
+    <Compile Include="ViewModels\Details\NoCharacterSelectedViewModel.cs" />
     <Compile Include="ViewModels\Details\ScrapbookItemViewModel.cs" />
     <Compile Include="ViewModels\Details\ScrapbookViewModel.cs" />
+    <Compile Include="ViewModels\Details\SessionConductorBase.cs" />
     <Compile Include="ViewModels\Details\SessionScreenBase.cs" />
     <Compile Include="ViewModels\CreateAccountViewModel.cs" />
     <Compile Include="ViewModels\DetailsViewModel.cs" />
@@ -143,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Colors.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\DataGrid.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -187,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Details\HallOfFameCrawlerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Details\NoCharacterSelectedView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

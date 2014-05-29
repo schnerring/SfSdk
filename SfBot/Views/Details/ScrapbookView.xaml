@@ -20,7 +20,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.Row="0" x:Name="MonsterViewModel" />
+            <ContentControl Grid.Row="0" x:Name="MonsterViewModel" Margin="0 -10 0 0" />
             <ContentControl Grid.Row="1" x:Name="ValuableViewModel" />
         </Grid>
 
@@ -31,7 +31,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <ContentControl Grid.Row="0" x:Name="WarriorViewModel" />
+            <ContentControl Grid.Row="0" x:Name="WarriorViewModel" Margin="0 -10 0 0" />
             <ContentControl Grid.Row="1" x:Name="MageViewModel" />
             <ContentControl Grid.Row="2" x:Name="ScoutViewModel" />
         </Grid>

@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="Styles/ListBox.xaml" />
                 <ResourceDictionary Source="Styles/TabControl.xaml" />
                 <ResourceDictionary Source="Styles/TextBlock.xaml" />
+                <ResourceDictionary Source="Styles/DataGrid.xaml" />
                 
                 <ResourceDictionary>
                     <sfBot:SfBootstrapper x:Key="Bootstrapper" />

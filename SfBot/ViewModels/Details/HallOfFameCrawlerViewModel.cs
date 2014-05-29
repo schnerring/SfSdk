@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using SfBot.Data;
@@ -9,7 +11,7 @@ using SfSdk.Framework;
 
 namespace SFBot.ViewModels.Details
 {
-    public class HallOfFameCrawlerViewModel : SessionScreenBase
+    public class HallOfFameCrawlerViewModel : SessionConductorBase<Screen>
     {
         private readonly HallOfFameSearchPredicate _searchPredicate = new HallOfFameSearchPredicate();
         private HallOfFameCrawler _crawler;
@@ -24,17 +26,19 @@ namespace SFBot.ViewModels.Details
         private int _maxRank = 67;
         private int _minRank = 1;
         private readonly BindableCollection<ICharacter> _searchResults = new BindableCollection<ICharacter>();
+        private ICharacter _selectedSearchResult;
+        private readonly Dictionary<string, CharacterDetailsViewModel> _characterDetailsViewModels = new Dictionary<string, CharacterDetailsViewModel>();
 
         public HallOfFameCrawlerViewModel(IEventAggregator events)
         {
             base.DisplayName = "Hall Of Fame Crawler";
             _events = events;
+            ActivateItem(IoC.Get<NoCharacterSelectedViewModel>());
         }
 
         public override void InitAccount(Account account)
         {
             base.InitAccount(account);
-            
             _crawler = new HallOfFameCrawler(account.Session);
         }
 
@@ -91,6 +95,32 @@ namespace SFBot.ViewModels.Details
         public BindableCollection<ICharacter> SearchResults
         {
             get { return _searchResults; }
+        }
+
+        public ICharacter SelectedSearchResult
+        {
+            get { return _selectedSearchResult; }
+            set
+            {
+                if (Equals(value, _selectedSearchResult)) return;
+                _selectedSearchResult = value;
+                if (_selectedSearchResult == null)
+                {
+                    ActivateItem(IoC.Get<NoCharacterSelectedViewModel>());
+                    return;
+                }
+                if (!_characterDetailsViewModels.ContainsKey(_selectedSearchResult.Username))
+                {
+                    var vm = IoC.Get<CharacterDetailsViewModel>();
+                    vm.InitAccount(Account);
+                    Func<Account, Task<ICharacter>> getCharacterAsync =
+                        async a => await a.Session.RequestCharacterAsync(_selectedSearchResult.Username);
+                    vm.InitCharacterFunc(getCharacterAsync);
+                    _characterDetailsViewModels.Add(_selectedSearchResult.Username, vm);
+                }
+                ActivateItem(_characterDetailsViewModels[_selectedSearchResult.Username]);
+                NotifyOfPropertyChange(() => SelectedSearchResult);
+            }
         }
 
         public string ExcludedUsernames

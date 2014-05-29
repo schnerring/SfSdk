@@ -20,7 +20,7 @@ namespace SfBot.ViewModels.Details
         {
             base.InitAccount(account);
             CharacterDetailsViewModel.InitAccount(account);
-            Func<Task<ICharacter>> myCharacter = async () => await Account.Session.MyCharacterAsync();
+            Func<Account, Task<ICharacter>> myCharacter = async a => await a.Session.MyCharacterAsync();
             CharacterDetailsViewModel.InitCharacterFunc(myCharacter);
         }
 

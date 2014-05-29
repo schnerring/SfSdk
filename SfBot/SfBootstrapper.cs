@@ -41,6 +41,7 @@ namespace SfBot
             _container.PerRequest<CharacterViewModel>();
             _container.PerRequest<CharacterDetailsViewModel>();
             _container.PerRequest<HallOfFameCrawlerViewModel>();
+            _container.Singleton<NoCharacterSelectedViewModel>();
             _container.PerRequest<ScrapbookViewModel>();
             _container.PerRequest<ScrapbookItemViewModel>();
         }
