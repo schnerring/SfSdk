@@ -7,7 +7,7 @@
              xmlns:details="clr-namespace:SFBot.ViewModels.Details"
              xmlns:converters="clr-namespace:SfBot.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="215" d:DesignWidth="370"
+             d:DesignHeight="215" d:DesignWidth="355"
              d:DataContext="{d:DesignInstance details:ScrapbookItemViewModel}">
     <UserControl.Resources>
         <DataTemplate DataType="{x:Type contracts:IScrapbookItem}" x:Key="ScrapbookItemDataTemplate">
