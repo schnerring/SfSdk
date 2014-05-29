@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using SfSdk.Constants;
@@ -155,7 +156,7 @@ namespace SfSdk
         /// <summary>
         ///     Represents the Hall Of Fame Screen Action.
         /// </summary>
-        /// <param name="searchString">Search strings may contain the rank or the name of a to be searched character.</param>
+        /// <param name="searchString">Search strings may contain the rank or the name of a character to be searched.</param>
         /// <param name="forceLoad">Indicates whether the details of the characters shall be loaded.</param>
         /// <returns>A <see cref="IEnumerable{T}"/> where T: <see cref="ICharacter"/>/>.</returns>
         /// <exception cref="SessionLoggedOutException">When session is not logged in.</exception>
@@ -164,7 +165,14 @@ namespace SfSdk
             if (!_isLoggedIn) throw new SessionLoggedOutException("HallOfFameAsync requires to be logged in.");
 
             string[] args = null;
-            if (searchString != null) args = new[] { searchString };
+            if (searchString != null)
+            {
+                int rank;
+                args =
+                    int.TryParse(searchString, out rank)
+                        ? new[] {string.Empty, rank.ToString(CultureInfo.InvariantCulture)}
+                        : new[] {searchString, (-1).ToString(CultureInfo.InvariantCulture)};
+            }
 
             var result = await new SfRequest().ExecuteAsync(_source, _sessionId, SF.ActScreenEhrenhalle, args);
             
