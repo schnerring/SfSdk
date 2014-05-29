@@ -24,7 +24,7 @@ namespace SfBot.ViewModels
             _detailsVmFactory = a =>
             {
                 var vm = IoC.Get<DetailsViewModel>();
-                vm.Init(a);
+                vm.InitAccount(a);
                 return vm;
             };
             events.Subscribe(this);

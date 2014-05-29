@@ -13,8 +13,9 @@ namespace SFBot.ViewModels.Details
             Items = new BindableCollection<IScrapbookItem>();
         }
 
-        public void Init(IEnumerable<IScrapbookItem> items)
+        public void FillItems(IEnumerable<IScrapbookItem> items)
         {
+            Items.Clear();
             foreach (var item in items)
             {
                 Items.Add(item);

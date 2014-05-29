@@ -1,44 +1,38 @@
-﻿using System.Threading.Tasks;
-using Caliburn.Micro;
-using SfBot.Events;
+﻿using System;
+using System.Threading.Tasks;
+using SfBot.Data;
+using SFBot.ViewModels.Details;
 using SfSdk.Contracts;
 
 namespace SfBot.ViewModels.Details
 {
     public class CharacterViewModel : SessionScreenBase
     {
-        private ICharacter _character;
-        private readonly IEventAggregator _events;
+        public CharacterDetailsViewModel CharacterDetailsViewModel { get; set; }
 
-        public ICharacter Character
+        public CharacterViewModel(CharacterDetailsViewModel characterDetailsViewModel)
         {
-            get { return _character; }
-            set
-            {
-                _character = value;
-                NotifyOfPropertyChange(() => Character);
-            }
+            base.DisplayName = "Character";
+            CharacterDetailsViewModel = characterDetailsViewModel;
         }
 
-        public CharacterViewModel(IEventAggregator events)
+        public override void InitAccount(Account account)
         {
-            _events = events;
-            base.DisplayName = "Character";
+            base.InitAccount(account);
+            CharacterDetailsViewModel.InitAccount(account);
+            Func<Task<ICharacter>> myCharacter = async () => await Account.Session.MyCharacterAsync();
+            CharacterDetailsViewModel.InitCharacterFunc(myCharacter);
         }
 
         public override async Task LoadAsync()
         {
-            IsBusy = true;
-            _events.PublishOnCurrentThread(new LogEvent(Account, "Character request started"));
-            Character = await Account.Session.MyCharacterAsync();
-            _events.PublishOnCurrentThread(new LogEvent(Account, "Character request finished"));
-            IsBusy = false;
+            return;
         }
 
         protected override void OnActivate()
         {
  	        base.OnActivate();
-            Load();
+            CharacterDetailsViewModel.Load();
         }
     }
 }

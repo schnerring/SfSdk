@@ -65,11 +65,11 @@ namespace SFBot.ViewModels
             IsLoggedIn = message.IsLoggedIn;
             if (!message.IsLoggedIn) return;
             foreach (ISessionScreen sessionScreen in _items)
-                sessionScreen.Init(_account);
+                sessionScreen.InitAccount(_account);
             SelectedItem = _items.FirstOrDefault();
         }
 
-        public void Init(Account account)
+        public void InitAccount(Account account)
         {
             _account = account;
         }

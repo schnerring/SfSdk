@@ -35,6 +35,11 @@ namespace SFBot.ViewModels.Details
             WarriorViewModel = warriorViewModel;
             MageViewModel = mageViewModel;
             ScoutViewModel = scoutViewModel;
+            MonsterViewModel.DisplayName = "Monster Items";
+            ValuableViewModel.DisplayName = "Valuable Items";
+            WarriorViewModel.DisplayName = "Warrior Items";
+            MageViewModel.DisplayName = "Mage Items";
+            ScoutViewModel.DisplayName = "Scout Items";
         }
 
         public override async Task LoadAsync()
@@ -45,20 +50,11 @@ namespace SFBot.ViewModels.Details
             var items = (await Account.Session.ScrapbookAsync()).ToList();
             _events.PublishOnCurrentThread(new LogEvent(Account, "Scrapbook request finished"));
 
-            MonsterViewModel.DisplayName = "Monster Items";
-            MonsterViewModel.Init(items.OfType<IMonsterItem>());
-
-            ValuableViewModel.DisplayName = "Valuable Items";
-            ValuableViewModel.Init(items.OfType<IValuableItem>());
-
-            WarriorViewModel.DisplayName = "Warrior Items";
-            WarriorViewModel.Init(items.OfType<IWarriorItem>());
-
-            MageViewModel.DisplayName = "Mage Items";
-            MageViewModel.Init(items.OfType<IMageItem>());
-
-            ScoutViewModel.DisplayName = "Scout Items";
-            ScoutViewModel.Init(items.OfType<IScoutItem>());
+            MonsterViewModel.FillItems(items.OfType<IMonsterItem>());
+            ValuableViewModel.FillItems(items.OfType<IValuableItem>());
+            WarriorViewModel.FillItems(items.OfType<IWarriorItem>());
+            MageViewModel.FillItems(items.OfType<IMageItem>());
+            ScoutViewModel.FillItems(items.OfType<IScoutItem>());
 
             IsBusy = false;
         }

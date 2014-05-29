@@ -8,7 +8,7 @@ namespace SfBot.ViewModels.Details
     {
         protected Account Account;
 
-        public virtual void Init(Account account)
+        public virtual void InitAccount(Account account)
         {
             Account = account;
         }

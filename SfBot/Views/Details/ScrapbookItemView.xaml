@@ -68,7 +68,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding DisplayName, Converter={StaticResource ToUpperConverter}}" Grid.Row="0" />
+        <TextBlock Text="{Binding DisplayName, Converter={StaticResource ToUpperConverter}}" Style="{StaticResource HeaderTextBlockStyle}" Grid.Row="0" />
         <Separator Grid.Row="1" />
         
         <ListBox x:Name="Items" Grid.Row="2"

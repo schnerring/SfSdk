@@ -4,6 +4,6 @@ namespace SfBot.ViewModels.Details
 {
     public interface ISessionScreen
     {
-        void Init(Account account);
+        void InitAccount(Account account);
     }
 }

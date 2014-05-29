@@ -116,6 +116,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="SfBootstrapper.cs" />
+    <Compile Include="ViewModels\Details\CharacterDetailsViewModel.cs" />
     <Compile Include="ViewModels\Details\CharacterViewModel.cs" />
     <Compile Include="ViewModels\Details\HallOfFameCrawlerViewModel.cs" />
     <Compile Include="ViewModels\Details\ILoadableScreen.cs" />
@@ -166,6 +167,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AccountsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Details\CharacterDetailsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -31,9 +31,9 @@ namespace SFBot.ViewModels.Details
             _events = events;
         }
 
-        public override void Init(Account account)
+        public override void InitAccount(Account account)
         {
-            base.Init(account);
+            base.InitAccount(account);
             
             _crawler = new HallOfFameCrawler(account.Session);
         }
